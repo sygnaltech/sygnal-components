@@ -127,7 +127,7 @@ export const FormFile = ({ name, text, note, variant, fileTypes }: FormFileProps
           ref={fileInputRef}
           type="file"
           name={name + '[]'}
-//          style={{ display: 'none' }}
+          style={{ display: 'none' }} 
           accept={getAcceptAttribute()}
           multiple
           onChange={handleFileChange}
