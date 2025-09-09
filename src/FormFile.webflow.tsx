@@ -1,20 +1,28 @@
-import { Badge } from './Badge';
+import { FormFile } from './FormFile';
 import { props } from '@webflow/data-types';
 import { declareComponent } from '@webflow/react';
 
-export default declareComponent(Badge, {
-    name: 'Badge',
-    description: 'A badge with variants',
-    group: 'Info',
+export default declareComponent(FormFile, {
+    name: 'Form File Upload',
+    description: 'A file upload componenet for forms',
+    group: 'Forms',
     props: {
         text: props.Text({
-            name: "Text",
-            defaultValue: "Hello World",
+            name: "Message",
+            defaultValue: "Drag & Drop Files Here",
+        }),
+        note: props.Text({
+            name: "Note",
+            defaultValue: "or, click to browse",
         }),
         variant: props.Variant({
             name: "Variant",
-            options: ["Light", "Dark"],
-            defaultValue: "Light",
+            options: ["Webflow", "Basin", "UploadCare"],
+            defaultValue: "Webflow",
+        }),
+        fileTypes: props.Text({
+            name: "File Types",
+            defaultValue: "",
         }),
     },
 });
