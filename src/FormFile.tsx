@@ -98,24 +98,18 @@ export const FormFile = ({ text, note, variant, fileTypes }: FormFileProps) => {
     return note;
   };
 
-  // Get variant-specific classes
-  const getVariantClasses = () => {
-    const baseClasses = "div-block-3";
+  // Get component classes
+  const getComponentClasses = () => {
+    const baseClasses = "cc-formfile";
     const dragOverClass = isDragOver ? "drag-over" : "";
+    const hasFilesClass = fileCount > 0 ? "has-files" : "";
     
-    switch (variant) {
-      case 'Basin':
-        return `${baseClasses} basin-variant ${dragOverClass}`;
-      case 'UploadCare':
-        return `${baseClasses} uploadcare-variant ${dragOverClass}`;
-      default:
-        return `${baseClasses} ${dragOverClass}`;
-    }
+    return `${baseClasses} ${dragOverClass} ${hasFilesClass}`.trim();
   };
 
   return (
     <div 
-      className={getVariantClasses()}
+      className={getComponentClasses()}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
@@ -124,7 +118,7 @@ export const FormFile = ({ text, note, variant, fileTypes }: FormFileProps) => {
       onClick={handleClick}
     >
       <div>{text}</div>
-      <div className="text-block-5">
+      <div className="cc-formfile-text-note">
         {getDisplayText()}
       </div>
       <div className="w-embed">
