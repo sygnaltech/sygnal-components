@@ -7,6 +7,11 @@ export default declareComponent(FormFile, {
     description: 'A drag & drop file upload component for forms with multiple service variants',
     group: 'Forms',
     props: {
+        name: props.Text({
+            name: "Input Name",
+            tooltip: "The name attribute for the file input field",
+            defaultValue: "files",
+        }),        
         text: props.Text({
             name: "Message",
             tooltip: "Main drag & drop message",

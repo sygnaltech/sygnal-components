@@ -3,13 +3,14 @@ import { useState, useRef, useCallback } from "react";
 import "./FormFile.css";
 
 interface FormFileProps {
+  name: string;
   text: string;
   note: string;
   variant: 'Webflow' | 'Basin' | 'UploadCare';
   fileTypes: string;
 }
 
-export const FormFile = ({ text, note, variant, fileTypes }: FormFileProps) => {
+export const FormFile = ({ name, text, note, variant, fileTypes }: FormFileProps) => {
   const [fileCount, setFileCount] = useState(0);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,12 +122,12 @@ export const FormFile = ({ text, note, variant, fileTypes }: FormFileProps) => {
       <div className="cc-formfile-text-note">
         {getDisplayText()}
       </div>
-      <div className="w-embed">
+      <div>
         <input
           ref={fileInputRef}
           type="file"
-          name="avatar[]"
-          style={{ display: 'none' }}
+          name={name + '[]'}
+//          style={{ display: 'none' }}
           accept={getAcceptAttribute()}
           multiple
           onChange={handleFileChange}

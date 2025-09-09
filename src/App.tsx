@@ -84,6 +84,7 @@ function App() {
         <div style={{ margin: '2rem 0', maxWidth: '400px' }}>
           <h3>Default Webflow Variant</h3>
           <FormFile 
+            name="files"
             text="Drag & Drop Files Here"
             note="or, click to browse"
             variant="Webflow"
@@ -110,6 +111,7 @@ function App() {
         <div style={{ margin: '2rem 0', maxWidth: '400px' }}>
           <h3>Default Webflow Variant</h3>
           <FormFile 
+            name="files"
             text="Drag & Drop Files Here"
             note="or, click to browse"
             variant="Webflow"
@@ -120,6 +122,7 @@ function App() {
         <div style={{ margin: '2rem 0', maxWidth: '400px' }}>
           <h3>Basin Variant (PDF Only)</h3>
           <FormFile 
+            name="files"
             text="Upload Your Documents"
             note="PDF files only"
             variant="Basin"
@@ -134,6 +137,7 @@ function App() {
             note="JPG, PNG, WebP accepted"
             variant="UploadCare"
             fileTypes="images"
+            name="images"
           />
         </div>
 
