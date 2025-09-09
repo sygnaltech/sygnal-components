@@ -1,0 +1,10 @@
+{
+  "library": {
+    "name": "Sygnal Components",
+    "components": [
+      "./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
+    ],
+    "description": "Sygnal Components",
+    "id": "sygnal-components"
+  }
+}
