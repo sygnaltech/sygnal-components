@@ -58,6 +58,7 @@ function App() {
     data-wf-page-id="63377a593d694ee5674978ee"
     data-wf-element-id="93ecd648-455e-ce9e-4a43-5f0fb110fadd"
     aria-label="Default Form"
+    enctype="multipart/form-data" 
   >
     <label for="Name-8">Name</label>
     <input
