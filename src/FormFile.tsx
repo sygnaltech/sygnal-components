@@ -15,8 +15,10 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
   const [fileCount, setFileCount] = useState(0);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null);
+  const hiddenInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Create a hidden input in the document body that forms can access
+  // Create a hidden input in the specific parent form
   useEffect(() => {
     console.log('FormFile useEffect running - creating hidden input');
     
@@ -31,23 +33,29 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
       hiddenInput.multiple = true;
     }
     
-    // Find the specific form that contains our component
-    // We need to traverse up from the shadow root to find the parent form
-    let currentElement = document.querySelector(`code-island[data-props*='"name":"${name}"']`);
-    console.log('Found component element:', currentElement);
-    
+    // Find THIS specific component's parent form by traversing from our ref
     let form = null;
-    while (currentElement && currentElement.parentElement) {
-      currentElement = currentElement.parentElement;
-      if (currentElement.tagName === 'FORM') {
-        form = currentElement;
-        break;
+    if (componentRef.current) {
+      // Get the shadow root host (the code-island element)
+      const shadowHost = componentRef.current.getRootNode() as ShadowRoot;
+      const codeIsland = shadowHost.host as HTMLElement;
+      console.log('Found code-island host:', codeIsland);
+      
+      // Traverse up from the code-island to find the parent form
+      let currentElement = codeIsland.parentElement;
+      while (currentElement) {
+        if (currentElement.tagName === 'FORM') {
+          form = currentElement;
+          break;
+        }
+        currentElement = currentElement.parentElement;
       }
     }
     
     console.log('Found parent form:', form);
     if (form) {
       form.appendChild(hiddenInput);
+      hiddenInputRef.current = hiddenInput;
       console.log('Hidden input added to correct form');
     } else {
       console.log('Could not find parent form');
@@ -56,9 +64,10 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
     // Cleanup on unmount
     return () => {
       console.log('Cleaning up hidden input');
-      if (hiddenInput.parentNode) {
-        hiddenInput.parentNode.removeChild(hiddenInput);
+      if (hiddenInputRef.current && hiddenInputRef.current.parentNode) {
+        hiddenInputRef.current.parentNode.removeChild(hiddenInputRef.current);
       }
+      hiddenInputRef.current = null;
     };
   }, [name, multiple]);
 
@@ -106,17 +115,16 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
       fileInputRef.current.files = files;
       updateFileCount(files);
       
-      // Also update the hidden input in the form
-      const hiddenInput = document.querySelector(`form input[name="${name}"]`) as HTMLInputElement;
-      if (hiddenInput) {
-        hiddenInput.files = files;
+      // Also update OUR specific hidden input
+      if (hiddenInputRef.current) {
+        hiddenInputRef.current.files = files;
       }
       
       // Trigger change event for form handling
       const changeEvent = new Event('change', { bubbles: true });
       fileInputRef.current.dispatchEvent(changeEvent);
     }
-  }, [updateFileCount, name]);
+  }, [updateFileCount]);
 
   // Handle click to open file selector
   const handleClick = useCallback(() => {
@@ -129,16 +137,14 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
     console.log('Files selected:', files);
     updateFileCount(files);
     
-    // Sync files to the hidden input in the form
-    const hiddenInput = document.querySelector(`form input[name="${name}"]`) as HTMLInputElement;
-    console.log('Found hidden input:', hiddenInput);
-    if (hiddenInput) {
-      hiddenInput.files = files;
+    // Sync files to OUR specific hidden input
+    if (hiddenInputRef.current) {
+      hiddenInputRef.current.files = files;
       console.log('Files synced to hidden input');
     } else {
       console.log('Hidden input not found!');
     }
-  }, [updateFileCount, name]);
+  }, [updateFileCount]);
 
   // Parse file types for accept attribute
   const getAcceptAttribute = () => {
@@ -179,6 +185,7 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
 
   return (
     <div 
+      ref={componentRef}
       className={getComponentClasses()}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
