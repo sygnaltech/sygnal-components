@@ -6,5 +6,12 @@
     ],
     "description": "Sygnal Components",
     "id": "sygnal-components"
+  },
+  "telemetry": {
+    "global": {
+      "allowTelemetry": true,
+      "lastPrompted": 1757464785972,
+      "version": "1.8.40"
+    }
   }
 }
