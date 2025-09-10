@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import "./FormFile.css";
 
 interface FormFileProps {
@@ -15,6 +15,52 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
   const [fileCount, setFileCount] = useState(0);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Create a hidden input in the document body that forms can access
+  useEffect(() => {
+    console.log('FormFile useEffect running - creating hidden input');
+    
+    // Create a hidden input that will be accessible to the form
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'file';
+    hiddenInput.name = name;
+    hiddenInput.style.display = 'none';
+    hiddenInput.style.position = 'absolute';
+    hiddenInput.style.left = '-9999px';
+    if (multiple) {
+      hiddenInput.multiple = true;
+    }
+    
+    // Find the specific form that contains our component
+    // We need to traverse up from the shadow root to find the parent form
+    let currentElement = document.querySelector(`code-island[data-props*='"name":"${name}"']`);
+    console.log('Found component element:', currentElement);
+    
+    let form = null;
+    while (currentElement && currentElement.parentElement) {
+      currentElement = currentElement.parentElement;
+      if (currentElement.tagName === 'FORM') {
+        form = currentElement;
+        break;
+      }
+    }
+    
+    console.log('Found parent form:', form);
+    if (form) {
+      form.appendChild(hiddenInput);
+      console.log('Hidden input added to correct form');
+    } else {
+      console.log('Could not find parent form');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      console.log('Cleaning up hidden input');
+      if (hiddenInput.parentNode) {
+        hiddenInput.parentNode.removeChild(hiddenInput);
+      }
+    };
+  }, [name, multiple]);
 
   // Update file count when files are selected
   const updateFileCount = useCallback((files: FileList | null) => {
@@ -60,11 +106,17 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
       fileInputRef.current.files = files;
       updateFileCount(files);
       
+      // Also update the hidden input in the form
+      const hiddenInput = document.querySelector(`form input[name="${name}"]`) as HTMLInputElement;
+      if (hiddenInput) {
+        hiddenInput.files = files;
+      }
+      
       // Trigger change event for form handling
       const changeEvent = new Event('change', { bubbles: true });
       fileInputRef.current.dispatchEvent(changeEvent);
     }
-  }, [updateFileCount]);
+  }, [updateFileCount, name]);
 
   // Handle click to open file selector
   const handleClick = useCallback(() => {
@@ -73,8 +125,20 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
 
   // Handle file input change
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFileCount(e.target.files);
-  }, [updateFileCount]);
+    const files = e.target.files;
+    console.log('Files selected:', files);
+    updateFileCount(files);
+    
+    // Sync files to the hidden input in the form
+    const hiddenInput = document.querySelector(`form input[name="${name}"]`) as HTMLInputElement;
+    console.log('Found hidden input:', hiddenInput);
+    if (hiddenInput) {
+      hiddenInput.files = files;
+      console.log('Files synced to hidden input');
+    } else {
+      console.log('Hidden input not found!');
+    }
+  }, [updateFileCount, name]);
 
   // Parse file types for accept attribute
   const getAcceptAttribute = () => {
@@ -95,7 +159,11 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
   // Get display text based on file count
   const getDisplayText = () => {
     if (fileCount > 0) {
-      return `${fileCount} file${fileCount !== 1 ? 's' : ''} selected`;
+      if (multiple) {
+        return `${fileCount} file${fileCount !== 1 ? 's' : ''} selected`;
+      } else {
+        return `1 file selected`;
+      }
     }
     return note;
   };
@@ -123,12 +191,12 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
       <div className="cc-formfile-text-note">
         {getDisplayText()}
       </div>
-      <div>
+      <div className="w-embed">
         <input
           ref={fileInputRef}
           type="file"
-          name={name + '[]'}
-          style={{ display: 'none' }} 
+          name={`${name}-internal`}
+          style={{ display: 'none' }}
           accept={getAcceptAttribute()}
           multiple={multiple}
           onChange={handleFileChange}
