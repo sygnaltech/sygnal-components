@@ -33,5 +33,13 @@ export default declareComponent(FormFile, {
             tooltip: "Accepted file types (e.g., 'images', 'pdf', '.jpg,.png' or MIME types). Leave empty for default image types",
             defaultValue: "",
         }),
+        multiple: props.Boolean({
+            name: "Allow Multiple Files",
+            defaultValue: false, 
+            trueLabel: 'Multiple',
+            falseLabel: 'Single',
+            group: "Advanced",  
+            tooltip: "Enable to allow multiple file uploads." 
+        }), 
     },
 });

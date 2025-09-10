@@ -90,6 +90,7 @@ function App() {
             note="or, click to browse"
             variant="Webflow"
             fileTypes=""
+            multiple={true}
           />
         </div>
 

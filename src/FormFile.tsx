@@ -8,9 +8,10 @@ interface FormFileProps {
   note: string;
   variant: 'Webflow' | 'Basin' | 'UploadCare';
   fileTypes: string;
+  multiple: boolean;
 }
 
-export const FormFile = ({ name, text, note, variant, fileTypes }: FormFileProps) => {
+export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: FormFileProps) => {
   const [fileCount, setFileCount] = useState(0);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -129,7 +130,7 @@ export const FormFile = ({ name, text, note, variant, fileTypes }: FormFileProps
           name={name + '[]'}
           style={{ display: 'none' }} 
           accept={getAcceptAttribute()}
-          multiple
+          multiple={multiple}
           onChange={handleFileChange}
         />
       </div>
