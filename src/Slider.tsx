@@ -5,10 +5,11 @@ import "./Slider.css";
 
 interface SliderProps {
   text: string;
+  slot?: React.ReactNode; 
   variant: 'Light' | 'Dark';
 }
 
-export const Slider = ({ text, variant }: SliderProps) => {
+export const Slider = ({ text, slot, variant }: SliderProps) => {
   return (
     <Swiper
       spaceBetween={50}
@@ -16,24 +17,7 @@ export const Slider = ({ text, variant }: SliderProps) => {
       onSlideChange={() => console.log('slide change')}
       onSwiper={(swiper) => console.log(swiper)}
     >
-      <SwiperSlide>Slide 1</SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-      <SwiperSlide>Slide 3</SwiperSlide>
-      <SwiperSlide>Slide 4</SwiperSlide>
-      ...
+      {slot}
     </Swiper>
   );  
-  // <span
-  //   style={{
-  //     backgroundColor: variant === 'Light' ? '#eee' : '#000',
-  //     borderRadius: '1em',
-  //     color: variant === 'Light' ? '#000' : '#fff',
-  //     display: 'inline-block',
-  //     fontSize: '14px',
-  //     lineHeight: 2,
-  //     padding: '0 1em',
-  //   }}
-  // >
-  //   {text}
-  // </span>
 };

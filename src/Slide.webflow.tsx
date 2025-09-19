@@ -1,10 +1,10 @@
-import { Slider } from './Slider';
+import { Slide } from './Slide';
 import { props } from '@webflow/data-types';
 import { declareComponent } from '@webflow/react';
 
-export default declareComponent(Slider, {
-    name: 'Slider',
-    description: 'A badge with variants',
+export default declareComponent(Slide, {
+    name: 'Slide',
+    description: 'A slider slide',
     group: 'Info',
     props: {
         text: props.Text({
@@ -15,11 +15,6 @@ export default declareComponent(Slider, {
             name: "Variant",
             options: ["Light", "Dark"],
             defaultValue: "Light",
-        }),
-        slot: props.Slot({ 
-            name: "Content",
-            tooltip: "Place slides here",
-            group: "Content"
         }),
     },
 });

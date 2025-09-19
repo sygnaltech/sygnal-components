@@ -1,0 +1,79 @@
+/* Base styles for the file upload component */
+.cc-formfile {
+  /* CSS Custom Properties */
+  --cc-formfile-border-color: #d1d5db;
+  --cc-formfile-border-thickness: 3px;
+  --cc-formfile-background-color: transparent;
+  --cc-formfile-hover-background-color: #f9fafb;
+  --cc-formfile-hover-border-color: #9ca3af;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: var(--cc-formfile-border-thickness) dashed var(--cc-formfile-border-color);
+  border-radius: 8px;
+  background-color: var(--cc-formfile-background-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.cc-formfile:hover {
+  border-color: var(--cc-formfile-hover-border-color);
+  background-color: var(--cc-formfile-hover-background-color);
+}
+
+/* Drag over state */
+.cc-formfile.drag-over {
+  border-color: #6366f1;
+  background-color: #f0f9ff;
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+/* Main text styling */
+.cc-formfile > div:first-child {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Secondary text styling */
+.cc-formfile-text-note {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+}
+
+/* File count state - when files are selected */
+.cc-formfile.has-files {
+  border-color: #10b981;
+  background-color: #ecfdf5;
+}
+
+.cc-formfile.has-files .cc-formfile-text-note {
+  color: #059669;
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .cc-formfile {
+    padding: 1.5rem;
+  }
+  
+  .cc-formfile > div:first-child {
+    font-size: 1rem;
+  }
+  
+  .cc-formfile-text-note {
+    font-size: 0.8125rem;
+  }
+}

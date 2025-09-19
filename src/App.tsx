@@ -4,6 +4,7 @@ import './App.css';
 import { FormFile } from './FormFile';
 import { Badge } from './Badge';
 import { Slider } from './Slider';
+import { Slide } from './Slide';
 
 function App() {
 
@@ -148,10 +149,26 @@ function App() {
         </div> */}
 
 
-{/* <Slider
-  text="test"
-  variant='Light'
-></Slider> */}
+
+
+
+
+<Slider
+  text="Flat"
+  variant="Dark" 
+//  debug={false}
+  slot={
+    <>
+      <Slide text="Test 1" variant="Dark" />
+      <Slide text="Test 2" variant="Dark" />
+      <Slide text="Test 3" variant="Dark" />
+      <Slide text="Test 4" variant="Dark" />
+      <Slide text="Test 5" variant="Dark" />
+      <Slide text="Test 6" variant="Dark" />
+    </>
+  }
+/>
+
 
 <Badge text='Dark' variant='Dark' />
 
