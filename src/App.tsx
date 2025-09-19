@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'; 
-import logo from './logo.svg';
+import logo from './logo.svg'; 
 import './App.css';
 import { FormFile } from './FormFile';
 import { Badge } from './Badge';
+import { Slider } from './Slider';
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={logo}  className="App-logo" alt="logo" />
         <h1>Sygnal Components</h1>
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -84,14 +85,14 @@ function App() {
 
         <div style={{ margin: '2rem 0', maxWidth: '400px' }}>
           <h3>Default Webflow Variant</h3>
-          <FormFile 
+          {/* <FormFile 
             name="files"
             text="Drag & Drop Files Here"
             note="or, click to browse"
             variant="Webflow"
             fileTypes=""
             multiple={true}
-          />
+          /> */}
         </div>
 
     <input
@@ -109,7 +110,7 @@ function App() {
   </div>
 </div>
 
-
+{/* 
         <div style={{ margin: '2rem 0', maxWidth: '400px' }}>
           <h3>Default Webflow Variant</h3>
           <FormFile 
@@ -118,6 +119,7 @@ function App() {
             note="or, click to browse"
             variant="Webflow"
             fileTypes=""
+            multiple={true}
           />
         </div>
 
@@ -129,6 +131,7 @@ function App() {
             note="PDF files only"
             variant="Basin"
             fileTypes="application/pdf"
+            multiple={true}
           />
         </div>
 
@@ -140,8 +143,15 @@ function App() {
             variant="UploadCare"
             fileTypes="images"
             name="images"
+            multiple={true}
           />
-        </div>
+        </div> */}
+
+
+{/* <Slider
+  text="test"
+  variant='Light'
+></Slider> */}
 
 <Badge text='Dark' variant='Dark' />
 

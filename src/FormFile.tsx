@@ -34,7 +34,7 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
     }
     
     // Find THIS specific component's parent form by traversing from our ref
-    let form = null;
+    let form: HTMLElement;
     if (componentRef.current) {
       // Get the shadow root host (the code-island element)
       const shadowHost = componentRef.current.getRootNode() as ShadowRoot;
@@ -52,8 +52,8 @@ export const FormFile = ({ name, text, note, variant, fileTypes, multiple }: For
       }
     }
     
-    console.log('Found parent form:', form);
-    if (form) {
+    console.log('Found parent form:', form!);
+    if (form!) {
       form.appendChild(hiddenInput);
       hiddenInputRef.current = hiddenInput;
       console.log('Hidden input added to correct form');
