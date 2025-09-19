@@ -1,0 +1,20 @@
+import { Slider } from './Slider';
+import { props } from '@webflow/data-types';
+import { declareComponent } from '@webflow/react';
+
+export default declareComponent(Slider, {
+    name: 'Slider',
+    description: 'A badge with variants',
+    group: 'Info',
+    props: {
+        text: props.Text({
+            name: "Text",
+            defaultValue: "Hello World",
+        }),
+        variant: props.Variant({
+            name: "Variant",
+            options: ["Light", "Dark"],
+            defaultValue: "Light",
+        }),
+    },
+});
