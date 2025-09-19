@@ -156,15 +156,13 @@ function App() {
 <Slider
   text="Flat"
   variant="Dark" 
-//  debug={false}
   slot={
     <>
-      <Slide text="Test 1" variant="Dark" />
-      <Slide text="Test 2" variant="Dark" />
-      <Slide text="Test 3" variant="Dark" />
-      <Slide text="Test 4" variant="Dark" />
-      <Slide text="Test 5" variant="Dark" />
-      <Slide text="Test 6" variant="Dark" />
+      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
+      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
+      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
+      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
+      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
     </>
   }
 />
