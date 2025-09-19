@@ -10,6 +10,22 @@ interface SliderProps {
 }
 
 export const Slider = ({ text, slot, variant }: SliderProps) => {
+  console.log('=== SLOT DEBUG ===');
+  console.log('slot:', slot);
+  
+  // Extract children from the slot
+  let children: React.ReactNode[] = [];
+  
+  if (slot && typeof slot === 'object' && 'props' in slot) {
+    // If slot is a Fragment or element with children, get its children
+    children = React.Children.toArray(slot.props?.children || slot);
+  } else {
+    children = React.Children.toArray(slot);
+  }
+  
+  console.log('extracted children:', children);
+  console.log('children count:', children.length);
+  
   return (
     <Swiper
       spaceBetween={50}
@@ -17,7 +33,11 @@ export const Slider = ({ text, slot, variant }: SliderProps) => {
       onSlideChange={() => console.log('slide change')}
       onSwiper={(swiper) => console.log(swiper)}
     >
-      {slot}
+      {children.map((child, index) => (
+        <SwiperSlide key={index}>
+          {child}
+        </SwiperSlide>
+      ))}
     </Swiper>
   );  
 };

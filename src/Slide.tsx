@@ -1,6 +1,4 @@
 import * as React from "react";
-import { SwiperSlide } from 'swiper/react'; 
-import "swiper/css";
 import "./Slide.css"; 
 
 interface SlideProps {
@@ -10,6 +8,8 @@ interface SlideProps {
 
 export const Slide = ({ text, variant }: SlideProps) => {
   return (
-      <SwiperSlide>{text}</SwiperSlide>
+    <div className={`slide-${variant.toLowerCase()}`}>
+      {text}
+    </div>
   );  
 };
