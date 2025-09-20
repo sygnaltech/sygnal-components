@@ -6,6 +6,9 @@ export default declareComponent(Slider, {
     name: 'Slider',
     description: 'A swiper slider component',
     group: 'Info',
+    options: {
+        ssr: false, // Disable server-side rendering
+    },
     props: {
         slidesPerView: props.Number({
             name: "Slides Per View",
