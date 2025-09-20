@@ -7,7 +7,7 @@ export default declareComponent(Slider2, {
     description: 'A swiper slider component with external CSS support',
     group: 'Info',
     options: {
-        ssr: false, // Disable server-side rendering
+        ssr: true, // Enable server-side rendering for proper DOM marker placement
     },
     props: {
         slidesPerView: props.Number({

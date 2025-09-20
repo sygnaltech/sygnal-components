@@ -22,8 +22,11 @@ export const Slider2 = ({
   debug = false,
   slot
 }: Slider2Props) => {
+  const uniqueId = React.useMemo(() => `slider2-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, []);
+
   if (debug) {
     console.log('=== SLIDER2 RENDER ===');
+    console.log('Unique ID:', uniqueId);
     console.log('Props received:');
     console.log('- slidesPerView:', slidesPerView);
     console.log('- spaceBetween:', spaceBetween);
@@ -35,28 +38,23 @@ export const Slider2 = ({
     console.log('Slot:', slot);
   }
 
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const slotRef = React.useRef<HTMLElement>(null);
-  const sliderId = React.useMemo(() => `slider2-${Date.now()}`, []);
-
   React.useEffect(() => {
-    // Create and inject script that runs in global scope (outside code island)
+    // Create and inject script that runs in global scope
     const script = document.createElement('script');
-    script.id = `slider2-script-${sliderId}`;
+    script.id = `slider2-script-${uniqueId}`;
 
-    // Create the script content as a string that will execute in global scope
     script.textContent = `
       (function() {
-        const sliderId = '${sliderId}';
+        const uniqueId = '${uniqueId}';
         const debug = ${debug};
         const slidesPerView = ${slidesPerView};
         const spaceBetween = ${spaceBetween};
         const loop = ${loop};
         const autoplay = ${autoplay};
         const autoplayDelay = ${autoplayDelay};
+        const height = '${height}';
 
-        if (debug) console.log('=== SLIDER2 GLOBAL SCRIPT ===');
-        if (debug) console.log('Script running in global scope for:', sliderId);
+        if (debug) console.log('=== SLIDER2 SCRIPT (SSR) ===');
 
         // Load Swiper CSS and JS if not already loaded
         if (!document.querySelector('link[href*="swiper"]')) {
@@ -67,73 +65,104 @@ export const Slider2 = ({
           document.head.appendChild(swiperCSS);
         }
 
-        function initializeSlider() {
-          if (debug) console.log('Looking for MY specific code island with ID:', sliderId);
+        let retryCount = 0;
+        const maxRetries = 5;
 
-          // We need to find the code island that contains THIS specific slider instance
-          // Use a data attribute or global variable to match the script to its component
-          window['slider2_' + sliderId + '_ready'] = true;
+        function findAndCreateSlider() {
+          retryCount++;
 
-          // Look for code islands containing Slider2 components
-          const codeIslands = document.querySelectorAll('code-island[data-props*="Slider2"]');
-          if (debug) console.log('Found Slider2 code islands:', codeIslands.length);
+          if (retryCount > maxRetries) {
+            if (debug) console.log('Max retries reached, giving up');
+            return;
+          }
+
+          // Find all code islands
+          const codeIslands = document.querySelectorAll('code-island');
+
+          if (codeIslands.length === 0) {
+            setTimeout(findAndCreateSlider, 500);
+            return;
+          }
 
           let targetCodeIsland = null;
 
-          // Check each code island to see if it has our debug flag and slider ID marker
-          for (const island of codeIslands) {
-            // Check if this island has the debug flag set to true (matching our instance)
-            const dataProps = island.getAttribute('data-props');
-            if (dataProps && dataProps.includes('"debug":true')) {
-              // This might be our island - check if it has slot content
-              const slotContent = island.querySelector('[slot="slot"]');
-              if (slotContent && slotContent.children.length > 0) {
+          // Look inside each code island's shadow DOM for our unique ID
+          for (let i = 0; i < codeIslands.length; i++) {
+            const island = codeIslands[i];
+
+            // Try to access shadow root
+            if (island.shadowRoot) {
+              const marker = island.shadowRoot.querySelector('[data-component-id="' + uniqueId + '"]');
+              if (marker) {
+                if (debug) console.log('Found our component marker in shadow DOM!', marker);
                 targetCodeIsland = island;
-                if (debug) console.log('Found MY code island with debug=true and content:', island);
+                break;
+              }
+            } else {
+              // Try regular DOM access as fallback
+              const marker = island.querySelector('[data-component-id="' + uniqueId + '"]');
+              if (marker) {
+                if (debug) console.log('Found our component marker in regular DOM!', marker);
+                targetCodeIsland = island;
                 break;
               }
             }
           }
 
           if (!targetCodeIsland) {
-            if (debug) console.log('My specific code island not found, retrying...');
-            setTimeout(initializeSlider, 1000);
+            setTimeout(findAndCreateSlider, 500);
             return;
           }
 
+          if (debug) console.log('Found MY specific code island:', targetCodeIsland);
+
+          // Get slot content - it's an immediate child of the code island itself, outside shadow root
           const slotContent = targetCodeIsland.querySelector('[slot="slot"]');
+
+          if (!slotContent) {
+            if (debug) console.log('No slot content found, retrying...');
+            setTimeout(findAndCreateSlider, 500);
+            return;
+          }
+
+          if (debug) console.log('Found slot content:', slotContent);
+          if (debug) console.log('Slot content children:', slotContent.children);
+
           if (debug) console.log('Processing MY slot content:', slotContent);
           processSliderContent(targetCodeIsland, slotContent);
         }
 
         function processSliderContent(codeIsland, slotContent) {
           if (debug) console.log('Processing slider content...');
+          if (debug) console.log('Slot content element:', slotContent);
+          if (debug) console.log('Slot content children:', Array.from(slotContent.children));
 
-          // Extract all slide elements from the slot content
-          let slideElements = Array.from(slotContent.children);
-          if (debug) console.log('Initial slide elements:', slideElements);
+          // Get the immediate children of the slot content
+          let children = Array.from(slotContent.children);
+          if (debug) console.log('Initial children:', children);
 
-          // Unwrap Webflow collection wrappers
-          function extractItems(element) {
-            const items = [];
-            Array.from(element.children).forEach(function(childEl) {
-              if (childEl.classList.contains('w-dyn-list') ||
-                  childEl.classList.contains('w-dyn-items') ||
-                  childEl.classList.contains('w-dyn-item')) {
-                items.push(...extractItems(childEl));
-              } else {
-                items.push(childEl);
-              }
-            });
-            return items;
-          }
-
+          // Unwrap Webflow collection list wrappers
           const unwrappedSlides = [];
-          slideElements.forEach(function(child) {
+
+          children.forEach(function(child) {
             if (child.classList.contains('w-dyn-list') ||
                 child.classList.contains('w-dyn-items') ||
                 child.classList.contains('w-dyn-item')) {
               if (debug) console.log('Found Webflow collection wrapper:', child.className);
+              // Recursively unwrap nested collection elements
+              const extractItems = function(element) {
+                const items = [];
+                Array.from(element.children).forEach(function(childEl) {
+                  if (childEl.classList.contains('w-dyn-list') ||
+                      childEl.classList.contains('w-dyn-items') ||
+                      childEl.classList.contains('w-dyn-item')) {
+                    items.push(...extractItems(childEl));
+                  } else {
+                    items.push(childEl);
+                  }
+                });
+                return items;
+              };
               unwrappedSlides.push(...extractItems(child));
             } else {
               unwrappedSlides.push(child);
@@ -141,21 +170,30 @@ export const Slider2 = ({
           });
 
           if (debug) console.log('Unwrapped slides:', unwrappedSlides);
+          if (debug) console.log('Number of unwrapped slides:', unwrappedSlides.length);
+
           if (unwrappedSlides.length === 0) {
             if (debug) console.log('No slides found after unwrapping');
+            return;
+          }
+
+          // Check if we already created a slider for this component
+          const existingSlider = document.getElementById('slider2-external-' + uniqueId);
+          if (existingSlider) {
+            if (debug) console.log('Slider already exists for this component');
             return;
           }
 
           // Create slider container OUTSIDE the code island
           const sliderContainer = document.createElement('div');
           sliderContainer.className = 'slider2-external-container';
-          sliderContainer.id = 'slider2-external-' + sliderId;
-          sliderContainer.style.cssText = 'width: 100%; height: 400px; background: #f0f0f0; border: 2px solid red; margin: 20px 0; position: relative;';
+          sliderContainer.id = 'slider2-external-' + uniqueId;
+          sliderContainer.style.cssText = 'width: 100%; height: ' + height + '; background: #f0f0f0; border: 2px solid #007bff; margin: 20px 0; position: relative; border-radius: 8px; overflow: hidden;';
 
           // Add a visible header so we can see it was created
           const header = document.createElement('div');
-          header.style.cssText = 'background: red; color: white; padding: 10px; font-weight: bold;';
-          header.textContent = 'SLIDER2 EXTERNAL CONTAINER - ' + unwrappedSlides.length + ' slides';
+          header.style.cssText = 'background: #007bff; color: white; padding: 10px; font-weight: bold; font-size: 14px;';
+          header.textContent = 'SLIDER2 - ' + unwrappedSlides.length + ' slides (' + uniqueId + ')';
           sliderContainer.appendChild(header);
 
           // Create swiper structure
@@ -212,42 +250,49 @@ export const Slider2 = ({
           const swiperJS = document.createElement('script');
           swiperJS.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
           swiperJS.onload = function() {
-            if (debug) console.log('Swiper JS loaded, initializing...');
-            initializeSlider();
+            if (debug) console.log('Swiper JS loaded, starting slider creation...');
+            findAndCreateSlider();
           };
           swiperJS.onerror = function() {
             if (debug) console.error('Failed to load Swiper JS');
           };
           document.head.appendChild(swiperJS);
         } else {
-          if (debug) console.log('Swiper already loaded, initializing...');
-          initializeSlider();
+          if (debug) console.log('Swiper already loaded, starting slider creation...');
+          findAndCreateSlider();
         }
       })();
     `;
 
     // Inject script into global scope
     document.head.appendChild(script);
-    if (debug) console.log('Script injected into global scope');
+    if (debug) console.log('Slider2 script injected for ID:', uniqueId);
 
     return () => {
-      // Cleanup
-      const existingScript = document.getElementById(`slider2-script-${sliderId}`);
+      // Cleanup script
+      const existingScript = document.getElementById(`slider2-script-${uniqueId}`);
       if (existingScript) {
         existingScript.remove();
       }
+
+      // Cleanup the created slider
+      const createdSlider = document.getElementById(`slider2-external-${uniqueId}`);
+      if (createdSlider) {
+        createdSlider.remove();
+      }
     };
-  }, [sliderId, slidesPerView, spaceBetween, loop, autoplay, autoplayDelay, debug]);
+  }, [uniqueId, slidesPerView, spaceBetween, loop, autoplay, autoplayDelay, height, debug]);
 
   if (slot && typeof slot === 'object' && 'type' in slot && slot.type === 'slot') {
     return (
-      <div
-        ref={containerRef}
-        className="slider-container"
-        style={{ height, position: 'relative' }}
-      >
+      <div className="slider-container" style={{ height, position: 'relative' }}>
+        <div
+          data-component-id={uniqueId}
+          style={{ display: 'none' }}
+        >
+          SSR Marker: {uniqueId}
+        </div>
         {React.createElement('slot', {
-          ref: slotRef,
           name: slot.props?.name
         })}
         {debug && (
@@ -261,12 +306,22 @@ export const Slider2 = ({
             fontSize: '12px',
             zIndex: 1000
           }}>
-            Slider2 ID: {sliderId}
+            Slider2 ID: {uniqueId}
           </div>
         )}
       </div>
     );
   }
 
-  return <div className="slider-container">Unexpected slot type</div>;
+  return (
+    <div className="slider-container">
+      <div
+        data-component-id={uniqueId}
+        style={{ display: 'none' }}
+      >
+        SSR Marker: {uniqueId}
+      </div>
+      Unexpected slot type
+    </div>
+  );
 };
