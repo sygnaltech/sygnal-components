@@ -1,43 +1,57 @@
 import * as React from "react";
 import { Swiper, SwiperSlide } from 'swiper/react'; 
+import { Autoplay } from 'swiper/modules';
 import "swiper/css";
 import "./Slider.css"; 
 
 interface SliderProps {
-  text: string;
+  slidesPerView?: number;
+  spaceBetween?: number;
+  loop?: boolean;
+  autoplay?: boolean;
+  autoplayDelay?: number;
   slot?: React.ReactNode; 
-  variant: 'Light' | 'Dark';
 }
 
-export const Slider = ({ text, slot, variant }: SliderProps) => {
-  console.log('=== SLOT DEBUG ===');
-  console.log('slot:', slot);
-  
-  // Extract children from the slot
+export const Slider = ({ 
+  slidesPerView = 3, 
+  spaceBetween = 50, 
+  loop = false,
+  autoplay = false,
+  autoplayDelay = 3000,
+  slot
+}: SliderProps) => {
+  // Extract children from the slot (handles fragments)
   let children: React.ReactNode[] = [];
   
   if (slot && typeof slot === 'object' && 'props' in slot) {
-    // If slot is a Fragment or element with children, get its children
     children = React.Children.toArray(slot.props?.children || slot);
   } else {
     children = React.Children.toArray(slot);
   }
-  
-  console.log('extracted children:', children);
-  console.log('children count:', children.length);
-  
+
+  const swiperModules = autoplay ? [Autoplay] : [];
+
   return (
-    <Swiper
-      spaceBetween={50}
-      slidesPerView={3}
-      onSlideChange={() => console.log('slide change')}
-      onSwiper={(swiper) => console.log(swiper)}
-    >
-      {children.map((child, index) => (
-        <SwiperSlide key={index}>
-          {child}
-        </SwiperSlide>
-      ))}
-    </Swiper>
+    <div className="slider-container">
+      <Swiper
+        modules={swiperModules}
+        spaceBetween={spaceBetween}
+        slidesPerView={slidesPerView}
+        loop={loop}
+        autoplay={autoplay ? {
+          delay: autoplayDelay,
+          disableOnInteraction: false,
+        } : false}
+        onSlideChange={() => console.log('slide change')}
+        onSwiper={(swiper) => console.log(swiper)}
+      >
+        {children.map((child, index) => (
+          <SwiperSlide key={index}>
+            {child}
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
   );  
 };

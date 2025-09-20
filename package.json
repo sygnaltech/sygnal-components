@@ -20,7 +20,8 @@
     "eject": "react-scripts eject",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npx webflow library share --no-input"
   },
   "eslintConfig": {
     "extends": [

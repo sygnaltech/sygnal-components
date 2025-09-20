@@ -4,21 +4,43 @@ import { declareComponent } from '@webflow/react';
 
 export default declareComponent(Slider, {
     name: 'Slider',
-    description: 'A badge with variants',
+    description: 'A swiper slider component',
     group: 'Info',
     props: {
-        text: props.Text({
-            name: "Text",
-            defaultValue: "Hello World",
+        slidesPerView: props.Number({
+            name: "Slides Per View",
+            tooltip: "Number of slides to display concurrently",
+            defaultValue: 3,
+            min: 1,
+            max: 10,
         }),
-        variant: props.Variant({
-            name: "Variant",
-            options: ["Light", "Dark"],
-            defaultValue: "Light",
+        spaceBetween: props.Number({
+            name: "Space Between",
+            tooltip: "Space between slides in pixels",
+            defaultValue: 50,
+            min: 0,
+            max: 200,
+        }),
+        loop: props.Boolean({
+            name: "Loop",
+            tooltip: "Enable continuous loop mode",
+            defaultValue: false,
+        }),
+        autoplay: props.Boolean({
+            name: "Autoplay",
+            tooltip: "Enable autoplay",
+            defaultValue: false,
+        }),
+        autoplayDelay: props.Number({
+            name: "Autoplay Delay",
+            tooltip: "Delay between transitions in ms",
+            defaultValue: 3000,
+            min: 1000,
+            max: 10000,
         }),
         slot: props.Slot({ 
-            name: "Content",
-            tooltip: "Place slides here",
+            name: "Slides",
+            tooltip: "Place any content here - each child becomes a slide",
             group: "Content"
         }),
     },

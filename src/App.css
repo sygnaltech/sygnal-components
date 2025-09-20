@@ -36,3 +36,30 @@
     transform: rotate(360deg);
   }
 }
+
+/**
+SLIDER
+*/
+
+.slide-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.slide-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.slide-card h3 {
+  margin: 16px;
+  font-size: 1.25rem;
+}
+
+.slide-card p {
+  margin: 0 16px 16px;
+  color: #666;
+}

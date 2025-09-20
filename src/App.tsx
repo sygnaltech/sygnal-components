@@ -152,20 +152,52 @@ function App() {
 
 
 
+  <div style={{ padding: '40px' }}>
+      <h1>Slider Component Demo</h1>
+      
+      <Slider
+        slidesPerView={3}
+        spaceBetween={30}
+        loop={true}
+        autoplay={false}
+        autoplayDelay={3000}
+        slot={
+          <>
+            <div className="slide-card">
+              <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Mountains" />
+              <h3>Mountain Vista</h3>
+              <p>Breathtaking mountain landscapes</p>
+            </div>
+            <div className="slide-card">
+              <img src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&q=80" alt="Ocean" />
+              <h3>Ocean Waves</h3>
+              <p>Serene coastal views</p>
+            </div>
+            <div className="slide-card">
+              <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Forest" />
+              <h3>Forest Path</h3>
+              <p>Peaceful woodland trails</p>
+            </div>
+            <div className="slide-card">
+              <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80" alt="Desert" />
+              <h3>Desert Dunes</h3>
+              <p>Golden desert landscapes</p>
+            </div>
+            <div className="slide-card">
+              <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&q=80" alt="City" />
+              <h3>City Lights</h3>
+              <p>Urban nighttime scenery</p>
+            </div>
+            <div className="slide-card">
+              <img src="https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=800&q=80" alt="Aurora" />
+              <h3>Northern Lights</h3>
+              <p>Aurora borealis magic</p>
+            </div>
+          </>
+        }
+      />
+    </div>
 
-<Slider
-  text="Flat"
-  variant="Dark" 
-  slot={
-    <>
-      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
-      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
-      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
-      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
-      <div style={{backgroundColor: "yellow", height: 400}}>TEST 1</div>
-    </>
-  }
-/>
 
 
 <Badge text='Dark' variant='Dark' />
