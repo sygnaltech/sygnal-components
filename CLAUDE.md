@@ -48,6 +48,7 @@ Each component follows this pattern:
 
 ### Component Examples
 - **Slider**: Swiper.js-based carousel with slot content support
+- **Slider2**: Enhanced slider that loads Swiper.js as a script (not React version) and rebuilds slider elements externally around the slot, outside the shadow DOM. Uses RenderAdjacent component technique for locating correct component and slot.
 - **Masonry**: Grid layout with configurable columns
 - **Tabs**: Tab navigation system
 - **FormFile**: File upload component
