@@ -13,15 +13,21 @@ interface SliderProps {
   slot?: React.ReactNode; 
 }
 
-export const Slider = ({ 
-  slidesPerView = 3, 
-  spaceBetween = 50, 
+export const Slider = ({
+  slidesPerView = 3,
+  spaceBetween = 50,
   loop = false,
   autoplay = false,
   autoplayDelay = 3000,
   slot
 }: SliderProps) => {
   console.log('=== SLIDER RENDER ===');
+  console.log('Props received:');
+  console.log('- slidesPerView:', slidesPerView);
+  console.log('- spaceBetween:', spaceBetween);
+  console.log('- loop:', loop);
+  console.log('- autoplay:', autoplay);
+  console.log('- autoplayDelay:', autoplayDelay);
   console.log('Slot:', slot);
   
   const slotRef = React.useRef<HTMLElement>(null);
