@@ -37,17 +37,47 @@ export const Slider = ({
   React.useEffect(() => {
     console.log('Effect running...');
     console.log('Slot ref:', slotRef.current);
-    
+
     if (slotRef.current && 'assignedElements' in slotRef.current) {
       const elements = (slotRef.current as any).assignedElements();
       console.log('Assigned elements:', elements);
-      
+
       if (elements.length > 0) {
         // Get the children of the first assigned element (the div wrapper)
-        const children = Array.from(elements[0].children);
-        console.log('Children of assigned element:', children);
-        console.log('Number of children:', children.length);
-        setSlideElements(children);
+        let children = Array.from(elements[0].children);
+        console.log('Initial children:', children);
+
+        // Unwrap Webflow collection list wrappers
+        const unwrappedChildren: Element[] = [];
+
+        children.forEach((child) => {
+          if (child.classList.contains('w-dyn-list') ||
+              child.classList.contains('w-dyn-items') ||
+              child.classList.contains('w-dyn-item')) {
+            console.log('Found Webflow collection wrapper:', child.className);
+            // Recursively unwrap nested collection elements
+            const extractItems = (element: Element): Element[] => {
+              const items: Element[] = [];
+              Array.from(element.children).forEach((childEl) => {
+                if (childEl.classList.contains('w-dyn-list') ||
+                    childEl.classList.contains('w-dyn-items') ||
+                    childEl.classList.contains('w-dyn-item')) {
+                  items.push(...extractItems(childEl));
+                } else {
+                  items.push(childEl);
+                }
+              });
+              return items;
+            };
+            unwrappedChildren.push(...extractItems(child));
+          } else {
+            unwrappedChildren.push(child);
+          }
+        });
+
+        console.log('Unwrapped children:', unwrappedChildren);
+        console.log('Number of unwrapped children:', unwrappedChildren.length);
+        setSlideElements(unwrappedChildren);
       }
     }
   }, []);
