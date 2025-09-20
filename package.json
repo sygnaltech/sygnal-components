@@ -43,9 +43,9 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.2",
-    "@webflow/data-types": "^0.0.12",
-    "@webflow/react": "^0.0.12",
-    "@webflow/webflow-cli": "^1.8.40",
+    "@webflow/data-types": "^1.0.1",
+    "@webflow/react": "^1.0.1",
+    "@webflow/webflow-cli": "^1.8.44",
     "vite": "^7.1.4"
   }
 }
