@@ -188,18 +188,12 @@ export const Slider2 = ({
           const sliderContainer = document.createElement('div');
           sliderContainer.className = 'slider2-external-container';
           sliderContainer.id = 'slider2-external-' + uniqueId;
-          sliderContainer.style.cssText = 'width: 100%; height: ' + height + '; background: #f0f0f0; border: 2px solid #007bff; margin: 20px 0; position: relative; border-radius: 8px; overflow: hidden;';
-
-          // Add a visible header so we can see it was created
-          const header = document.createElement('div');
-          header.style.cssText = 'background: #007bff; color: white; padding: 10px; font-weight: bold; font-size: 14px;';
-          header.textContent = 'SLIDER2 - ' + unwrappedSlides.length + ' slides (' + uniqueId + ')';
-          sliderContainer.appendChild(header);
+          sliderContainer.style.cssText = 'width: 100%; height: ' + height + '; position: relative;';
 
           // Create swiper structure
           const swiperContainer = document.createElement('div');
           swiperContainer.className = 'swiper';
-          swiperContainer.style.cssText = 'height: calc(100% - 40px); background: white;';
+          swiperContainer.style.cssText = 'width: 100%; height: 100%;';
 
           const swiperWrapper = document.createElement('div');
           swiperWrapper.className = 'swiper-wrapper';
@@ -209,7 +203,6 @@ export const Slider2 = ({
             if (debug) console.log('Creating slide ' + index + ':', slideEl);
             const swiperSlide = document.createElement('div');
             swiperSlide.className = 'swiper-slide';
-            swiperSlide.style.cssText = 'background: lightblue; border: 1px solid blue; padding: 10px;';
             swiperSlide.appendChild(slideEl.cloneNode(true));
             swiperWrapper.appendChild(swiperSlide);
           });
