@@ -44,7 +44,7 @@ export const Slider = ({
 
       if (elements.length > 0) {
         // Get the children of the first assigned element (the div wrapper)
-        let children = Array.from(elements[0].children);
+        let children = Array.from(elements[0].children) as Element[];
         console.log('Initial children:', children);
 
         // Unwrap Webflow collection list wrappers
@@ -58,7 +58,7 @@ export const Slider = ({
             // Recursively unwrap nested collection elements
             const extractItems = (element: Element): Element[] => {
               const items: Element[] = [];
-              Array.from(element.children).forEach((childEl) => {
+              (Array.from(element.children) as Element[]).forEach((childEl) => {
                 if (childEl.classList.contains('w-dyn-list') ||
                     childEl.classList.contains('w-dyn-items') ||
                     childEl.classList.contains('w-dyn-item')) {
