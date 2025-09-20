@@ -10,7 +10,8 @@ interface SliderProps {
   loop?: boolean;
   autoplay?: boolean;
   autoplayDelay?: number;
-  slot?: React.ReactNode; 
+  height?: string;
+  slot?: React.ReactNode;
 }
 
 export const Slider = ({
@@ -19,6 +20,7 @@ export const Slider = ({
   loop = false,
   autoplay = false,
   autoplayDelay = 3000,
+  height = "auto",
   slot
 }: SliderProps) => {
   console.log('=== SLIDER RENDER ===');
@@ -28,6 +30,7 @@ export const Slider = ({
   console.log('- loop:', loop);
   console.log('- autoplay:', autoplay);
   console.log('- autoplayDelay:', autoplayDelay);
+  console.log('- height:', height);
   console.log('Slot:', slot);
   
   const slotRef = React.useRef<HTMLElement>(null);
@@ -95,11 +98,11 @@ export const Slider = ({
     console.log('Rendering with slot element');
     
     return (
-      <div className="slider-container">
+      <div className="slider-container" style={{ height }}>
         <div style={{ display: 'none' }}>
-          {React.createElement('slot', { 
+          {React.createElement('slot', {
             ref: slotRef,
-            name: slot.props?.name 
+            name: slot.props?.name
           })}
         </div>
         <Swiper

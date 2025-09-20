@@ -41,7 +41,12 @@ export default declareComponent(Slider, {
             min: 1000,
             max: 10000,
         }),
-        slot: props.Slot({ 
+        height: props.Text({
+            name: "Height",
+            tooltip: "Height of the slider (e.g., 400px, 50vh, auto)",
+            defaultValue: "auto",
+        }),
+        slot: props.Slot({
             name: "Slides",
             tooltip: "Place any content here - each child becomes a slide",
             group: "Content"
