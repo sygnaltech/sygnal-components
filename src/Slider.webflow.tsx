@@ -46,6 +46,11 @@ export default declareComponent(Slider, {
             tooltip: "Height of the slider (e.g., 400px, 50vh, auto)",
             defaultValue: "auto",
         }),
+        debug: props.Boolean({
+            name: "Debug",
+            tooltip: "Enable console logging for debugging",
+            defaultValue: false,
+        }),
         slot: props.Slot({
             name: "Slides",
             tooltip: "Place any content here - each child becomes a slide",
