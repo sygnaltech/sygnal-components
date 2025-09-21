@@ -8,6 +8,9 @@ interface Slider2Props {
   autoplay?: boolean;
   autoplayDelay?: number;
   height?: string;
+  pagination?: boolean;
+  navigation?: boolean;
+  scrollbar?: boolean;
   debug?: boolean;
   slot?: React.ReactNode;
 }
@@ -19,6 +22,9 @@ export const Slider2 = ({
   autoplay = false,
   autoplayDelay = 3000,
   height = "auto",
+  pagination = false,
+  navigation = false,
+  scrollbar = false,
   debug = false,
   slot
 }: Slider2Props) => {
@@ -34,6 +40,9 @@ export const Slider2 = ({
     console.log('- autoplay:', autoplay);
     console.log('- autoplayDelay:', autoplayDelay);
     console.log('- height:', height);
+    console.log('- pagination:', pagination);
+    console.log('- navigation:', navigation);
+    console.log('- scrollbar:', scrollbar);
     console.log('- debug:', debug);
     console.log('Slot:', slot);
   }
@@ -53,6 +62,9 @@ export const Slider2 = ({
         const autoplay = ${autoplay};
         const autoplayDelay = ${autoplayDelay};
         const height = '${height}';
+        const pagination = ${pagination};
+        const navigation = ${navigation};
+        const scrollbar = ${scrollbar};
 
         if (debug) console.log('=== SLIDER2 SCRIPT (SSR) ===');
 
@@ -208,6 +220,36 @@ export const Slider2 = ({
           });
 
           swiperContainer.appendChild(swiperWrapper);
+
+          // Add pagination if enabled
+          let paginationElement = null;
+          if (pagination) {
+            paginationElement = document.createElement('div');
+            paginationElement.className = 'swiper-pagination';
+            swiperContainer.appendChild(paginationElement);
+          }
+
+          // Add navigation if enabled
+          let prevElement = null;
+          let nextElement = null;
+          if (navigation) {
+            prevElement = document.createElement('div');
+            prevElement.className = 'swiper-button-prev';
+            swiperContainer.appendChild(prevElement);
+
+            nextElement = document.createElement('div');
+            nextElement.className = 'swiper-button-next';
+            swiperContainer.appendChild(nextElement);
+          }
+
+          // Add scrollbar if enabled
+          let scrollbarElement = null;
+          if (scrollbar) {
+            scrollbarElement = document.createElement('div');
+            scrollbarElement.className = 'swiper-scrollbar';
+            swiperContainer.appendChild(scrollbarElement);
+          }
+
           sliderContainer.appendChild(swiperContainer);
 
           // Insert the new slider AFTER the code island
@@ -221,8 +263,8 @@ export const Slider2 = ({
 
           if (debug) console.log('External slider structure created, initializing Swiper...');
 
-          // Initialize Swiper on the external structure
-          const swiperInstance = new window.Swiper(swiperContainer, {
+          // Build Swiper configuration
+          const swiperConfig = {
             slidesPerView: slidesPerView,
             spaceBetween: spaceBetween,
             loop: loop,
@@ -232,7 +274,35 @@ export const Slider2 = ({
             } : false,
             observer: true,
             observeParents: true
-          });
+          };
+
+          // Add pagination configuration
+          if (pagination && paginationElement) {
+            swiperConfig.pagination = {
+              el: paginationElement,
+              clickable: true,
+              dynamicBullets: true
+            };
+          }
+
+          // Add navigation configuration
+          if (navigation && prevElement && nextElement) {
+            swiperConfig.navigation = {
+              nextEl: nextElement,
+              prevEl: prevElement
+            };
+          }
+
+          // Add scrollbar configuration
+          if (scrollbar && scrollbarElement) {
+            swiperConfig.scrollbar = {
+              el: scrollbarElement,
+              draggable: true
+            };
+          }
+
+          // Initialize Swiper on the external structure
+          const swiperInstance = new window.Swiper(swiperContainer, swiperConfig);
 
           if (debug) console.log('Swiper initialized successfully:', swiperInstance);
         }
@@ -274,7 +344,7 @@ export const Slider2 = ({
         createdSlider.remove();
       }
     };
-  }, [uniqueId, slidesPerView, spaceBetween, loop, autoplay, autoplayDelay, height, debug]);
+  }, [uniqueId, slidesPerView, spaceBetween, loop, autoplay, autoplayDelay, height, pagination, navigation, scrollbar, debug]);
 
   if (slot && typeof slot === 'object' && 'type' in slot && slot.type === 'slot') {
     return (

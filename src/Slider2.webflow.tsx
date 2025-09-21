@@ -46,6 +46,21 @@ export default declareComponent(Slider2, {
             tooltip: "Height of the slider (e.g., 400px, 50vh, auto)",
             defaultValue: "auto",
         }),
+        pagination: props.Boolean({
+            name: "Pagination",
+            tooltip: "Enable pagination dots",
+            defaultValue: false,
+        }),
+        navigation: props.Boolean({
+            name: "Navigation",
+            tooltip: "Enable previous/next arrow buttons",
+            defaultValue: false,
+        }),
+        scrollbar: props.Boolean({
+            name: "Scrollbar",
+            tooltip: "Enable scrollbar",
+            defaultValue: false,
+        }),
         debug: props.Boolean({
             name: "Debug",
             tooltip: "Enable console logging for debugging",
