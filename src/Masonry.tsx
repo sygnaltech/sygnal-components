@@ -11,6 +11,8 @@ interface MasonryProps {
   tabletColumns?: number;
   mobileLandscapeColumns?: number;
   mobilePortraitColumns?: number;
+  trueOrder?: boolean;
+  waitForImages?: boolean;
 }
 
 
@@ -38,9 +40,11 @@ export const Masonry = ({
   marginX = 24,
   marginY = 24,
   columns = 4,
-  tabletColumns,
-  mobileLandscapeColumns,
-  mobilePortraitColumns
+  tabletColumns = 3,
+  mobileLandscapeColumns = 2,
+  mobilePortraitColumns = 1,
+  trueOrder = false,
+  waitForImages = false
 }: MasonryProps) => {
   const componentId = useMemo(() => `masonry-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, []);
   const slotRef = useRef<HTMLElement>(null);
@@ -62,6 +66,8 @@ export const Masonry = ({
     console.log('TabletColumns:', tabletColumns);
     console.log('MobileLandscapeColumns:', mobileLandscapeColumns);
     console.log('MobilePortraitColumns:', mobilePortraitColumns);
+    console.log('TrueOrder:', trueOrder);
+    console.log('WaitForImages:', waitForImages);
   }
 
   useEffect(() => {
@@ -136,16 +142,17 @@ export const Masonry = ({
           const contentContainer = assignedElements[0];
           if (debug) console.log('Creating new macy instance with content container:', contentContainer);
 
-          // Build breakpoints object if any responsive columns are specified
-          const breakAt: { [key: number]: number } = {};
-          if (tabletColumns !== undefined) breakAt[1024] = tabletColumns; // Tablet
-          if (mobileLandscapeColumns !== undefined) breakAt[768] = mobileLandscapeColumns; // Mobile landscape
-          if (mobilePortraitColumns !== undefined) breakAt[480] = mobilePortraitColumns; // Mobile portrait
+          // Build breakpoints object - matching Webflow's breakpoints
+          const breakAt: { [key: number]: number } = {
+            991: tabletColumns, // Tablet (991px and below)
+            767: mobileLandscapeColumns, // Mobile landscape (767px and below)
+            478: mobilePortraitColumns // Mobile portrait (478px and below)
+          };
 
           const macyConfig: any = {
             container: contentContainer,
-            trueOrder: false,
-            waitForImages: true,
+            trueOrder: trueOrder,
+            waitForImages: waitForImages,
             margin: {
               x: marginX,
               y: marginY
@@ -153,10 +160,8 @@ export const Masonry = ({
             columns: columns
           };
 
-          // Only add breakAt if we have breakpoints
-          if (Object.keys(breakAt).length > 0) {
-            macyConfig.breakAt = breakAt;
-          }
+          // Always add breakpoints since we have defaults
+          macyConfig.breakAt = breakAt;
 
           if (debug) {
             console.log('Macy config:', macyConfig);
@@ -178,7 +183,7 @@ export const Masonry = ({
       masonryRef.current = null;
       if (debug) console.log('Macy cleanup complete');
     };
-  }, [debug, isClient]);
+  }, [debug, isClient, marginX, marginY, columns, tabletColumns, mobileLandscapeColumns, mobilePortraitColumns, trueOrder, waitForImages]);
 
   if (slot && typeof slot === 'object' && 'type' in slot && slot.type === 'slot') {
     return (
