@@ -101,7 +101,10 @@ export const Masonry = ({
           if (debug) console.log('Found collection wrappers in assigned element:', collectionsToUnwrap.length);
 
           collectionsToUnwrap.forEach((wrapper, index) => {
-            if (debug) console.log(`Unwrapping collection ${index}:`, wrapper.className);
+            // Only log w-dyn-list unwrapping
+            if (debug && wrapper.classList.contains('w-dyn-list')) {
+              console.log(`Unwrapping collection ${index}:`, wrapper.className);
+            }
 
             // Move all children of the wrapper to replace the wrapper
             const parent = wrapper.parentNode;
@@ -114,8 +117,19 @@ export const Masonry = ({
               });
               // Remove the empty wrapper
               parent.removeChild(wrapper);
-              if (debug) console.log(`Moved ${children.length} children and removed wrapper`);
             }
+          });
+        });
+      }
+
+      // Remove w-dyn-empty elements after unwrapping
+      if ('assignedElements' in slotElement) {
+        const assignedElements = (slotElement as any).assignedElements();
+        assignedElements.forEach((assignedEl: Element) => {
+          const emptyElements = assignedEl.querySelectorAll('.w-dyn-empty');
+          emptyElements.forEach((emptyEl) => {
+            if (debug) console.log('Removing w-dyn-empty element');
+            emptyEl.remove();
           });
         });
       }
