@@ -4,20 +4,21 @@ import { declareComponent } from '@webflow/react';
 
 export default declareComponent(Masonry, {
     name: 'Masonry',
-    description: 'Masonry layout',
+    description: 'Masonry layout for arranging content in a responsive grid',
     group: 'Layouts',
-    props: { 
-        slot: props.Slot({ 
+    options: {
+        ssr: false, // Disable SSR to prevent hydration mismatch from UUID generation
+    },
+    props: {
+        slot: props.Slot({
             name: "Content",
-        })
-        // text: props.Text({
-        //     name: "Text",
-        //     defaultValue: "Hello World",
-        // }),
-        // variant: props.Variant({
-        //     name: "Variant",
-        //     options: ["Light", "Dark"],
-        //     defaultValue: "Light",
-        // }),
+            tooltip: "Place any content here - items will be arranged in masonry layout",
+            group: "Content"
+        }),
+        debug: props.Boolean({
+            name: "Debug",
+            tooltip: "Enable console logging for debugging",
+            defaultValue: false,
+        }),
     }
 });
