@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-//import MasonryLayout from "masonry-layout";
-
-// https://masonry.desandro.com/#package-managers 
+import Macy from "macy"; 
 
 interface MasonryProps {
   slot?: React.ReactNode;
@@ -102,53 +100,48 @@ export const Masonry = ({ slot, debug = false }: MasonryProps) => {
     let imgs: HTMLImageElement[] = [];
 
     (async () => {
-      if (debug) console.log('Loading masonry-layout...');
-      const MasonryLayout = (await import("masonry-layout")).default;
+      if (debug) console.log('Loading macy.js...');
+      const Macy = (await import("macy")).default;
 
-      if (debug) console.log('Destroying existing masonry instance...');
-      masonryRef.current?.destroy?.();
+      if (debug) console.log('Destroying existing macy instance...');
+      masonryRef.current?.remove?.();
 
       // Unwrap collections before initializing masonry
       unwrapCollections();
 
-      if (debug) console.log('Creating new masonry instance with slot element:', slotElement);
-      masonryRef.current = new MasonryLayout(slotElement, {
-        itemSelector: ":scope > *",
-      });
+      // Get the assigned element (the actual content container)
+      if ('assignedElements' in slotElement) {
+        const assignedElements = (slotElement as any).assignedElements();
+        if (assignedElements.length > 0) {
+          const contentContainer = assignedElements[0];
+          if (debug) console.log('Creating new macy instance with content container:', contentContainer);
 
-      imgs = Array.from(slotElement.querySelectorAll("img"));
-      if (debug) console.log('Found images:', imgs.length);
-
-      const onLoad = () => {
-        if (debug) console.log('Image loaded, re-laying out masonry');
-        masonryRef.current?.layout?.();
-      };
-
-      imgs.forEach((img, index) => {
-        if (img.complete) {
-          if (debug) console.log(`Image ${index} already loaded`);
-          return;
+          masonryRef.current = Macy({
+            container: contentContainer,
+            trueOrder: false,
+            waitForImages: true,
+            margin: 24,
+            columns: 4,
+            breakAt: {
+              1200: 3,
+              940: 2,
+              520: 1,
+            }
+          });
+        } else {
+          if (debug) console.log('No assigned elements found for macy');
         }
-        if (debug) console.log(`Setting up load listener for image ${index}`);
-        img.addEventListener("load", onLoad);
-        img.addEventListener("error", onLoad);
-      });
+      }
 
-      if (debug) console.log('Performing initial layout...');
-      masonryRef.current.layout?.();
-      if (debug) console.log('Masonry initialization complete');
+      if (debug) console.log('Macy initialization complete');
     })();
 
     return () => {
-      if (debug) console.log('=== MASONRY CLEANUP ===');
-      imgs.forEach((img) => {
-        img.removeEventListener("load", () => {});
-        img.removeEventListener("error", () => {});
-      });
-      if (debug) console.log('Destroying masonry instance...');
-      masonryRef.current?.destroy?.();
+      if (debug) console.log('=== MACY CLEANUP ===');
+      if (debug) console.log('Destroying macy instance...');
+      masonryRef.current?.remove?.();
       masonryRef.current = null;
-      if (debug) console.log('Masonry cleanup complete');
+      if (debug) console.log('Macy cleanup complete');
     };
   }, [debug, isClient]);
 
