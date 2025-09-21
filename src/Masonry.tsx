@@ -5,6 +5,12 @@ import Macy from "macy";
 interface MasonryProps {
   slot?: React.ReactNode;
   debug?: boolean;
+  marginX?: number;
+  marginY?: number;
+  columns?: number;
+  tabletColumns?: number;
+  mobileLandscapeColumns?: number;
+  mobilePortraitColumns?: number;
 }
 
 
@@ -26,7 +32,16 @@ const unwrap = (
   return nodes;
 };
 
-export const Masonry = ({ slot, debug = false }: MasonryProps) => {
+export const Masonry = ({
+  slot,
+  debug = false,
+  marginX = 24,
+  marginY = 24,
+  columns = 4,
+  tabletColumns,
+  mobileLandscapeColumns,
+  mobilePortraitColumns
+}: MasonryProps) => {
   const componentId = useMemo(() => `masonry-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, []);
   const slotRef = useRef<HTMLElement>(null);
   const masonryRef = useRef<any>(null); // cannot type it before import
@@ -42,6 +57,11 @@ export const Masonry = ({ slot, debug = false }: MasonryProps) => {
     console.log('Is Client:', isClient);
     console.log('Slot:', slot);
     console.log('Debug:', debug);
+    console.log('MarginX:', marginX, 'MarginY:', marginY);
+    console.log('Columns:', columns);
+    console.log('TabletColumns:', tabletColumns);
+    console.log('MobileLandscapeColumns:', mobileLandscapeColumns);
+    console.log('MobilePortraitColumns:', mobilePortraitColumns);
   }
 
   useEffect(() => {
@@ -116,18 +136,33 @@ export const Masonry = ({ slot, debug = false }: MasonryProps) => {
           const contentContainer = assignedElements[0];
           if (debug) console.log('Creating new macy instance with content container:', contentContainer);
 
-          masonryRef.current = Macy({
+          // Build breakpoints object if any responsive columns are specified
+          const breakAt: { [key: number]: number } = {};
+          if (tabletColumns !== undefined) breakAt[1024] = tabletColumns; // Tablet
+          if (mobileLandscapeColumns !== undefined) breakAt[768] = mobileLandscapeColumns; // Mobile landscape
+          if (mobilePortraitColumns !== undefined) breakAt[480] = mobilePortraitColumns; // Mobile portrait
+
+          const macyConfig: any = {
             container: contentContainer,
             trueOrder: false,
             waitForImages: true,
-            margin: 24,
-            columns: 4,
-            breakAt: {
-              1200: 3,
-              940: 2,
-              520: 1,
-            }
-          });
+            margin: {
+              x: marginX,
+              y: marginY
+            },
+            columns: columns
+          };
+
+          // Only add breakAt if we have breakpoints
+          if (Object.keys(breakAt).length > 0) {
+            macyConfig.breakAt = breakAt;
+          }
+
+          if (debug) {
+            console.log('Macy config:', macyConfig);
+          }
+
+          masonryRef.current = Macy(macyConfig);
         } else {
           if (debug) console.log('No assigned elements found for macy');
         }
