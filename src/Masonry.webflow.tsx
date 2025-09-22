@@ -21,6 +21,7 @@ export default declareComponent(Masonry, {
             defaultValue: 4,
             min: 1,
             max: 12,
+            decimals: 0,
         }),
         marginX: props.Number({
             name: "Margin X",
@@ -28,6 +29,7 @@ export default declareComponent(Masonry, {
             defaultValue: 24,
             min: 0,
             max: 100,
+            decimals: 0,
         }),
         marginY: props.Number({
             name: "Margin Y",
@@ -35,6 +37,7 @@ export default declareComponent(Masonry, {
             defaultValue: 24,
             min: 0,
             max: 100,
+            decimals: 0,
         }),
         tabletColumns: props.Number({
             name: "Tablet Columns",
@@ -42,6 +45,7 @@ export default declareComponent(Masonry, {
             defaultValue: 3,
             min: 1,
             max: 12,
+            decimals: 0,
             group: "Responsive"
         }),
         mobileLandscapeColumns: props.Number({
@@ -50,6 +54,7 @@ export default declareComponent(Masonry, {
             defaultValue: 2,
             min: 1,
             max: 12,
+            decimals: 0,
             group: "Responsive"
         }),
         mobilePortraitColumns: props.Number({
@@ -58,6 +63,7 @@ export default declareComponent(Masonry, {
             defaultValue: 1,
             min: 1,
             max: 12,
+            decimals: 0,
             group: "Responsive"
         }),
         trueOrder: props.Boolean({
