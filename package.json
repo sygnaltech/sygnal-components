@@ -21,7 +21,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npx webflow library share --no-input"
+    "deploy": "node scripts/deploy.js",
+    "update-cli": "npm i --save-dev @webflow/webflow-cli @webflow/data-types @webflow/react"
   },
   "eslintConfig": {
     "extends": [
