@@ -22,7 +22,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "node scripts/deploy.js",
-    "update-cli": "npm i --save-dev @webflow/webflow-cli @webflow/data-types @webflow/react"
+    "update-cli": "npm i --save-dev @webflow/webflow-cli@latest @webflow/data-types@latest @webflow/react@latest"
   },
   "eslintConfig": {
     "extends": [
