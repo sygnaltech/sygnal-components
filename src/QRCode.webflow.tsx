@@ -17,24 +17,28 @@ export default declareComponent(QRCode, {
             options: ["100x100", "200x200", "300x300", "400x400", "500x500", "100%x100%"],
             defaultValue: "200x200",
         }),
+        includeMargin: props.Boolean({
+            name: "Margin",
+            defaultValue: true,
+            tooltip: "Add quiet zone around QR code",
+            group: "Styling",
+        }),
+        foregroundColor: props.Text({
+            name: "Foreground Color",
+            defaultValue: "#000000",
+            group: "Styling",
+        }),
+        backgroundColor: props.Text({
+            name: "Background Color",
+            defaultValue: "#ffffff",
+            group: "Styling",
+        }),
         errorCorrection: props.Variant({
             name: "Error Correction",
             options: ["L", "M", "Q", "H"],
             defaultValue: "M",
             tooltip: "L=7%, M=15%, Q=25%, H=30% error correction",
-        }),
-        foregroundColor: props.Text({
-            name: "Foreground Color",
-            defaultValue: "#000000",
-        }),
-        backgroundColor: props.Text({
-            name: "Background Color",
-            defaultValue: "#ffffff",
-        }),
-        includeMargin: props.Boolean({
-            name: "Include Margin",
-            defaultValue: true,
-            tooltip: "Add quiet zone around QR code",
+            group: "Advanced",
         }),
     }
 });
