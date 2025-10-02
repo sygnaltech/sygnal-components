@@ -1,11 +1,11 @@
 {
   "library": {
-    "name": "Sygnal Components Test v0.1.0",
+    "name": "Sygnal Components v0.1.1",
     "components": [
       "./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
     ],
     "description": "Sygnal Components",
-    "id": "sygnal-components-test"
+    "id": "sygnal-components"
   },
   "telemetry": {
     "global": {
