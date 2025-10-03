@@ -112,7 +112,14 @@ export const ScriptManager: React.FC<ScriptManagerProps> = ({
   // Handle closing the mode indicator
   const handleClose = () => {
     deleteCookie('script_mode');
-    window.location.reload();
+
+    // Remove ?dev, ?test, or ?prod from URL before reloading
+    const url = new URL(window.location.href);
+    url.searchParams.delete('dev');
+    url.searchParams.delete('test');
+    url.searchParams.delete('prod');
+
+    window.location.href = url.toString();
   };
 
   // Render mode indicator if a mode is active
