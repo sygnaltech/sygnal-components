@@ -25,6 +25,41 @@ const deleteCookie = (name: string) => {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 };
 
+// Helper function to determine initial script mode
+const getInitialScriptMode = (): 'dev' | 'test' | 'prod' | null => {
+  // Check URL parameters for ?dev, ?test, or ?prod
+  const urlParams = new URLSearchParams(window.location.search);
+  const devParam = urlParams.get('dev');
+  const testParam = urlParams.get('test');
+  const prodParam = urlParams.get('prod');
+
+  if (devParam === 'false' || testParam === 'false' || prodParam === 'false') {
+    // Delete cookie if any mode is set to false
+    deleteCookie('script_mode');
+    return null;
+  } else if (devParam !== null) {
+    // Set cookie to dev if ?dev exists
+    setCookie('script_mode', 'dev');
+    return 'dev';
+  } else if (testParam !== null) {
+    // Set cookie to test if ?test exists
+    setCookie('script_mode', 'test');
+    return 'test';
+  } else if (prodParam !== null) {
+    // Set cookie to prod if ?prod exists
+    setCookie('script_mode', 'prod');
+    return 'prod';
+  } else {
+    // Check if script_mode cookie exists
+    const modeCookie = getCookie('script_mode');
+    if (modeCookie === 'dev' || modeCookie === 'test' || modeCookie === 'prod') {
+      return modeCookie;
+    }
+  }
+
+  return null;
+};
+
 export const ScriptManager: React.FC<ScriptManagerProps> = ({
   devCodeUrl,
   testCodeUrl,
@@ -32,59 +67,42 @@ export const ScriptManager: React.FC<ScriptManagerProps> = ({
   async = false,
   defer = false,
 }) => {
-  const [scriptMode, setScriptMode] = useState<'dev' | 'test' | 'prod' | null>(null);
-
-  useEffect(() => {
-    // Check URL parameters for ?dev, ?test, or ?prod
-    const urlParams = new URLSearchParams(window.location.search);
-    const devParam = urlParams.get('dev');
-    const testParam = urlParams.get('test');
-    const prodParam = urlParams.get('prod');
-
-    if (devParam === 'false' || testParam === 'false' || prodParam === 'false') {
-      // Delete cookie if any mode is set to false
-      deleteCookie('script_mode');
-      setScriptMode(null);
-    } else if (devParam !== null) {
-      // Set cookie to dev if ?dev exists
-      setCookie('script_mode', 'dev');
-      setScriptMode('dev');
-    } else if (testParam !== null) {
-      // Set cookie to test if ?test exists
-      setCookie('script_mode', 'test');
-      setScriptMode('test');
-    } else if (prodParam !== null) {
-      // Set cookie to prod if ?prod exists
-      setCookie('script_mode', 'prod');
-      setScriptMode('prod');
-    } else {
-      // Check if script_mode cookie exists
-      const modeCookie = getCookie('script_mode');
-      if (modeCookie === 'dev' || modeCookie === 'test' || modeCookie === 'prod') {
-        setScriptMode(modeCookie);
-      }
-    }
-  }, []);
+  const [scriptMode] = useState<'dev' | 'test' | 'prod' | null>(getInitialScriptMode);
 
   useEffect(() => {
     // Determine which URL to use based on mode
     let scriptUrl: string | undefined;
+    let mode: string;
 
     if (scriptMode === 'dev') {
       scriptUrl = devCodeUrl;
+      mode = 'DEV (cookie override)';
     } else if (scriptMode === 'test') {
       scriptUrl = testCodeUrl;
+      mode = 'TEST (cookie override)';
     } else if (scriptMode === 'prod') {
       scriptUrl = prodCodeUrl;
+      mode = 'PROD (cookie override)';
     } else {
       // Default behavior when no cookie is set
       const hostname = window.location.hostname;
       const isWebflowPreview = hostname.includes('webflow.io');
-      scriptUrl = isWebflowPreview ? testCodeUrl : prodCodeUrl;
+      if (isWebflowPreview) {
+        scriptUrl = testCodeUrl;
+        mode = 'TEST (webflow.io default)';
+      } else {
+        scriptUrl = prodCodeUrl;
+        mode = 'PROD (default)';
+      }
     }
 
     // Only inject if we have a valid URL
-    if (!scriptUrl) return;
+    if (!scriptUrl) {
+      console.log('[ScriptManager] No script URL provided for mode:', mode);
+      return;
+    }
+
+    console.log('[ScriptManager] Injecting script:', mode, '| URL:', scriptUrl);
 
     // Create script element
     const script = document.createElement('script');
@@ -103,6 +121,7 @@ export const ScriptManager: React.FC<ScriptManagerProps> = ({
 
     // Cleanup function to remove script when component unmounts
     return () => {
+      console.log('[ScriptManager] Cleaning up script:', scriptUrl);
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
