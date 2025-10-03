@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
 export interface CodeInjectorProps {
-  devCodeUrl?: { href: string };
-  testCodeUrl?: { href: string };
-  prodCodeUrl?: { href: string };
+  devCodeUrl?: string;
+  testCodeUrl?: string;
+  prodCodeUrl?: string;
   async?: boolean;
   defer?: boolean;
 }
@@ -59,11 +59,11 @@ export const CodeInjector: React.FC<CodeInjectorProps> = ({
     let scriptUrl: string | undefined;
 
     if (isDevMode) {
-      scriptUrl = devCodeUrl?.href;
+      scriptUrl = devCodeUrl;
     } else {
       const hostname = window.location.hostname;
       const isWebflowPreview = hostname.includes('webflow.io');
-      scriptUrl = isWebflowPreview ? testCodeUrl?.href : prodCodeUrl?.href;
+      scriptUrl = isWebflowPreview ? testCodeUrl : prodCodeUrl;
     }
 
     // Only inject if we have a valid URL

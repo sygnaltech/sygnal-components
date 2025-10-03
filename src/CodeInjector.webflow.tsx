@@ -7,15 +7,15 @@ export default declareComponent(CodeInjector, {
     description: 'Dynamically injects external scripts based on environment (Test vs Prod)',
     group: 'Utilities',
     props: {
-        devCodeUrl: props.Link({
+        devCodeUrl: props.Text({
             name: "Dev Code URL",
-            tooltip: "Script URL for development environment (not currently used)",
+            tooltip: "Script URL for development environment",
         }),
-        testCodeUrl: props.Link({
+        testCodeUrl: props.Text({
             name: "Test Code URL",
             tooltip: "Script URL for Webflow preview/test environments (*.webflow.io)",
         }),
-        prodCodeUrl: props.Link({
+        prodCodeUrl: props.Text({
             name: "Prod Code URL",
             tooltip: "Script URL for production environment",
         }),
