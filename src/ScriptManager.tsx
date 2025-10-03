@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export interface CodeInjectorProps {
+export interface ScriptManagerProps {
   devCodeUrl?: string;
   testCodeUrl?: string;
   prodCodeUrl?: string;
@@ -25,7 +25,7 @@ const deleteCookie = (name: string) => {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 };
 
-export const CodeInjector: React.FC<CodeInjectorProps> = ({
+export const ScriptManager: React.FC<ScriptManagerProps> = ({
   devCodeUrl,
   testCodeUrl,
   prodCodeUrl,

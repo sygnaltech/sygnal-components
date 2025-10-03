@@ -1,9 +1,9 @@
-import { CodeInjector } from './CodeInjector';
+import { ScriptManager } from './ScriptManager';
 import { props } from '@webflow/data-types';
 import { declareComponent } from '@webflow/react';
 
-export default declareComponent(CodeInjector, {
-    name: 'Code Injector',
+export default declareComponent(ScriptManager, {
+    name: 'Script Manager',
     description: 'Dynamically injects external scripts based on environment (Test vs Prod)',
     group: 'Utilities',
     props: {
