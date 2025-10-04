@@ -46,12 +46,28 @@ Each component follows this pattern:
 - **React Scripts** as fallback (legacy from CRA setup)
 - Components are configured in `webflow.json` to match pattern `./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)`
 
-### Component Examples
-- **Slider**: Swiper.js-based carousel with slot content support
-- **Slider2**: Enhanced slider that loads Swiper.js as a script (not React version) and rebuilds slider elements externally around the slot, outside the shadow DOM. Uses RenderAdjacent component technique for locating correct component and slot.
-- **Masonry**: Grid layout with configurable columns
-- **Tabs**: Tab navigation system
-- **FormFile**: File upload component
-- **Marquee**: Scrolling text/content
 
 All components are designed to work seamlessly within Webflow's visual editor while maintaining React component flexibility.
+
+
+
+
+## Webflow Code Components Properties
+
+These are Webflow's supported Property types and docs for each. 
+
+Never use description, use tooltip instead. 
+
+- Text: https://developers.webflow.com/code-components/reference/prop-types/text.md
+- Rich Text: https://developers.webflow.com/code-components/reference/prop-types/rich-text.md
+- Text Node: https://developers.webflow.com/code-components/reference/prop-types/text-node.md
+- Link: https://developers.webflow.com/code-components/reference/prop-types/link.md
+- Image: https://developers.webflow.com/code-components/reference/prop-types/image.md
+- Number: https://developers.webflow.com/code-components/reference/prop-types/number.md
+- Boolean: https://developers.webflow.com/code-components/reference/prop-types/boolean.md
+- Variant: https://developers.webflow.com/code-components/reference/prop-types/variant.md
+- Visibility: https://developers.webflow.com/code-components/reference/prop-types/visibility.md
+- Slot: https://developers.webflow.com/code-components/reference/prop-types/slot.md
+- ID: https://developers.webflow.com/code-components/reference/prop-types/id.md
+
+
