@@ -25,5 +25,8 @@ yarn-error.log*
 .env
 .env.*
 
+# Webflow deployment
 webflow.json
+/deploy 
+
 
