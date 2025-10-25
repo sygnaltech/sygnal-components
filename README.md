@@ -202,6 +202,3 @@ When developing new components:
 - [React Documentation](https://react.dev/)
 - [Vite Documentation](https://vitejs.dev/)
 
-## License
-
-MIT
