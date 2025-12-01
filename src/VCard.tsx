@@ -137,33 +137,17 @@ export const VCard = ({
   };
 
   // Render based on variant
-  console.log('VCard render - variant:', variant, 'Slot exists:', !!Slot);
-
   if (variant === 'Slot') {
     return (
       <div
-        onMouseDown={(e: React.MouseEvent) => {
-          console.log('MouseDown captured');
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-        onClickCapture={(e: React.MouseEvent) => {
-          console.log('ClickCapture - target:', e.target, 'currentTarget:', e.currentTarget);
-          e.preventDefault();
-          e.stopPropagation();
-          handleDownload();
-          return false;
-        }}
         onClick={(e: React.MouseEvent) => {
-          console.log('Click - should not see this if capture worked');
           e.preventDefault();
           e.stopPropagation();
           handleDownload();
         }}
         style={{
           cursor: 'pointer',
-          position: 'relative',
-          border: '2px solid red' // DEBUG: visual indicator
+          display: 'inline-block'
         }}
       >
         <div style={{ pointerEvents: 'none' }}>
