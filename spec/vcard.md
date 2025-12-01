@@ -14,8 +14,19 @@ No image support needed.
 
 ### Properties
 
-**Button & File:**
+**Variant:**
+- **Type** (Variant) - Options: "Button", "Slot" - Default: "Button"
+  - Button: Renders a built-in styled button
+  - Slot: Allows user to provide custom content that triggers download
+
+**Button Variant Properties:**
 - **Button Text** (Text) - Default: "Save to Contacts"
+- **Button Style** (Text) - Custom CSS styles (e.g., "background-color: red; color: white;")
+
+**Slot Variant Properties:**
+- **Content** (Slot) - Custom content to trigger vCard download
+
+**File:**
 - **Filename** (Text) - Default: "contact.vcf" (automatically append .vcf if missing)
 
 **Contact Information (all optional):**
@@ -37,7 +48,52 @@ No image support needed.
 
 ### Behavior
 
-When clicked, the button generates a vCard 3.0 formatted file with all provided fields and triggers a download.
+When clicked (either button or slot content), the component generates a vCard 3.0 formatted file with all provided fields and triggers a download.
+
+## Implementation Details
+
+### Slot Variant Click Handling
+
+The Slot variant uses a clever technique to intercept clicks on user-provided content:
+
+1. **Wrapper Structure**: The slot content is wrapped in two divs:
+   ```tsx
+   <div onClick={handleDownload} style={{ cursor: 'pointer', display: 'inline-block' }}>
+     <div style={{ pointerEvents: 'none' }}>
+       {Slot}
+     </div>
+   </div>
+   ```
+
+2. **Pointer Events Disabled**: The inner wrapper has `pointerEvents: 'none'`, which disables all mouse/touch interactions on the slotted content itself (buttons, links, etc.).
+
+3. **Click Capture**: Since the slotted content can't receive pointer events, all clicks bubble up to the parent div, which captures them and triggers the vCard download.
+
+4. **Event Handling**: The parent div's onClick handler:
+   - Prevents default behavior (`e.preventDefault()`)
+   - Stops event propagation (`e.stopPropagation()`)
+   - Triggers the vCard download
+
+This approach allows users to insert any styled content (buttons, links, images) into the slot, and clicking anywhere on that content will trigger the download without needing to modify the slotted elements.
+
+### Button Variant Styling
+
+The Button variant supports custom CSS through the **Button Style** property:
+
+1. **CSS String Parsing**: Accepts inline CSS as a string (e.g., `"background-color: red; font-size: 18px;"`)
+
+2. **Property Conversion**: Automatically converts kebab-case CSS properties to camelCase for React (e.g., `background-color` → `backgroundColor`)
+
+3. **Style Merging**: Custom styles are merged with default button styles, allowing users to override specific properties while keeping sensible defaults
+
+4. **Default Styles**:
+   - padding: 12px 24px
+   - fontSize: 16px
+   - cursor: pointer
+   - backgroundColor: #0073e6
+   - color: #ffffff
+   - border: none
+   - borderRadius: 4px
 
 
 
