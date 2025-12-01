@@ -1,8 +1,10 @@
 import React from "react";
 
 interface VCardProps {
+  variant: 'Button' | 'Slot';
   buttonText: string;
   filename: string;
+  Slot?: React.ReactNode;
   fullName?: string;
   lastName?: string;
   firstName?: string;
@@ -21,8 +23,10 @@ interface VCardProps {
 }
 
 export const VCard = ({
+  variant,
   buttonText,
   filename,
+  Slot,
   fullName,
   lastName,
   firstName,
@@ -132,6 +136,19 @@ export const VCard = ({
     window.URL.revokeObjectURL(url);
   };
 
+  // Render based on variant
+  if (variant === 'Slot') {
+    return (
+      <div
+        onClick={handleDownload}
+        style={{ cursor: 'pointer' }}
+      >
+        {Slot}
+      </div>
+    );
+  }
+
+  // Button variant (default)
   return (
     <button
       onClick={handleDownload}

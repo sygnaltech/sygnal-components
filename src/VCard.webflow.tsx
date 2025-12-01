@@ -7,10 +7,20 @@ export default declareComponent(VCard, {
     description: 'Download contact information as a vCard file',
     group: 'Interactive',
     props: {
+        variant: props.Variant({
+            name: "Type",
+            options: ["Button", "Slot"],
+            defaultValue: "Button",
+            tooltip: "Use built-in button or custom slot content",
+        }),
         buttonText: props.Text({
             name: "Button Text",
             defaultValue: "Save to Contacts",
-            tooltip: "Text displayed on the download button",
+            tooltip: "Text displayed on the download button (Button variant only)",
+        }),
+        Slot: props.Slot({
+            name: "Content",
+            tooltip: "Custom content to trigger vCard download (Slot variant only)",
         }),
         filename: props.Text({
             name: "Filename",
