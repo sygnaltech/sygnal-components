@@ -18,6 +18,11 @@ export default declareComponent(VCard, {
             defaultValue: "Save to Contacts",
             tooltip: "Text displayed on the download button (Button variant only)",
         }),
+        buttonStyle: props.Text({
+            name: "Button Style",
+            defaultValue: "",
+            tooltip: "Custom CSS styles for the button (e.g., background-color: red; color: white;)",
+        }),
         Slot: props.Slot({
             name: "Content",
             tooltip: "Custom content to trigger vCard download (Slot variant only)",

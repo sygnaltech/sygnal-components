@@ -3,6 +3,7 @@ import React from "react";
 interface VCardProps {
   variant: 'Button' | 'Slot';
   buttonText: string;
+  buttonStyle?: string;
   filename: string;
   Slot?: React.ReactNode;
   fullName?: string;
@@ -25,6 +26,7 @@ interface VCardProps {
 export const VCard = ({
   variant,
   buttonText,
+  buttonStyle,
   filename,
   Slot,
   fullName,
@@ -158,19 +160,38 @@ export const VCard = ({
   }
 
   // Button variant (default)
+  // Parse custom CSS styles
+  const parseInlineStyles = (styleString?: string): React.CSSProperties => {
+    const defaultStyles: React.CSSProperties = {
+      padding: '12px 24px',
+      fontSize: '16px',
+      cursor: 'pointer',
+      backgroundColor: '#0073e6',
+      color: '#ffffff',
+      border: 'none',
+      borderRadius: '4px',
+      fontFamily: 'inherit',
+    };
+
+    if (!styleString) return defaultStyles;
+
+    const customStyles: React.CSSProperties = {};
+    styleString.split(';').forEach(rule => {
+      const [property, value] = rule.split(':').map(s => s.trim());
+      if (property && value) {
+        // Convert kebab-case to camelCase
+        const camelProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+        customStyles[camelProperty as any] = value;
+      }
+    });
+
+    return { ...defaultStyles, ...customStyles };
+  };
+
   return (
     <button
       onClick={handleDownload}
-      style={{
-        padding: '12px 24px',
-        fontSize: '16px',
-        cursor: 'pointer',
-        backgroundColor: '#0073e6',
-        color: '#ffffff',
-        border: 'none',
-        borderRadius: '4px',
-        fontFamily: 'inherit',
-      }}
+      style={parseInlineStyles(buttonStyle)}
     >
       {buttonText}
     </button>
