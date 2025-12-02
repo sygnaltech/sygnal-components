@@ -1,16 +1,16 @@
 {
   "library": {
-    "name": "Sygnal Components v0.1.2",
+    "name": "Sygnal Components Test v0.1.2 ⚠️",
     "components": [
-      "./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
+      "./deploy/src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
     ],
     "description": "Sygnal Components",
-    "id": "sygnal-components"
+    "id": "sygnal-components-test"
   },
   "telemetry": {
     "global": {
       "allowTelemetry": true,
-      "lastPrompted": 1757464785972,
+      "lastPrompted": 1764644537057,
       "version": "1.8.40"
     }
   }
