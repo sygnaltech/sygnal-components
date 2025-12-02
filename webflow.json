@@ -1,6 +1,6 @@
 {
   "library": {
-    "name": "Sygnal Components Test v0.1.2 ⚠️",
+    "name": "Sygnal Components Test v0.1.3 ⚠️",
     "components": [
       "./deploy/src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
     ],
@@ -10,7 +10,7 @@
   "telemetry": {
     "global": {
       "allowTelemetry": true,
-      "lastPrompted": 1764644537057,
+      "lastPrompted": 1764647869828,
       "version": "1.8.40"
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "sygnal-components",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -46,7 +46,7 @@
     ]
   },
   "devDependencies": {
-    "@sygnal/code-component": "^0.5.2",
+    "@sygnal/code-component": "^0.5.8",
     "@vitejs/plugin-react": "^5.0.2",
     "@webflow/data-types": "^1.0.1",
     "@webflow/react": "^1.0.1",
