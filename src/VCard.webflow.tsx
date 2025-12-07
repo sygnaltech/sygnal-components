@@ -98,6 +98,12 @@ export default declareComponent(VCard, {
             tooltip: "City name",
             group: "Address",
         }),
+        state: props.Text({
+            name: "State/Region",
+            defaultValue: "",
+            tooltip: "State, province, or region",
+            group: "Address",
+        }),
         postalCode: props.Text({
             name: "Postal Code",
             defaultValue: "",

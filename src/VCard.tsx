@@ -17,6 +17,7 @@ interface VCardProps {
   additionalEmail?: string;
   streetAddress?: string;
   city?: string;
+  state?: string;
   postalCode?: string;
   country?: string;
   websiteUrl?: string;
@@ -40,6 +41,7 @@ export const VCard = ({
   additionalEmail,
   streetAddress,
   city,
+  state,
   postalCode,
   country,
   websiteUrl,
@@ -92,10 +94,10 @@ export const VCard = ({
       vcard += `EMAIL:${additionalEmail}\n`;
     }
 
-    // Address (ADR;TYPE=WORK:;;street;city;;postal;country)
-    if (streetAddress || city || postalCode || country) {
+    // Address (ADR;TYPE=WORK:;;street;city;state;postal;country)
+    if (streetAddress || city || state || postalCode || country) {
       vcard += `ADR;TYPE=WORK:;;${streetAddress || ''};${city || ''};`;
-      vcard += `;${postalCode || ''};${country || ''}\n`;
+      vcard += `${state || ''};${postalCode || ''};${country || ''}\n`;
     }
 
     // Website URL

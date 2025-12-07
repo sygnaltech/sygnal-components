@@ -41,6 +41,7 @@ No image support needed.
 - **Additional Email** (Text) - Second EMAIL field
 - **Street Address** (Text) - ADR;TYPE=WORK (street)
 - **City** (Text) - ADR;TYPE=WORK (city)
+- **State/Region** (Text) - ADR;TYPE=WORK (state/province)
 - **Postal Code** (Text) - ADR;TYPE=WORK (postal code)
 - **Country** (Text) - ADR;TYPE=WORK (country)
 - **Website URL** (Text) - URL field
