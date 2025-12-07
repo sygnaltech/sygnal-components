@@ -20,7 +20,11 @@ interface VCardProps {
   state?: string;
   postalCode?: string;
   country?: string;
-  websiteUrl?: string;
+  websiteUrl?: {
+    href: string;
+    target?: "_self" | "_blank" | string;
+    preload?: "prerender" | "prefetch" | "none" | string;
+  };
   note?: string;
 }
 
@@ -101,8 +105,8 @@ export const VCard = ({
     }
 
     // Website URL
-    if (websiteUrl) {
-      vcard += `URL:${websiteUrl}\n`;
+    if (websiteUrl?.href) {
+      vcard += `URL:${websiteUrl.href}\n`;
     }
 
     // Note

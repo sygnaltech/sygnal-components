@@ -116,9 +116,8 @@ export default declareComponent(VCard, {
             tooltip: "Country name",
             group: "Address",
         }),
-        websiteUrl: props.Text({
+        websiteUrl: props.Link({
             name: "Website URL",
-            defaultValue: "",
             tooltip: "Website or social media URL",
             group: "Additional",
         }),
