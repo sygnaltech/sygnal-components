@@ -33,3 +33,5 @@ webflow.json
 .claude/
 
 dist/
+
+.mcp.json
