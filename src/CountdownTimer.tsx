@@ -154,11 +154,29 @@ function calculateTimeRemaining(endTime: number): TimeRemaining {
 // DOM Update Logic
 // ============================================================================
 
+/**
+ * Find the host element (code-island) from a shadow DOM element.
+ * In Webflow's shadow DOM setup, slotted content lives in the light DOM
+ * (as children of the host element), not inside the shadow root.
+ */
+function getHostElement(shadowDomElement: HTMLElement): HTMLElement | null {
+  // Walk up to find the shadow root, then get its host
+  let root = shadowDomElement.getRootNode();
+  if (root instanceof ShadowRoot) {
+    return root.host as HTMLElement;
+  }
+  return null;
+}
+
 function updateCountdownElements(
-  container: HTMLElement,
+  shadowDomElement: HTMLElement,
   time: TimeRemaining,
   leadingZeros: boolean
 ): void {
+  // Get the host element to query light DOM (slotted content)
+  const host = getHostElement(shadowDomElement);
+  if (!host) return;
+
   const format = (val: number): string => {
     if (leadingZeros && val < 10) {
       return `0${val}`;
@@ -167,7 +185,8 @@ function updateCountdownElements(
   };
 
   const updateElement = (attr: string, value: string) => {
-    const elements = container.querySelectorAll(`[countdown-remaining="${attr}"]`);
+    // Query the host's light DOM children (slotted content)
+    const elements = host.querySelectorAll(`[countdown-remaining="${attr}"]`);
     elements.forEach((el) => {
       if (el instanceof HTMLElement) {
         el.innerText = value;
@@ -181,8 +200,8 @@ function updateCountdownElements(
   updateElement('seconds', format(time.seconds));
 
   // Handle visibility for active/expired states
-  const activeElements = container.querySelectorAll('[countdown-remaining="active"]');
-  const expiredElements = container.querySelectorAll('[countdown-remaining="expired"]');
+  const activeElements = host.querySelectorAll('[countdown-remaining="active"]');
+  const expiredElements = host.querySelectorAll('[countdown-remaining="expired"]');
 
   activeElements.forEach((el) => {
     if (el instanceof HTMLElement) {
