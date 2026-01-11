@@ -1,0 +1,140 @@
+
+<style>
+  .timer-outer {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    padding: 10px 20px;
+    background: #ffffff;
+    border-radius: 999px;
+    width: fit-content;
+    align-items: center;
+  }
+
+  .timer-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+
+  .timer-svg {
+    transform: rotate(-90deg);
+  }
+
+  .timer-bg {
+    fill: #8b3f12;
+  }
+
+  .timer-dots circle {
+    fill: #f6c322;
+    r: 1;
+  }
+
+  .timer-progress {
+    fill: none;
+    stroke: #f6c322;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 251;
+    stroke-dashoffset: 251;
+    transition: stroke-dashoffset 0.6s linear;
+  }
+
+  .timer-number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+</style>
+
+<div class="timer-outer">
+  <!-- HOURS -->
+  <div class="timer-circle">
+    <svg class="timer-svg" width="80" height="80" viewBox="0 0 96 96">
+      <circle cx="48" cy="48" r="40" class="timer-bg"></circle>
+      <circle cx="48" cy="48" r="40" class="timer-progress" id="ph"></circle>
+      <g class="timer-dots"></g>
+    </svg>
+    <div class="timer-number" countdown-remaining="hours">00</div>
+  </div>
+
+  <!-- MINUTES -->
+  <div class="timer-circle">
+    <svg class="timer-svg" width="80" height="80" viewBox="0 0 96 96">
+      <circle cx="48" cy="48" r="40" class="timer-bg"></circle>
+      <circle cx="48" cy="48" r="40" class="timer-progress" id="pm"></circle>
+      <g class="timer-dots"></g>
+    </svg>
+    <div class="timer-number" countdown-remaining="minutes">00</div>
+  </div>
+
+  <!-- SECONDS -->
+  <div class="timer-circle">
+    <svg class="timer-svg" width="80" height="80" viewBox="0 0 96 96">
+      <circle cx="48" cy="48" r="40" class="timer-bg"></circle>
+      <circle cx="48" cy="48" r="40" class="timer-progress" id="ps"></circle>
+      <g class="timer-dots"></g>
+    </svg>
+    <div class="timer-number" countdown-remaining="seconds">00</div>
+  </div>
+</div>
+
+<script>
+  const CIRC = 251;
+  const FULL_DURATION = 24 * 60 * 60 * 1000; // 24h in ms (must match component duration)
+
+  function setProgress(id, value, max) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const offset = CIRC - (value / max) * CIRC;
+    el.style.strokeDashoffset = offset;
+  }
+
+  // Listen for countdown updates from the CountdownTimer component
+  window.addEventListener('countdown:update', (e) => {
+    const { hours, minutes, seconds, totalMs, expired } = e.detail;
+
+    // Calculate elapsed time for overall progress
+    const elapsed = FULL_DURATION - totalMs;
+
+    // Update progress rings
+    setProgress('ph', elapsed, FULL_DURATION); // Overall progress based on 24h
+    setProgress('pm', 60 - minutes, 60);       // Minutes progress (60 -> 0)
+    setProgress('ps', 60 - seconds, 60);       // Seconds progress (60 -> 0)
+
+    // Handle expired state - fill all rings
+    if (expired) {
+      setProgress('ph', 1, 1);
+      setProgress('pm', 1, 1);
+      setProgress('ps', 1, 1);
+    }
+  });
+
+  // Generate decorative dots inside each circle (runs once on load)
+  document.querySelectorAll('.timer-circle').forEach(circle => {
+    const dotsGroup = circle.querySelector('.timer-dots');
+    if (!dotsGroup) return;
+
+    const cx = 48, cy = 48;
+    const radius = 38;
+    const numDots = 12;
+
+    for (let i = 0; i < numDots; i++) {
+      const angle = (i / numDots) * 2 * Math.PI;
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      dot.setAttribute("cx", x);
+      dot.setAttribute("cy", y);
+      dot.setAttribute("r", 0.25);
+      dot.setAttribute("fill", "#f6c322");
+      dotsGroup.appendChild(dot);
+    }
+  });
+</script>
