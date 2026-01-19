@@ -9,15 +9,8 @@ export default declareComponent(ColorSwatch, {
     props: {
         color: props.Text({
             name: "Color",
-            defaultValue: "#3c3530",
+            defaultValue: "#000000",
             tooltip: "Any CSS color value (hex, rgb, rgba, named color)",
-            group: "Settings",
-        }),
-        colorName: props.Variant({
-            name: "Color Format",
-            options: ["As Specified", "Hex Color"],
-            defaultValue: "As Specified",
-            tooltip: "As Specified uses the color value as-is. Hex Color converts any color format to 6-digit hex.",
             group: "Settings",
         }),
         style: props.Variant({
@@ -33,6 +26,20 @@ export default declareComponent(ColorSwatch, {
             defaultValue: "64 x 64",
             tooltip: "Preset size. Larger sizes show more information in Informative style.",
             group: "Settings",
+        }),
+        labelFormat: props.Variant({
+            name: "Label Format",
+            options: ["As Specified", "Hex Color"],
+            defaultValue: "Hex Color",
+            tooltip: "As Specified uses the color value as-is. Hex Color converts any color format to 6-digit hex.",
+            group: "Label",
+        }),
+        labelColor: props.Variant({
+            name: "Label Color",
+            options: ["White", "Black", "Auto"],
+            defaultValue: "Auto",
+            tooltip: "Color of the label text. Auto uses white unless contrast is too low.",
+            group: "Label",
         }),
     }
 });

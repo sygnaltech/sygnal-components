@@ -2,9 +2,10 @@ import React, { useState, useMemo } from 'react';
 
 export interface ColorSwatchProps {
   color?: string;
-  colorName?: 'As Specified' | 'Hex Color';
   style?: 'Plain' | 'Informative';
   size?: '32 x 32' | '48 x 48' | '64 x 64' | '96 x 96' | '128 x 128' | '154 x 154';
+  labelFormat?: 'As Specified' | 'Hex Color';
+  labelColor?: 'White' | 'Black' | 'Auto';
 }
 
 const SIZE_CONFIG: Record<string, { width: number; height: number; showHex: boolean; showRgb: boolean }> = {
@@ -36,11 +37,13 @@ function getLuminance(r: number, g: number, b: number): number {
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 }
 
-function getContrastTextColor(hex: string): string {
+function getAutoTextColor(hex: string): string {
   const rgb = hexToRgb(hex);
   if (!rgb) return '#ffffff';
   const luminance = getLuminance(rgb.r, rgb.g, rgb.b);
-  return luminance > 0.179 ? '#000000' : '#ffffff';
+  // Use white text unless background is light enough that black provides better contrast
+  // Threshold ~0.4 ensures white text on colors like red, blue, dark green
+  return luminance > 0.4 ? '#000000' : '#ffffff';
 }
 
 /**
@@ -94,20 +97,21 @@ function colorToHex(color: string): string {
 }
 
 export function ColorSwatch({
-  color = '#3c3530',
-  colorName = 'As Specified',
+  color = '#000000',
   style = 'Plain',
   size = '64 x 64',
+  labelFormat = 'Hex Color',
+  labelColor = 'Auto',
 }: ColorSwatchProps) {
   const [copied, setCopied] = useState(false);
 
-  // Normalize color to 6-digit hex if colorName is 'Hex Color'
+  // Normalize color to 6-digit hex if labelFormat is 'Hex Color'
   const normalizedColor = useMemo(() => {
-    if (colorName === 'Hex Color') {
+    if (labelFormat === 'Hex Color') {
       return colorToHex(color);
     }
     return color;
-  }, [color, colorName]);
+  }, [color, labelFormat]);
 
   const config = SIZE_CONFIG[size];
   const { width, height } = config;
@@ -115,7 +119,14 @@ export function ColorSwatch({
   const showRgb = style === 'Informative' && config.showRgb;
 
   const cornerRadius = Math.round(width * 0.08);
-  const textColor = getContrastTextColor(normalizedColor);
+
+  // Determine text color based on labelColor setting
+  const textColor = useMemo(() => {
+    if (labelColor === 'White') return '#ffffff';
+    if (labelColor === 'Black') return '#000000';
+    return getAutoTextColor(normalizedColor);
+  }, [labelColor, normalizedColor]);
+
   const rgb = hexToRgb(normalizedColor);
   const hexDisplay = normalizedColor.replace('#', '').toUpperCase();
 
