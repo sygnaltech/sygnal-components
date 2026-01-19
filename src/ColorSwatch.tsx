@@ -140,8 +140,15 @@ export function ColorSwatch({
     }
   };
 
-  // Scale font sizes based on swatch size
-  const hexFontSize = Math.round(width * 0.22);
+  // Scale font sizes based on swatch size and text length
+  const baseHexFontSize = Math.round(width * 0.22);
+  // For standard 6-char hex, use base size. Scale down for longer text.
+  // Monospace chars are roughly 0.6x font size wide
+  const maxTextWidth = width * 0.9; // 90% of swatch width
+  const estimatedTextWidth = hexDisplay.length * baseHexFontSize * 0.6;
+  const hexFontSize = estimatedTextWidth > maxTextWidth
+    ? Math.round(baseHexFontSize * (maxTextWidth / estimatedTextWidth))
+    : baseHexFontSize;
   const rgbFontSize = Math.round(width * 0.11);
   const rgbBoxWidth = Math.round(width * 0.27);
   const rgbBoxHeight = Math.round(height * 0.19);
