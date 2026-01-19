@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:docs.webflow.com)",
       "WebSearch",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "mcp__spec-mcp__spec_read_work"
     ],
     "deny": [],
     "ask": []
