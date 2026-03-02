@@ -1,0 +1,79 @@
+---
+title: Code Embed
+description: Embed external HTML, CSS, and JS from a CDN via iframe with auto-sizing and security controls.
+---
+
+# Code Embed
+
+The Code Embed component loads HTML, CSS, and JS files from a CDN base URL and renders them inside an iframe. It assembles a complete HTML document from three files — `{url}.html`, `{url}.css`, and `{url}.js` — so your embedded content stays fully isolated from the host page.
+
+**Group:** Utility
+
+## Properties
+
+### Content
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `baseUrl` | Text | `''` | CDN base URL. The component fetches `{url}.html`, `{url}.css`, and `{url}.js` from this path. |
+
+### Sizing
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `sizingMode` | Variant | `explicit` | `explicit` — fixed pixel height. `auto` — grows dynamically via postMessage from the embedded content. |
+| `height` | Number | `400` | iframe height in pixels. Used when `sizingMode` is `explicit`. |
+| `minHeight` | Number | `100` | Minimum iframe height in pixels. Used when `sizingMode` is `auto`. |
+| `width` | Text | `100%` | iframe width as a CSS value (e.g., `100%`, `640px`). |
+| `scrolling` | Variant | `auto` | Controls iframe scrollbars: `auto`, `yes`, or `no`. |
+
+### Security & Permissions
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `sandbox` | Boolean | `false` | Applies iframe sandbox restrictions. Allows scripts, same-origin, forms, popups, downloads, and modals. |
+| `referrerPolicy` | Boolean | `true` | Sends `strict-origin-when-cross-origin` referrer header. Disable to send no referrer. |
+| `allowFullscreen` | Boolean | `true` | Permits the iframe to enter fullscreen mode. |
+| `allowAutoplay` | Boolean | `false` | Permits media autoplay inside the iframe. |
+| `allowCamera` | Boolean | `false` | Grants camera access to the iframe. |
+| `allowMicrophone` | Boolean | `false` | Grants microphone access to the iframe. |
+| `allowGeolocation` | Boolean | `false` | Grants geolocation access to the iframe. |
+| `allowClipboardWrite` | Boolean | `false` | Permits writing to the clipboard. |
+| `allowPayment` | Boolean | `false` | Permits use of the Payment Request API. |
+| `allowDisplayCapture` | Boolean | `false` | Permits screen capture (getDisplayMedia). |
+
+## Sizing Modes
+
+### Explicit mode
+
+The iframe renders at a fixed pixel height. Use this when you know the content dimensions.
+
+Set `sizingMode` to `explicit` and provide a `height` value in pixels.
+
+### Auto mode
+
+The iframe expands to match its content height. The component injects a resize reporter script into the assembled HTML document that sends the document height via `postMessage`. The outer component listens and adjusts the iframe height accordingly.
+
+Set `sizingMode` to `auto`. The `minHeight` property controls the smallest height the iframe will render at.
+
+> **Note:** Auto mode requires the embedded content's origin to allow postMessage communication. If the content is cross-origin and blocked by CSP, use explicit mode instead.
+
+## How the URL is Assembled
+
+Given `baseUrl` of `https://cdn.example.com/widget`, the component fetches:
+
+- `https://cdn.example.com/widget.html` — body content
+- `https://cdn.example.com/widget.css` — stylesheet
+- `https://cdn.example.com/widget.js` — script
+
+These are assembled into a complete HTML document and rendered in the iframe as a `srcdoc`. No separate HTTP requests for the iframe document itself are made.
+
+## Error State
+
+If `baseUrl` is empty or the content fails to load, the component renders a placeholder box styled to look disabled, making it easy to spot unconfigured instances in the Designer.
+
+## Security Considerations
+
+- Enable `sandbox` to apply the most restrictive iframe permissions. The sandbox value allows `allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals`.
+- Only enable permission flags (`allowCamera`, `allowMicrophone`, etc.) for content that explicitly requires them.
+- The `referrerPolicy` toggle controls whether the host page URL is sent to the CDN. Disable it for privacy-sensitive scenarios.

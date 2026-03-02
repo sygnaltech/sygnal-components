@@ -1,0 +1,45 @@
+---
+title: Grid
+description: Arrange content in equal-width columns using CSS grid.
+---
+
+# Grid
+
+The Grid component distributes slotted content across a configurable number of equal-width columns using CSS grid. It uses `minmax(0, 1fr)` columns so items shrink correctly even when their content would otherwise overflow.
+
+**Group:** Layout
+
+## Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `columns` | Number | `3` | Number of equal-width columns. Accepted range: 1–100. |
+| `content` | Slot | — | Items to distribute across the grid columns. |
+| `debugMode` | Boolean | `false` | Shows a debug panel indicating the active column count. |
+
+## Column Layout
+
+The grid is defined as:
+
+```css
+grid-template-columns: repeat(N, minmax(0, 1fr));
+gap: 1rem;
+```
+
+Where `N` is the `columns` property value. All columns are equal width and flex with the container.
+
+Slotted child elements receive `display: contents`, which removes them from the layout box model so their children participate directly in the grid. This lets you nest Webflow elements inside the slot without creating an extra wrapper that breaks the grid structure.
+
+## Responsive Layouts
+
+The Grid component sets a fixed column count. For responsive behavior, use multiple Grid components inside Webflow's conditional visibility or breakpoint-specific layout containers, each with a different `columns` value.
+
+Alternatively, wrap the Grid in a parent element and use Webflow's custom CSS on that parent to control when the grid switches to a single column.
+
+## Gap
+
+The gap between grid items is fixed at `1rem`. This is currently not configurable via a property — apply custom CSS to the Grid's wrapper element if you need a different gap value.
+
+## Debug Mode
+
+Enable `debugMode` to show a panel that spans all grid columns and displays the current `columns` value. This helps confirm the component is configured correctly while building layouts in the Designer. Disable it before publishing.

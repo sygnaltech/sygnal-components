@@ -1,0 +1,57 @@
+---
+title: Color Swatch
+description: Clickable color swatch with optional hex/RGB display and automatic contrast-aware text color.
+---
+
+# Color Swatch
+
+The Color Swatch component renders a colored square with optional label information. Clicking the swatch copies the hex value to the clipboard and shows a brief "Copied!" confirmation. Text color is automatically chosen for legibility against the swatch color.
+
+**Group:** UI
+
+## Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `color` | Text | `#000000` | Any valid CSS color value. Supports hex (`#ff6600`), named colors (`tomato`), `rgb()`, `rgba()`, and `hsl()`. |
+| `style` | Variant | `Plain` | `Plain` — shows only the color fill. `Informative` — adds hex and RGB component boxes at the bottom. |
+| `size` | Variant | `64 x 64` | Preset swatch dimensions: `32 x 32`, `48 x 48`, `64 x 64`, `96 x 96`, `128 x 128`, `154 x 154`. |
+| `labelFormat` | Variant | `Hex Color` | `As Specified` — displays the color value as entered. `Hex Color` — converts any color format to 6-digit hex before displaying. |
+| `labelColor` | Variant | `Auto` | `White`, `Black`, or `Auto`. `Auto` uses WCAG relative luminance to pick whichever is more legible. |
+
+## Styles
+
+### Plain
+
+Renders the swatch as a solid color block. The hex value is shown centered in the swatch. Click anywhere on the swatch to copy.
+
+### Informative
+
+Extends the Plain style with an additional row at the bottom that shows RGB component boxes — one each for the Red, Green, and Blue values. Useful for design systems or color palette documentation.
+
+## Label Format
+
+- **As Specified:** The label reflects the `color` value exactly as entered. If you type `tomato`, the label shows `tomato`.
+- **Hex Color:** All color formats are normalized to 6-digit hex (e.g., `rgb(255, 99, 71)` → `#FF6347`). Named colors and `rgba` values are resolved to their hex equivalents.
+
+## Auto Text Color
+
+When `labelColor` is set to `Auto`, the component calculates the relative luminance of the swatch color using the WCAG formula and selects black or white text to ensure the highest contrast ratio.
+
+## Click-to-Copy
+
+Clicking the swatch copies the resolved hex value to the clipboard. A "Copied!" message briefly appears over the swatch. This works in browsers that support the Clipboard API (all modern browsers).
+
+## Color Format Support
+
+The component accepts any CSS color string that the browser can parse. Internally it normalizes all colors to hex for copy operations and WCAG luminance calculations. Examples:
+
+```
+#ff6600
+#f60
+rgb(255, 102, 0)
+rgba(255, 102, 0, 1)
+hsl(24, 100%, 50%)
+tomato
+coral
+```

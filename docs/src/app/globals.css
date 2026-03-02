@@ -1,0 +1,4 @@
+/* Set Nextra's CSS variable for content width */
+:root {
+  --nextra-content-width: 1400px;
+}

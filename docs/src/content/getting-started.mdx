@@ -1,0 +1,47 @@
+# Getting Started
+
+Sygnal Components integrates into Webflow as a code component library. Follow these steps to add it to your project.
+
+## Prerequisites
+
+- A Webflow site on a plan that supports code components
+- Access to your site's **Designer** settings
+
+## Adding the Library to Webflow
+
+1. Open your Webflow project in the Designer.
+2. Click the **Components** panel icon in the left sidebar.
+3. Scroll to the **Code components** section and click **Manage**.
+4. Add the Sygnal Components library by entering the library URL or selecting it from your connected libraries.
+5. Once connected, all components will appear in your component panel under the **Sygnal** group.
+
+## Using a Component
+
+1. Open the **Components** panel in the Webflow Designer.
+2. Find the component you want (e.g., **QR Code**, **Dropdown**).
+3. Drag it onto the canvas.
+4. Select the component on the canvas to open its property panel on the right.
+5. Configure the available properties — text, numbers, variants, and toggles.
+
+## Slots
+
+Many components include one or more **Slot** properties. Slots let you nest your own Webflow elements inside the component, which the component then positions or wires up with its logic.
+
+To use a slot:
+1. Select the component on the canvas.
+2. In the right panel, find the slot property.
+3. Double-click into the slot area to add child elements.
+
+## Deploying
+
+Components render in the Webflow Designer for layout and configuration. They use the same React runtime in published sites. No additional build steps are needed — publish your site normally.
+
+## Development Notes
+
+If you are building or customizing the library itself, the project uses:
+
+- `npm run dev` — Start the Vite development server
+- `npm run build` — Build for production
+- `npm run deploy` — Deploy components to the Webflow library
+
+See the repository's `CLAUDE.md` for full development commands.

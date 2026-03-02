@@ -1,0 +1,99 @@
+---
+title: Dropdown
+description: Nestable dropdown menu with configurable expansion direction, trigger mode, and fade animations.
+---
+
+# Dropdown
+
+The Dropdown component renders a trigger button that opens a panel of content. It supports arbitrary nesting depth, six expansion directions, click or hover triggers, and configurable fade animations. Panels use `position: fixed` so they escape any `overflow: hidden` ancestors.
+
+**Group:** Navigation
+
+## Properties
+
+### Content
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `label` | Text Node | `Menu` | The trigger button label text. Editable inline on the Webflow canvas. |
+| `icon` | Image | — | Optional leading icon displayed before the label text. |
+| `content` | Slot | — | The dropdown panel contents. Supports nested Dropdown components. |
+
+### Behavior
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `position` | Variant | `below` | Which direction the panel expands: `below`, `above`, `right-down`, `right-up`, `left-down`, `left-up`. |
+| `openOnHover` | Boolean | `false` | Open the panel on mouse hover instead of click. |
+| `hoverCloseDelay` | Number | `150` | Milliseconds to wait before closing the panel after the mouse leaves (hover mode only). Range: 0–2000. |
+
+### Animation
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `fadeEnabled` | Boolean | `true` | Fade the panel in and out on open/close. |
+| `fadeDuration` | Number | `200` | Fade transition duration in milliseconds. Range: 0–2000. |
+| `fadeEasing` | Text | `ease` | CSS easing function for the fade transition (e.g., `ease-in-out`, `cubic-bezier(0.4, 0, 0.2, 1)`). |
+
+### Designer
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `designMode` | Boolean | `false` | Forces the panel open so you can lay out and style it in the Webflow Designer. Disable before publishing. |
+
+## Position Options
+
+| Value | Panel opens... |
+|-------|---------------|
+| `below` | Below the trigger, aligned to the left |
+| `above` | Above the trigger, aligned to the left |
+| `right-down` | To the right of the trigger, aligned to the top |
+| `right-up` | To the right of the trigger, aligned to the bottom |
+| `left-down` | To the left of the trigger, aligned to the top |
+| `left-up` | To the left of the trigger, aligned to the bottom |
+
+The panel position is calculated from viewport coordinates, so it renders correctly regardless of scroll position or parent overflow settings.
+
+## Nesting
+
+Dropdown panels can contain other Dropdown components, creating multi-level menus. The component tracks nesting depth via shadow DOM traversal and exposes it as a CSS variable, allowing depth-specific styling:
+
+```css
+--cc-dropdown-background-1: #ffffff;   /* level 1 */
+--cc-dropdown-background-2: #f5f5f5;   /* level 2 */
+--cc-dropdown-background: #e0e0e0;     /* fallback for all levels */
+```
+
+There is no configured limit on nesting depth.
+
+## Click Mode
+
+In click mode (default), clicking the trigger toggles the panel. Clicking outside any open dropdown or pressing `Escape` closes all open panels.
+
+## Hover Mode
+
+Enable `openOnHover` to open the panel when the mouse enters the trigger area. The panel stays open while the mouse is over either the trigger or the panel. After the mouse leaves both, the panel closes after `hoverCloseDelay` milliseconds.
+
+The hover check traverses the composed event path to correctly handle nested dropdowns — hovering a child panel does not close the parent.
+
+## Chevron Icon
+
+The trigger button includes a chevron icon that rotates based on the open state and expansion direction, providing a visual cue about which way the panel will appear.
+
+## Custom Events
+
+| Event | Fired On | Description |
+|-------|----------|-------------|
+| `dropdown:closeAll` | Document | Dispatching this event on the document closes all open dropdown panels. |
+
+```js
+document.dispatchEvent(new CustomEvent('dropdown:closeAll'));
+```
+
+## Design Mode
+
+Set `designMode` to `true` while styling the dropdown panel in the Webflow Designer. This keeps the panel visible so you can select and style its contents. Remember to turn it off before publishing — the panel should be closed by default for site visitors.
+
+## CSS Styling
+
+The dropdown panel is a standard div positioned with fixed coordinates. Apply Webflow classes to the content slot children to style the panel appearance. Use CSS variables for depth-aware theming when nesting multiple levels.

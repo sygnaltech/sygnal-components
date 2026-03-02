@@ -1,0 +1,108 @@
+---
+title: Countdown Timer
+description: A persistent countdown timer that survives page reloads using localStorage.
+---
+
+# Countdown Timer
+
+The Countdown Timer component runs a real-time countdown and persists its state across page reloads via localStorage. Once a visitor first loads the page, the timer locks their end time in storage — refreshing or revisiting the page picks up where the countdown left off rather than restarting.
+
+**Group:** Utilities
+
+## Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `duration` | Text | `24h` | Duration string defining how long the countdown runs from first visit. |
+| `content` | Slot | — | The content area containing countdown display elements. |
+| `storageKey` | Text | `countdown` | localStorage key prefix used to persist this timer's state. Use a unique value if you have multiple timers on the same site. |
+| `leadingZeros` | Boolean | `true` | Pad single-digit values with a leading zero (e.g., `5` → `05`). |
+| `debugMode` | Boolean | `false` | Shows a debug information panel with current timer state. |
+
+## Duration Format
+
+The `duration` property accepts a flexible string with one or more time units:
+
+| Unit | Symbol | Example |
+|------|--------|---------|
+| Years | `y` | `1y` |
+| Months | `M` | `6M` |
+| Days | `d` | `5d` |
+| Hours | `h` | `12h` |
+| Minutes | `m` | `30m` |
+| Seconds | `s` | `45s` |
+
+Units can be combined in any order:
+
+```
+24h
+2d 12h
+1y 6M 5d 3h 30m 15s
+```
+
+## Wiring Up Display Elements
+
+The component drives display elements via a `countdown-remaining` attribute. Add this attribute to any element inside the `content` slot:
+
+| Attribute Value | What It Shows |
+|----------------|---------------|
+| `days` | Remaining days |
+| `hours` | Remaining hours (0–23) |
+| `minutes` | Remaining minutes (0–59) |
+| `seconds` | Remaining seconds (0–59) |
+| `active` | Visible when the countdown is running |
+| `expired` | Visible when the countdown has ended |
+
+### Example Markup (inside the slot)
+
+```html
+<div countdown-remaining="days">00</div>
+<div countdown-remaining="hours">00</div>
+<div countdown-remaining="minutes">00</div>
+<div countdown-remaining="seconds">00</div>
+
+<div countdown-remaining="active">Offer ends soon!</div>
+<div countdown-remaining="expired">This offer has ended.</div>
+```
+
+The component queries for these attributes and updates their text content every second. Elements with `countdown-remaining="active"` are hidden when the timer expires; elements with `countdown-remaining="expired"` are hidden while the timer runs.
+
+## Custom Events
+
+The component dispatches custom events on the host element each time the countdown ticks:
+
+| Event | Fired When |
+|-------|-----------|
+| `countdown:update` | Every second (general update) |
+| `countdown:days` | Every second (days value) |
+| `countdown:hours` | Every second (hours value) |
+| `countdown:minutes` | Every second (minutes value) |
+| `countdown:seconds` | Every second (seconds value) |
+| `countdown:expired` | When the countdown reaches zero |
+
+Listen for these events with JavaScript if you need to drive additional UI outside the slot:
+
+```js
+document.querySelector('[data-component="countdown"]')
+  .addEventListener('countdown:expired', () => {
+    // handle expiry
+  });
+```
+
+## Persistence
+
+The timer stores two values in localStorage under the `storageKey` prefix:
+
+- `{storageKey}:firstVisit` — timestamp of when the visitor first loaded the page
+- `{storageKey}:endTime` — calculated end time based on first visit + duration
+
+If a visitor clears their localStorage or visits from a different browser, the countdown restarts from the full duration.
+
+## Multiple Timers
+
+To use more than one timer on the same site, give each a unique `storageKey`. Without this, timers share the same localStorage entry and will interfere with each other.
+
+```
+Timer 1: storageKey = "sale-countdown"
+Timer 2: storageKey = "signup-deadline"
+```

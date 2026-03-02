@@ -1,0 +1,245 @@
+{
+  "main": {
+    "id": "3df554bd710a68ba",
+    "type": "split",
+    "children": [
+      {
+        "id": "7d8d68f1b6dd9868",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "98adf021a74a446c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          },
+          {
+            "id": "3841ac0f84292774",
+            "type": "leaf",
+            "state": {
+              "type": "mdx-preview",
+              "state": {
+                "data": "# My Nextra 4 Documentation\r\n\r\nA clean documentation site built with Nextra 4 and Next.js 15.\r\n\r\n## Getting Started\r\n\r\nInstall dependencies:\r\n\r\n```bash\r\nnpm install\r\n```\r\n\r\nRun the development server:\r\n\r\n```bash\r\nnpm run dev\r\n```\r\n\r\nOpen [http://localhost:3000](http://localhost:3000) in your browser.\r\n\r\n## Project Structure\r\n\r\n```\r\nmy-docs-project/\r\n├── src/\r\n│   ├── app/\r\n│   │   ├── layout.tsx              # Root layout\r\n│   │   └── [[...slug]]/\r\n│   │       ├── layout.tsx          # Docs layout with Nextra theme\r\n│   │       └── page.tsx            # Dynamic page handler\r\n│   └── content/                    # Your MDX documentation files\r\n│       ├── _meta.json              # Sidebar configuration\r\n│       ├── index.mdx               # Home page\r\n│       ├── basic-features.mdx\r\n│       ├── advanced-features.mdx\r\n│       └── components.mdx\r\n├── next.config.mjs                 # Next.js + Nextra config\r\n├── package.json\r\n└── tsconfig.json\r\n```\r\n\r\n## Adding New Pages\r\n\r\n1. Create a new `.mdx` file in `src/content/`\r\n2. Add frontmatter with title and description\r\n3. Update `src/content/_meta.json` to add it to the sidebar\r\n\r\nExample:\r\n\r\n```mdx\r\n---\r\ntitle: My New Page\r\ndescription: Description of my page\r\n---\r\n\r\n# My New Page\r\n\r\nYour content here...\r\n```\r\n\r\n## Features Demonstrated\r\n\r\nThis starter includes examples of:\r\n\r\n- ✅ Basic Markdown syntax\r\n- ✅ Code blocks with syntax highlighting\r\n- ✅ Callouts (info, warning, error)\r\n- ✅ Steps component\r\n- ✅ Tabs component\r\n- ✅ Cards component\r\n- ✅ FileTree component\r\n- ✅ Math equations (LaTeX)\r\n- ✅ Mermaid diagrams\r\n- ✅ Dark mode\r\n- ✅ Full-text search\r\n\r\n## Learn More\r\n\r\n- [Nextra Documentation](https://nextra.site)\r\n- [Next.js Documentation](https://nextjs.org/docs)\r\n\r\n## Deploy\r\n\r\nDeploy easily to Vercel:\r\n\r\n```bash\r\nnpm run build\r\n```\r\n\r\nOr use Vercel CLI:\r\n\r\n```bash\r\nvercel\r\n```\r\n",
+                "basename": "README"
+              },
+              "icon": "lucide-file",
+              "title": "MDX Preview"
+            }
+          },
+          {
+            "id": "007f12007429dfb3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "src/content/index.mdx",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "index"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "251946a29a7c06fc",
+    "type": "split",
+    "children": [
+      {
+        "id": "137c4c2d14d1aa53",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "63e188fca850eb09",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "3d69ca3a44de32fb",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "18d8d0ff643d1373",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b631fadba102e775",
+    "type": "split",
+    "children": [
+      {
+        "id": "5a56d40c2db68249",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1db506fb906c649e",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for README"
+            }
+          },
+          {
+            "id": "991798bd8e015b98",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from README"
+            }
+          },
+          {
+            "id": "51a6fc3152bc44f2",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "0f43b8eef1ff90f7",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "README.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "007f12007429dfb3",
+  "lastOpenFiles": [
+    "src/content/page-setup.mdx",
+    "src/content/index.mdx",
+    "public/popup.png",
+    "public/toolbar.png",
+    "src/content/installation.mdx",
+    "out/_pagefind/pagefind-entry.json",
+    "out/_pagefind/wasm.unknown.pagefind",
+    "out/_pagefind/pagefind-modular-ui.css",
+    "out/_pagefind/pagefind-modular-ui.js",
+    "out/_pagefind/pagefind-ui.js",
+    "out/_pagefind/pagefind-ui.css",
+    "out/_pagefind/pagefind-highlight.js",
+    "out/html-embed-example.png",
+    "node_modules/is-hexadecimal/readme.md",
+    "node_modules/is-decimal/readme.md",
+    "node_modules/character-reference-invalid/readme.md",
+    "node_modules/array-iterate/readme.md",
+    "node_modules/unist-util-modify-children/readme.md",
+    "node_modules/micromark-factory-title/readme.md",
+    "node_modules/micromark-factory-label/readme.md",
+    "node_modules/space-separated-tokens/readme.md",
+    "node_modules/micromark-factory-space/readme.md",
+    "node_modules/mdast-util-find-and-replace/readme.md",
+    "node_modules/longest-streak/readme.md",
+    "node_modules/unist-util-remove-position/readme.md",
+    "node_modules/micromark-util-chunked/readme.md",
+    "node_modules/markdown-extensions/readme.md",
+    "node_modules/micromark-util-encode/readme.md",
+    "node_modules/trim-lines/readme.md",
+    "node_modules/is-plain-obj/readme.md",
+    "node_modules/bail/readme.md",
+    "node_modules/micromark-util-sanitize-uri/readme.md",
+    "node_modules/micromark-util-decode-string/readme.md",
+    "node_modules/micromark-util-decode-numeric-character-reference/readme.md",
+    "node_modules/mdast-util-gfm-strikethrough/readme.md",
+    "node_modules/unist-util-visit-children/readme.md",
+    "node_modules/unist-util-remove/readme.md",
+    "node_modules/unist-util-visit/readme.md",
+    "node_modules/cytoscape-fcose/node_modules/layout-base/layout-schema.png",
+    "node_modules/layout-base/layout-schema.png",
+    "node_modules/cytoscape-fcose/demo/incrementalConstraints.gif",
+    "node_modules/cytoscape-fcose/demo/demo.gif"
+  ]
+}

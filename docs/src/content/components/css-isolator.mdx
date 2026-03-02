@@ -1,0 +1,94 @@
+---
+title: CSS Isolator
+description: Scope CSS variables and rules to a container using ID-based selectors.
+---
+
+# CSS Isolator
+
+The CSS Isolator wraps its slotted content in a container with a generated unique ID, then prefixes all CSS selectors with that ID. This prevents styles from leaking out to the rest of the page, and lets you override CSS variables for a specific section without affecting other instances of the same components.
+
+**Group:** Style
+
+## Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `cssVars` | Text | — | CSS custom property overrides applied to the scoped container (e.g., `--color-brand: #ff6600;`). |
+| `css` | Text | — | Full CSS rules to scope to this container. Selectors are automatically prefixed with the container's unique ID. |
+| `slot` | Slot | — | Components and elements that should be affected by the isolated CSS rules. |
+
+## How It Works
+
+When the component mounts, it generates a unique ID (UUID v4) and creates a wrapping `<div id="{uuid}">`. Any CSS you provide in the `css` property is transformed so that every selector is prefixed with `#{uuid}`:
+
+```css
+/* Your input */
+.button { color: red; }
+h2 { font-size: 2rem; }
+
+/* Applied to the page */
+#a1b2c3d4 .button { color: red; }
+#a1b2c3d4 h2 { font-size: 2rem; }
+```
+
+CSS custom properties from `cssVars` are applied directly to the container element, making them available to all descendants via cascade.
+
+## CSS Variables
+
+Use the `cssVars` property to override design tokens or CSS custom properties for everything inside the isolator:
+
+```css
+--color-brand: #ff6600;
+--font-size-heading: 2.5rem;
+--spacing-section: 4rem;
+```
+
+These variables cascade normally within the scoped container. Components that consume these variables will pick up the overridden values.
+
+## Scoped CSS Rules
+
+Use the `css` property for full CSS rules. Selectors are prefixed automatically — you write standard CSS:
+
+```css
+.card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+h2 {
+  font-weight: 700;
+  color: var(--color-brand);
+}
+```
+
+> **Limitation:** The selector prefixer uses a regex-based approach, not a full CSS parser. Complex selectors involving pseudo-elements (`::before`, `::after`) or at-rules (`@media`, `@keyframes`) may not be prefixed correctly. Test thoroughly when using advanced CSS.
+
+## Combining Variables and Rules
+
+You can use both properties together. Variables are applied first (as inline styles on the container), then scoped rules are injected via a `<style>` tag.
+
+## Use Cases
+
+### Per-section theme overrides
+
+Apply different brand colors to two sections of the same page that use the same components:
+
+```css
+/* Section 1 CSS Isolator */
+cssVars: --color-brand: #0055ff; --color-accent: #00ccff;
+
+/* Section 2 CSS Isolator */
+cssVars: --color-brand: #ff3300; --color-accent: #ffaa00;
+```
+
+### One-off component styling
+
+Style a specific component instance without affecting global styles or creating new Webflow classes:
+
+```css
+.my-component { padding: 2rem; background: #f5f5f5; }
+```
+
+## HTML Encoding
+
+Both `cssVars` and `css` values are HTML-decoded before being applied, so HTML entities like `&gt;` and `&amp;` entered through the Webflow Designer are correctly handled.

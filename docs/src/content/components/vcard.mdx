@@ -1,0 +1,113 @@
+---
+title: VCard
+description: Generate and download contact information as a vCard (.vcf) file.
+---
+
+# VCard
+
+The VCard component generates a contact card in vCard 3.0 format and triggers a browser download when activated. It supports two interaction modes: a built-in styled button, or a custom content slot that wraps any Webflow element you design.
+
+**Group:** Interactive
+
+## Properties
+
+### Display
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `variant` | Variant | `Button` | `Button` — renders a built-in download button. `Slot` — wraps custom content; clicking anywhere inside triggers the download. |
+| `buttonText` | Text | `Save to Contacts` | Label text for the built-in button. Only used when `variant` is `Button`. |
+| `buttonStyle` | Text | `''` | Inline CSS applied to the built-in button (e.g., `background-color: #0055ff; color: white;`). Only used when `variant` is `Button`. |
+| `Slot` | Slot | — | Custom clickable content. Only used when `variant` is `Slot`. |
+
+### Download
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `filename` | Text | `contact.vcf` | The downloaded file name. `.vcf` is automatically appended if not already present. |
+
+### Contact Information
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `fullName` | Text | `''` | The contact's full display name (FN field in vCard). |
+| `firstName` | Text | `''` | Given name (N field). |
+| `lastName` | Text | `''` | Family name (N field). |
+| `organization` | Text | `''` | Company or organization name. |
+| `title` | Text | `''` | Job title or position. |
+| `cellPhone` | Text | `''` | Mobile phone number. |
+| `workPhone` | Text | `''` | Work phone number. |
+| `email` | Text | `''` | Primary email address. |
+| `additionalEmail` | Text | `''` | Secondary email address. |
+| `streetAddress` | Text | `''` | Street address. |
+| `city` | Text | `''` | City. |
+| `state` | Text | `''` | State, province, or region. |
+| `postalCode` | Text | `''` | ZIP or postal code. |
+| `country` | Text | `''` | Country name. |
+| `websiteUrl` | Link | — | Website or social media URL. |
+| `note` | Text | `''` | Additional notes appended to the vCard. |
+
+## Interaction Modes
+
+### Button variant
+
+The component renders a styled button. By default it uses blue background (`#0055ff`) with white text and `12px 24px` padding. Customize the appearance using the `buttonStyle` property with inline CSS:
+
+```
+background-color: #111827; color: white; border-radius: 6px; padding: 10px 20px; font-weight: 600;
+```
+
+### Slot variant
+
+Set `variant` to `Slot` and design any Webflow element inside the slot — a button, a banner, a card, a link. The entire slot area becomes clickable and triggers the vCard download. This gives you full control over the download trigger's appearance using Webflow's native design tools.
+
+## Generated vCard Format
+
+The component outputs a vCard 3.0 file. Only fields with non-empty values are included:
+
+```
+BEGIN:VCARD
+VERSION:3.0
+N:Smith;John;;;
+FN:John Smith
+ORG:Acme Corp
+TITLE:Product Manager
+TEL;TYPE=CELL:+1 555 000 0001
+TEL;TYPE=WORK,VOICE:+1 555 000 0002
+EMAIL;TYPE=WORK:john@acme.com
+EMAIL:john@personal.com
+ADR;TYPE=WORK:;;123 Main St;Springfield;IL;62701;USA
+URL:https://john.example.com
+NOTE:Met at conference 2024
+END:VCARD
+```
+
+### vCard Field Mapping
+
+| Property | vCard Field | Type Tag |
+|----------|-------------|---------|
+| `firstName` + `lastName` | `N` | — |
+| `fullName` | `FN` | — |
+| `organization` | `ORG` | — |
+| `title` | `TITLE` | — |
+| `cellPhone` | `TEL` | `CELL` |
+| `workPhone` | `TEL` | `WORK,VOICE` |
+| `email` | `EMAIL` | `WORK` |
+| `additionalEmail` | `EMAIL` | — |
+| `streetAddress` + `city` + `state` + `postalCode` + `country` | `ADR` | `WORK` |
+| `websiteUrl` | `URL` | — |
+| `note` | `NOTE` | — |
+
+## Download Behavior
+
+The component creates a `Blob` with the vCard content and type `text/vcard`, generates a temporary object URL, clicks a hidden `<a>` element to trigger the browser's download dialog, then immediately revokes the URL. This works in all modern browsers without any server-side processing.
+
+## Button Style Property
+
+The `buttonStyle` property accepts CSS in standard CSS syntax (property: value; pairs). Property names should use kebab-case:
+
+```
+background-color: #333; color: #fff; padding: 12px 24px; border-radius: 4px;
+```
+
+These styles are parsed and applied as inline styles on the button element. Any valid CSS property is accepted.

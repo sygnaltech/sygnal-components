@@ -1,0 +1,72 @@
+---
+title: SVG Icon
+description: Render inline SVG markup with validation, HTML entity decoding, and preset size variants.
+---
+
+# SVG Icon
+
+The SVG Icon component renders inline SVG markup directly into the page. It validates the SVG before rendering, decodes HTML entities that may have been introduced by the Webflow Designer's text fields, and applies one of six preset size variants.
+
+**Group:** Media
+
+## Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `svg` | Text | — | SVG markup string (the full `<svg>...</svg>` element). |
+| `variant` | Variant | `16x16` | Preset output dimensions applied to the rendered SVG container. |
+
+## Size Options
+
+| Variant | Dimensions |
+|---------|-----------|
+| `16x16` | 16 × 16 px |
+| `24x24` | 24 × 24 px |
+| `32x32` | 32 × 32 px |
+| `48x48` | 48 × 48 px |
+| `80x80` | 80 × 80 px |
+| `104x104` | 104 × 104 px |
+
+Sizes are fixed pixel dimensions, not responsive. The component wrapper is sized to the variant, and the SVG renders within it.
+
+## Providing SVG Markup
+
+Paste the full `<svg>` element into the `svg` property. The SVG must be valid XML. If the markup fails validation, the component renders an error state rather than broken HTML.
+
+### Example
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <circle cx="12" cy="12" r="10"/>
+  <line x1="12" y1="8" x2="12" y2="12"/>
+  <line x1="12" y1="16" x2="12.01" y2="16"/>
+</svg>
+```
+
+## HTML Entity Decoding
+
+When entering SVG markup in the Webflow Designer, the text field may encode certain characters as HTML entities (e.g., `&lt;` for `<`, `&amp;` for `&`, `&quot;` for `"`). The component automatically decodes these entities before rendering, so SVG copied from tools like Figma or Illustrator renders correctly without manual cleanup.
+
+## Default Icon
+
+If the `svg` property is empty, the component renders a default plus/cross icon as a placeholder. This makes the component easy to identify and configure in the Webflow Designer.
+
+## Validation
+
+The SVG string is parsed with `DOMParser` before rendering. If the parsed document contains a `parsererror` element, the SVG is considered invalid and an error state is shown instead of potentially broken markup.
+
+## Styling
+
+The SVG is rendered using `dangerouslySetInnerHTML` inside the component's shadow DOM. To control color, use `currentColor` in your SVG markup and set the CSS `color` property on the component's wrapper element via Webflow's style panel.
+
+```xml
+<svg ... stroke="currentColor" ...>
+```
+
+Then set the Webflow element's text color to control the icon color through CSS inheritance.
+
+## Use Cases
+
+- UI icons from icon libraries (Lucide, Heroicons, Feather, etc.)
+- Brand logos or custom vector graphics
+- Inline diagrams or illustrations that need to scale without pixelation

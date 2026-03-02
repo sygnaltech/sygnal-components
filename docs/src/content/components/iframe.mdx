@@ -1,0 +1,81 @@
+---
+title: IFrame
+description: Embed external URLs in a sandboxed iframe with configurable permissions.
+---
+
+# IFrame
+
+The IFrame component embeds an external URL in a sandboxed iframe. It exposes the same security and permission controls as the [Code Embed](/components/code-embed) component, but takes a direct URL rather than assembling content from separate HTML/CSS/JS files.
+
+**Group:** Utility
+
+## Properties
+
+### Content
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `url` | Text | `''` | The URL to embed. Must be a fully qualified URL (e.g., `https://example.com`). |
+
+### Sizing
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `height` | Number | `400` | iframe height in pixels. |
+| `width` | Text | `100%` | iframe width as a CSS value (e.g., `100%`, `640px`). |
+| `scrolling` | Variant | `auto` | Controls iframe scrollbars: `auto`, `yes`, or `no`. |
+
+### Security & Permissions
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `sandbox` | Boolean | `false` | Applies iframe sandbox restrictions. Allows scripts, same-origin, forms, popups, downloads, and modals. |
+| `referrerPolicy` | Boolean | `true` | Sends `strict-origin-when-cross-origin` referrer header. Disable to send no referrer. |
+| `allowFullscreen` | Boolean | `true` | Permits the iframe to enter fullscreen mode. |
+| `allowAutoplay` | Boolean | `false` | Permits media autoplay inside the iframe. |
+| `allowCamera` | Boolean | `false` | Grants camera access to the iframe. |
+| `allowMicrophone` | Boolean | `false` | Grants microphone access to the iframe. |
+| `allowGeolocation` | Boolean | `false` | Grants geolocation access to the iframe. |
+| `allowClipboardWrite` | Boolean | `false` | Permits writing to the clipboard. |
+| `allowPayment` | Boolean | `false` | Permits use of the Payment Request API. |
+| `allowDisplayCapture` | Boolean | `false` | Permits screen capture (getDisplayMedia). |
+
+## Empty URL State
+
+If `url` is empty, the component renders an error message in place of the iframe, indicating that no URL has been provided. This makes unconfigured instances easy to spot in the Designer and on the live site.
+
+## Security Controls
+
+### Sandbox
+
+Enabling `sandbox` applies the following permission set to the iframe:
+
+```
+allow-scripts allow-same-origin allow-forms allow-popups
+allow-popups-to-escape-sandbox allow-downloads allow-modals
+```
+
+This is a balanced sandbox that permits interactive content while restricting top-level navigation and other potentially risky behaviors.
+
+### Permission Flags
+
+Each permission flag adds an entry to the iframe's `allow` attribute. Only enable permissions that the embedded content explicitly requires:
+
+- **allowAutoplay** — Required for video/audio players that start automatically
+- **allowCamera / allowMicrophone** — Required for video conferencing or media recording tools
+- **allowGeolocation** — Required for location-based services
+- **allowClipboardWrite** — Required for copy-to-clipboard functionality inside the iframe
+- **allowPayment** — Required for embedded checkout flows using the Payment Request API
+- **allowDisplayCapture** — Required for screen sharing features
+
+## IFrame vs Code Embed
+
+Use **IFrame** when you have a URL to an existing page or service.
+Use **[Code Embed](/components/code-embed)** when you have HTML, CSS, and JS files on a CDN that you want assembled and rendered together.
+
+| Feature | IFrame | Code Embed |
+|---------|--------|-----------|
+| Input | URL | CDN base URL |
+| Content assembly | None — loads the URL directly | Assembles HTML + CSS + JS into a document |
+| Auto-sizing | No | Yes (auto mode) |
+| Use case | External pages, apps, embeds | Custom widgets from a CDN |
