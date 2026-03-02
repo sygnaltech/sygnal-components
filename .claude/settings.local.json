@@ -14,7 +14,8 @@
       "mcp__chrome-devtools__list_pages",
       "mcp__chrome-devtools__new_page",
       "mcp__playwright-extension__browser_evaluate",
-      "mcp__spec-mcp__spec_write_work"
+      "mcp__spec-mcp__spec_write_work",
+      "Read(//d/Projects/**)"
     ],
     "deny": [],
     "ask": [],

@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev: Ready",
+      "type": "shell",
+      "command": "powershell -NoProfile -File \"${workspaceFolder}/dev-ready.ps1\"",
+      "presentation": {
+        "group": "sygnal-dev",
+        "panel": "dedicated",
+        "reveal": "always",
+        "tab": "Sygnal: !"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docs",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/docs" },
+      "presentation": {
+        "group": "sygnal-dev",
+        "panel": "dedicated",
+        "reveal": "always",
+        "tab": "Sygnal: Docs"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev: Servers",
+      "dependsOn": ["Docs"],
+      "dependsOrder": "parallel",
+      "presentation": { "reveal": "never" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev: Start Servers",
+      "dependsOn": ["Dev: Ready", "Dev: Servers"],
+      "dependsOrder": "sequence",
+      "presentation": { "reveal": "never" },
+      "problemMatcher": []
+    }
+  ]
+}
