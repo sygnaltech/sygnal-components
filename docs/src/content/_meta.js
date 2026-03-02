@@ -10,7 +10,5 @@ export default {
     type: 'separator',
     title: 'Code Component Libraries'
   },
-  components: {
-    display: 'children'
-  }
+  'sygnal-components': 'Sygnal Components'
 }

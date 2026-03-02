@@ -1,4 +1,5 @@
 export default {
+  index: 'Overview',
   'code-embed': 'Code Embed',
   'color-swatch': 'Color Swatch',
   'countdown-timer': 'Countdown Timer',
