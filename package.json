@@ -25,7 +25,7 @@
     "deploy": "sygnal-deploy",
     "deploy-prod": "sygnal-deploy --release",
     "deploy-test": "sygnal-deploy --prerelease",
-    "update-cli": "npm i --save-dev @webflow/webflow-cli@latest @webflow/data-types@latest @webflow/react@latest"
+    "update-cli": "npm i --global @webflow/webflow-cli@latest @webflow/data-types@latest @webflow/react@latest"
   },
   "eslintConfig": {
     "extends": [
@@ -47,10 +47,12 @@
   },
   "devDependencies": {
     "@sygnal/code-component": "^0.5.8",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.2",
-    "@webflow/data-types": "^1.0.1",
-    "@webflow/react": "^1.0.1",
-    "@webflow/webflow-cli": "^1.8.44",
+    "@webflow/data-types": "^1.2.1",
+    "@webflow/react": "^1.2.1",
+    "@webflow/webflow-cli": "^1.12.2",
     "vite": "^7.1.4"
   }
 }

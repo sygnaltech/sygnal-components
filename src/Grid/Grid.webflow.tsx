@@ -12,7 +12,6 @@ export default declareComponent(Grid, {
       group: 'Settings',
       min: 1,
       max: 100,
-      step: 1,
       defaultValue: 3,
       tooltip: 'Number of equal-width columns in the grid.',
     }),
