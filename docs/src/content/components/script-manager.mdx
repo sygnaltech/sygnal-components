@@ -5,17 +5,29 @@ description: Load different external scripts per environment — development, te
 
 # Script Manager
 
-The Script Manager component injects a single external script tag into the page, choosing between dev, test, and production script URLs based on the current environment. The active environment is determined automatically from the hostname, but can be overridden via URL parameters or persisted in localStorage.
+![Script Manager component in Webflow Designer](/components/script-manager.png)
+
+When injecting a code library into a Webflow site, it's best to serve it from a CDN and use separate URLs for dev, test, and production builds. Script Manager automates this — it detects the current environment and loads the correct script automatically, with easy URL-parameter overrides for developers.
+
+> Based on an idea by [Patrick Corsetti](https://x.com/corsettiDev).
 
 **Group:** Utilities
+
+## Features
+
+- Dynamic script loading based on environment
+- **Automatic detection:** injects the TEST script on staging (`*.webflow.io`), the PROD script on production
+- **Developer overrides:** append `?dev`, `?test`, or `?prod` to any URL to switch modes instantly
+- **Persistent overrides:** mode selection is stored in localStorage and survives page loads
+- **Visual indicator:** colored badge shows when an override is active; click it to exit override mode
 
 ## Properties
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `devCodeUrl` | Text | — | Script URL to load in development mode. |
-| `testCodeUrl` | Text | — | Script URL to load in test mode (e.g., Webflow preview). |
-| `prodCodeUrl` | Text | — | Script URL to load in production mode. |
+| `devCodeUrl` | Text | — | Script URL to load in development mode (typically `localhost`). |
+| `testCodeUrl` | Text | — | Script URL to load in test/staging mode (e.g., a CDN integration branch). |
+| `prodCodeUrl` | Text | — | Script URL to load in production mode (e.g., a CDN release branch). |
 | `async` | Boolean | `false` | Load the script asynchronously. |
 | `defer` | Boolean | `false` | Defer script execution until the page has finished loading. |
 
@@ -23,11 +35,11 @@ The Script Manager component injects a single external script tag into the page,
 
 The component determines the active environment using this priority order:
 
-1. **URL parameter** — If the page URL contains `?dev`, `?test`, or `?prod`, that mode is used and saved to localStorage.
-2. **localStorage** — If a mode was previously set via URL parameter, it is restored from `localStorage` (`script_mode` key).
-3. **Hostname detection** — If the hostname contains `webflow.io`, the test URL is used. Otherwise, the production URL is used.
+1. **URL parameter** — `?dev`, `?test`, or `?prod` in the current URL. Mode is saved to localStorage.
+2. **localStorage** — Previously stored mode from a URL parameter override.
+3. **Hostname detection** — Hostname containing `webflow.io` → test URL. All other hostnames → production URL.
 
-### Switching Environments via URL
+## Switching Environments via URL
 
 Append a mode parameter to any page URL to override the active environment:
 
@@ -39,23 +51,23 @@ https://yoursite.com/page?prod
 
 The selected mode persists across page loads via localStorage until explicitly cleared.
 
-### Clearing the Override
+## Clearing an Override
 
-Add `?dev=false`, `?test=false`, or `?prod=false` to any URL to clear the stored mode and return to automatic detection. Alternatively, click the mode indicator badge (see below).
+Add `?dev=false`, `?test=false`, or `?prod=false` to any URL to clear the stored mode and return to automatic detection. Alternatively, click the mode indicator badge.
 
 ## Mode Indicator
 
-While a mode override is active, the component displays a fixed-position badge in the corner of the page:
+While a mode override is active, the component displays a fixed-position badge:
 
 - **Red badge** — Development mode
 - **Yellow badge** — Test mode
 - **Green badge** — Production mode
 
-Clicking the badge clears the stored mode and removes the URL parameter, reverting to automatic environment detection on the next page load.
+Clicking the badge clears the stored mode and removes the URL parameter.
 
 ## Typical Setup
 
-A common pattern is to place one Script Manager in the Webflow site's global before-`</body>` code or in a Symbol that appears on every page. Set the three URLs to point to your dev, staging, and production CDN paths:
+Place one Script Manager in the Webflow site's global settings (before `</body>`) or in a Symbol that appears on every page. Point the three URLs at your CDN paths:
 
 | Property | Example Value |
 |----------|---------------|
@@ -63,18 +75,41 @@ A common pattern is to place one Script Manager in the Webflow site's global bef
 | `testCodeUrl` | `https://cdn-staging.example.com/app.js` |
 | `prodCodeUrl` | `https://cdn.example.com/app.js` |
 
-During development on a local dev server, add `?dev` to the URL. The Script Manager loads the local build. When done, navigate to the production URL without the parameter — production scripts load automatically.
+During local development, add `?dev` to the URL — Script Manager loads your local build. On the live site without parameters, production scripts load automatically.
+
+## Script Loading Timing
+
+> **Important:** Using the code component approach, the script is injected at some point during page load — unlike a manually placed `<script>` tag, the exact load point is harder to control.
+
+If your scripts use the `DOMContentLoaded` trigger, verify that the event has not already fired:
+
+```javascript
+(() => {
+  function apply() {
+    // Your code here
+  }
+
+  // Safe loader — works whether DOMContentLoaded has already fired or not
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply, { once: true });
+  } else {
+    apply();
+  }
+})();
+```
 
 ## Loading Attributes
 
 Use `async` or `defer` to control when the script executes relative to page parsing:
 
-- **async** — Script downloads in parallel and executes as soon as it is available, potentially before the DOM is ready.
-- **defer** — Script downloads in parallel but executes after the DOM is fully parsed.
-- Neither — Script blocks HTML parsing until downloaded and executed (classic blocking behavior).
+- **async** — Downloads in parallel, executes as soon as available (may be before DOM is ready)
+- **defer** — Downloads in parallel, executes after the DOM is fully parsed
+- **Neither** — Blocks HTML parsing until downloaded and executed
 
-For most analytics and enhancement scripts, `defer` is the recommended choice.
+For most site enhancement scripts, `defer` is the recommended choice.
 
-## Cleanup
+## Future Plans
 
-When the component unmounts (e.g., navigating away in a SPA), it removes the injected script tag from the DOM.
+- Designer suppression (currently executes PROD mode code in the Designer)
+- Graceful handling of partial configurations (only some URLs provided)
+- Multiple named Script Manager instances with independent state tracking

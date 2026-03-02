@@ -5,46 +5,75 @@ description: Clickable color swatch with optional hex/RGB display and automatic 
 
 # Color Swatch
 
-The Color Swatch component renders a colored square with optional label information. Clicking the swatch copies the hex value to the clipboard and shows a brief "Copied!" confirmation. Text color is automatically chosen for legibility against the swatch color.
+![Color Swatch in Plain style](/components/color-swatch-plain.png)
+
+![Color Swatch in Informative style](/components/color-swatch-informative.png)
+
+The Color Swatch component displays colors with optional hex and RGB information. Generates the SVG automatically. Click any swatch to copy the color value to your clipboard.
 
 **Group:** UI
 
+## Use Cases
+
+- Brand guide or style guide pages for clients — display an entire color palette with copy-on-click
+- Design system documentation
+- CMS-driven color reference pages (bind the `color` property to a CMS color or text field)
+
 ## Properties
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `color` | Text | `#000000` | Any valid CSS color value. Supports hex (`#ff6600`), named colors (`tomato`), `rgb()`, `rgba()`, and `hsl()`. |
-| `style` | Variant | `Plain` | `Plain` — shows only the color fill. `Informative` — adds hex and RGB component boxes at the bottom. |
-| `size` | Variant | `64 x 64` | Preset swatch dimensions: `32 x 32`, `48 x 48`, `64 x 64`, `96 x 96`, `128 x 128`, `154 x 154`. |
-| `labelFormat` | Variant | `Hex Color` | `As Specified` — displays the color value as entered. `Hex Color` — converts any color format to 6-digit hex before displaying. |
-| `labelColor` | Variant | `Auto` | `White`, `Black`, or `Auto`. `Auto` uses WCAG relative luminance to pick whichever is more legible. |
+### Settings
 
-## Styles
+| Property | Type | Default | Options | Description |
+|----------|------|---------|---------|-------------|
+| `color` | Text | `#000000` | Any CSS color | The color to display. Accepts hex (`#ff6600`), named colors (`red`), RGB (`rgb(255,100,50)`), RGBA, HSL, and other CSS color formats. |
+| `style` | Variant | `Plain` | Plain, Informative | **Plain** displays color only. **Informative** shows hex code and RGB values (on larger sizes). |
+| `size` | Variant | `64 x 64` | 32×32, 48×48, 64×64, 96×96, 128×128, 154×154 | The dimensions of the swatch in pixels. |
 
-### Plain
+### Label
 
-Renders the swatch as a solid color block. The hex value is shown centered in the swatch. Click anywhere on the swatch to copy.
+| Property | Type | Default | Options | Description |
+|----------|------|---------|---------|-------------|
+| `labelFormat` | Variant | `Hex Color` | As Specified, Hex Color | **As Specified** displays the color value exactly as entered. **Hex Color** converts any color format to a normalized 6-digit hex code. |
+| `labelColor` | Variant | `Auto` | White, Black, Auto | The color of the label text. **Auto** uses WCAG luminance to select black or white for best contrast. |
 
-### Informative
+## Size and Information Display
 
-Extends the Plain style with an additional row at the bottom that shows RGB component boxes — one each for the Red, Green, and Blue values. Useful for design systems or color palette documentation.
+The amount of information shown in **Informative** style depends on the swatch size:
+
+| Size | Informative Style Shows |
+|------|------------------------|
+| 32 × 32 | Color only (too small for text) |
+| 48 × 48 | Color only (too small for text) |
+| 64 × 64 | Hex code |
+| 96 × 96 | Hex code + RGB values |
+| 128 × 128 | Hex code + RGB values |
+| 154 × 154 | Hex code + RGB values |
+
+**Plain** style always shows color only, regardless of size.
+
+## Click-to-Copy
+
+Click any swatch to copy the color value to your clipboard. A "Copied!" tooltip appears briefly to confirm.
+
+- In **Hex Color** format: copies the normalized hex value (e.g., `#ff6600`)
+- In **As Specified** format: copies the original value as entered
 
 ## Label Format
 
-- **As Specified:** The label reflects the `color` value exactly as entered. If you type `tomato`, the label shows `tomato`.
+- **As Specified:** The label reflects the `color` value exactly as entered — if you type `tomato`, the label shows `tomato`.
 - **Hex Color:** All color formats are normalized to 6-digit hex (e.g., `rgb(255, 99, 71)` → `#FF6347`). Named colors and `rgba` values are resolved to their hex equivalents.
 
 ## Auto Text Color
 
-When `labelColor` is set to `Auto`, the component calculates the relative luminance of the swatch color using the WCAG formula and selects black or white text to ensure the highest contrast ratio.
+When `labelColor` is set to `Auto`, the component calculates relative luminance using the WCAG formula and selects black or white text to ensure the highest contrast ratio against the swatch color.
 
-## Click-to-Copy
+## Auto-Sizing Text
 
-Clicking the swatch copies the resolved hex value to the clipboard. A "Copied!" message briefly appears over the swatch. This works in browsers that support the Clipboard API (all modern browsers).
+When using **As Specified** label format with longer color values (like `rgba(255, 128, 64, 0.5)`), the label text automatically scales down to fit within the swatch boundaries.
 
 ## Color Format Support
 
-The component accepts any CSS color string that the browser can parse. Internally it normalizes all colors to hex for copy operations and WCAG luminance calculations. Examples:
+The component accepts any CSS color string that the browser can parse. All colors are normalized to hex internally for copy operations and WCAG calculations:
 
 ```
 #ff6600
@@ -54,4 +83,48 @@ rgba(255, 102, 0, 1)
 hsl(24, 100%, 50%)
 tomato
 coral
+rebeccapurple
 ```
+
+## Examples
+
+### Basic swatch
+
+```
+Color: #3366cc
+Style: Plain
+Size: 64 x 64
+```
+
+Displays a simple blue square with hex code in the center.
+
+### Informative swatch with RGB
+
+```
+Color: coral
+Style: Informative
+Size: 128 x 128
+Label Format: Hex Color
+Label Color: Auto
+```
+
+Displays a coral swatch showing `FF7F50` and RGB values (255, 127, 80) with auto-contrast white text.
+
+### Named color with original label
+
+```
+Color: rebeccapurple
+Style: Informative
+Size: 154 x 154
+Label Format: As Specified
+Label Color: White
+```
+
+Displays the color with `rebeccapurple` as the label text.
+
+## Tips
+
+- Use **Hex Color** label format for consistent hex output regardless of input format
+- Use **As Specified** for displaying CSS variable names or preserving named color labels
+- For accessibility, use **Auto** label color to ensure readable text on all swatches
+- Sizes 96+ are recommended for **Informative** style to display all information clearly

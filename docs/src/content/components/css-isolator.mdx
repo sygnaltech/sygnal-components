@@ -5,9 +5,17 @@ description: Scope CSS variables and rules to a container using ID-based selecto
 
 # CSS Isolator
 
-The CSS Isolator wraps its slotted content in a container with a generated unique ID, then prefixes all CSS selectors with that ID. This prevents styles from leaking out to the rest of the page, and lets you override CSS variables for a specific section without affecting other instances of the same components.
+![CSS Isolator component in Webflow Designer](/components/css-isolator.png)
+
+Webflow's Native Component and Code Component styling doesn't directly support styling individual component instances. CSS Isolator fills that gap — wrap any group of components or elements in a CSS Isolator and provide CSS or CSS variable overrides that apply only to that specific instance.
 
 **Group:** Style
+
+## Features
+
+- Provide custom CSS that applies only to the slotted content — works with Native Components, Code Components, and Shared Libraries
+- Provide CSS variable overrides that apply only to the slotted content — works with Code Components, Native Components, and Shared Libraries
+- Each isolator gets a unique auto-generated ID so styles never leak to other instances
 
 ## Properties
 
@@ -31,7 +39,7 @@ h2 { font-size: 2rem; }
 #a1b2c3d4 h2 { font-size: 2rem; }
 ```
 
-CSS custom properties from `cssVars` are applied directly to the container element, making them available to all descendants via cascade.
+CSS custom properties from `cssVars` are applied directly to the container element, making them available to all descendants via the CSS cascade.
 
 ## CSS Variables
 
@@ -61,12 +69,6 @@ h2 {
 }
 ```
 
-> **Limitation:** The selector prefixer uses a regex-based approach, not a full CSS parser. Complex selectors involving pseudo-elements (`::before`, `::after`) or at-rules (`@media`, `@keyframes`) may not be prefixed correctly. Test thoroughly when using advanced CSS.
-
-## Combining Variables and Rules
-
-You can use both properties together. Variables are applied first (as inline styles on the container), then scoped rules are injected via a `<style>` tag.
-
 ## Use Cases
 
 ### Per-section theme overrides
@@ -74,11 +76,13 @@ You can use both properties together. Variables are applied first (as inline sty
 Apply different brand colors to two sections of the same page that use the same components:
 
 ```css
-/* Section 1 CSS Isolator */
-cssVars: --color-brand: #0055ff; --color-accent: #00ccff;
+/* Section 1 CSS Isolator cssVars */
+--color-brand: #0055ff;
+--color-accent: #00ccff;
 
-/* Section 2 CSS Isolator */
-cssVars: --color-brand: #ff3300; --color-accent: #ffaa00;
+/* Section 2 CSS Isolator cssVars */
+--color-brand: #ff3300;
+--color-accent: #ffaa00;
 ```
 
 ### One-off component styling
@@ -89,6 +93,11 @@ Style a specific component instance without affecting global styles or creating 
 .my-component { padding: 2rem; background: #f5f5f5; }
 ```
 
+## Limitations
+
+- In some cases, styling may not render correctly at design-time due to differences in the Webflow design canvas. Most styles will be visible in the Designer, but publish to staging or use Preview mode to verify complex cases.
+- The selector prefixer uses a regex-based approach, not a full CSS parser. Complex selectors involving pseudo-elements (`::before`, `::after`) or at-rules (`@media`, `@keyframes`) may not be prefixed correctly.
+
 ## HTML Encoding
 
-Both `cssVars` and `css` values are HTML-decoded before being applied, so HTML entities like `&gt;` and `&amp;` entered through the Webflow Designer are correctly handled.
+Both `cssVars` and `css` values are HTML-decoded before being applied, so HTML entities like `&gt;` and `&amp;` entered through the Webflow Designer text fields are correctly handled.

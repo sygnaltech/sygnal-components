@@ -5,9 +5,18 @@ description: Generate and download contact information as a vCard (.vcf) file.
 
 # VCard
 
-The VCard component generates a contact card in vCard 3.0 format and triggers a browser download when activated. It supports two interaction modes: a built-in styled button, or a custom content slot that wraps any Webflow element you design.
+![VCard component in Webflow Designer](/components/vcard.png)
+
+The VCard component generates a contact card in vCard 3.0 format and triggers a browser download when activated. Share contact information directly from your site — visitors can save it to their phone or desktop contact manager in one tap.
+
+All contact fields are CMS-bindable, making this ideal for employee directories, speaker pages, and contact listings.
 
 **Group:** Interactive
+
+## Best Practices
+
+- **Full Name is required.** First Name and Last Name are also recommended as separate fields for better compatibility with contact apps.
+- VCards are primarily useful on mobile. Consider hiding the component on tablet and desktop breakpoints, or placing it in a mobile-only section.
 
 ## Properties
 
@@ -17,7 +26,7 @@ The VCard component generates a contact card in vCard 3.0 format and triggers a 
 |----------|------|---------|-------------|
 | `variant` | Variant | `Button` | `Button` — renders a built-in download button. `Slot` — wraps custom content; clicking anywhere inside triggers the download. |
 | `buttonText` | Text | `Save to Contacts` | Label text for the built-in button. Only used when `variant` is `Button`. |
-| `buttonStyle` | Text | `''` | Inline CSS applied to the built-in button (e.g., `background-color: #0055ff; color: white;`). Only used when `variant` is `Button`. |
+| `buttonStyle` | Text | `''` | Inline CSS applied to the built-in button. Only used when `variant` is `Button`. |
 | `Slot` | Slot | — | Custom clickable content. Only used when `variant` is `Slot`. |
 
 ### Download
@@ -28,30 +37,30 @@ The VCard component generates a contact card in vCard 3.0 format and triggers a 
 
 ### Contact Information
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `fullName` | Text | `''` | The contact's full display name (FN field in vCard). |
-| `firstName` | Text | `''` | Given name (N field). |
-| `lastName` | Text | `''` | Family name (N field). |
-| `organization` | Text | `''` | Company or organization name. |
-| `title` | Text | `''` | Job title or position. |
-| `cellPhone` | Text | `''` | Mobile phone number. |
-| `workPhone` | Text | `''` | Work phone number. |
-| `email` | Text | `''` | Primary email address. |
-| `additionalEmail` | Text | `''` | Secondary email address. |
-| `streetAddress` | Text | `''` | Street address. |
-| `city` | Text | `''` | City. |
-| `state` | Text | `''` | State, province, or region. |
-| `postalCode` | Text | `''` | ZIP or postal code. |
-| `country` | Text | `''` | Country name. |
-| `websiteUrl` | Link | — | Website or social media URL. |
-| `note` | Text | `''` | Additional notes appended to the vCard. |
+| Property | Type | Notes |
+|----------|------|-------|
+| `fullName` | Text | **Required.** Full display name. |
+| `firstName` | Text | Given name |
+| `lastName` | Text | Family name |
+| `organization` | Text | Company or organization |
+| `title` | Text | Job title or position |
+| `cellPhone` | Text | Mobile phone number |
+| `workPhone` | Text | Work phone number |
+| `email` | Text | Primary email address |
+| `additionalEmail` | Text | Secondary email address |
+| `streetAddress` | Text | Street address |
+| `city` | Text | City |
+| `state` | Text | State, province, or region |
+| `postalCode` | Text | ZIP or postal code |
+| `country` | Text | Country name |
+| `websiteUrl` | Link | Website or social media URL |
+| `note` | Text | Additional notes |
 
 ## Interaction Modes
 
 ### Button variant
 
-The component renders a styled button. By default it uses blue background (`#0055ff`) with white text and `12px 24px` padding. Customize the appearance using the `buttonStyle` property with inline CSS:
+The component renders a built-in styled button (blue background, white text, `12px 24px` padding by default). Customize appearance with the `buttonStyle` property using inline CSS:
 
 ```
 background-color: #111827; color: white; border-radius: 6px; padding: 10px 20px; font-weight: 600;
@@ -59,7 +68,7 @@ background-color: #111827; color: white; border-radius: 6px; padding: 10px 20px;
 
 ### Slot variant
 
-Set `variant` to `Slot` and design any Webflow element inside the slot — a button, a banner, a card, a link. The entire slot area becomes clickable and triggers the vCard download. This gives you full control over the download trigger's appearance using Webflow's native design tools.
+Set `variant` to `Slot` and design any Webflow element inside the slot — a button, banner, card, or link. The entire slot area becomes clickable and triggers the vCard download. This gives you full control over the trigger's appearance using Webflow's native design tools.
 
 ## Generated vCard Format
 
@@ -100,14 +109,16 @@ END:VCARD
 
 ## Download Behavior
 
-The component creates a `Blob` with the vCard content and type `text/vcard`, generates a temporary object URL, clicks a hidden `<a>` element to trigger the browser's download dialog, then immediately revokes the URL. This works in all modern browsers without any server-side processing.
+The component creates a `Blob` with the vCard content and type `text/vcard`, generates a temporary object URL, triggers the browser download dialog, then immediately revokes the URL. No server-side processing is required.
 
-## Button Style Property
+## CMS Binding
 
-The `buttonStyle` property accepts CSS in standard CSS syntax (property: value; pairs). Property names should use kebab-case:
+Bind any contact field to a CMS field for dynamic contact pages. Useful patterns:
 
-```
-background-color: #333; color: #fff; padding: 12px 24px; border-radius: 4px;
-```
+- Employee directory: bind all fields to a Staff CMS collection
+- Speaker listing: bind name, title, organization, and email
+- Contact page: use a single-item CMS collection as a data source
 
-These styles are parsed and applied as inline styles on the button element. Any valid CSS property is accepted.
+## Future Plans
+
+- QR code option for sharing the vCard without downloading

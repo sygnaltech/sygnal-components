@@ -5,15 +5,25 @@ description: Generate QR codes from any text or URL with customizable size, colo
 
 # QR Code
 
-The QR Code component generates a scannable QR code from any text or URL. Size, foreground/background colors, error correction level, and quiet zone margin are all configurable in the Webflow Designer.
+![QR Code component in Webflow Designer](/components/qr-code.png)
+
+The QR Code component generates a scannable QR code from any text or URL. Size, foreground/background colors, error correction level, and quiet zone margin are all configurable in the Webflow Designer. All properties are CMS-bindable.
 
 **Group:** Media
+
+## Use Cases
+
+- Link to App Store or Google Play listings
+- Link to AR experiences
+- Quick contact card sharing from web to mobile
+- Provide special mobile-only views or offers
+- Product pages with QR codes linking to manuals or support
 
 ## Properties
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `data` | Text | `https://www.webflow.com` | The URL or text to encode in the QR code. |
+| `data` | Text | `https://www.webflow.com` | The URL or text to encode in the QR code. CMS-bindable. |
 | `variant` | Variant | `200x200` | Preset output dimensions. |
 | `includeMargin` | Boolean | `true` | Adds a quiet zone (white margin) around the QR code, as recommended by the QR standard. |
 | `foregroundColor` | Text | `#000000` | Color of the QR code modules (dots). Accepts any CSS hex color. |
@@ -42,7 +52,7 @@ Use `100%x100%` when you want the QR code to scale with its parent container rat
 | `Q` | ~25% | Printed materials that may get slightly dirty |
 | `H` | ~30% | Logos or graphics overlaid on the QR code |
 
-Higher error correction levels increase the QR code complexity (more modules), which may reduce scan speed at smaller sizes. For most web use cases, `M` is the best balance.
+Higher error correction levels increase QR code complexity (more modules), which may reduce scan speed at smaller sizes. For most web use cases, `M` is the best balance.
 
 ## Colors
 
@@ -50,12 +60,12 @@ Set `foregroundColor` and `backgroundColor` using hex values. While the standard
 
 ## Quiet Zone (Margin)
 
-The `includeMargin` property adds a white border around the code. The QR standard requires a minimum quiet zone of 4 modules. Disable this only if you are providing the quiet zone in surrounding CSS padding or if the QR code is displayed on a plain white background.
+The `includeMargin` property adds a white border around the code. The QR standard requires a minimum quiet zone of 4 modules. Disable this only if you are providing the quiet zone in surrounding CSS padding or the QR code is on a plain white background.
 
 ## Live Updates
 
-The QR code re-renders automatically when any property changes. This includes the data string, colors, size, and error correction level — useful while building and testing in the Webflow Designer.
+The QR code re-renders automatically when any property changes — useful while building in the Webflow Designer.
 
 ## Rendering
 
-QR codes are rendered as styled SVG using the `qr-code-styling` library with rounded dots. The output is embedded directly in the component's shadow DOM.
+QR codes are rendered as styled SVG using the `qr-code-styling` library with rounded dots, embedded directly in the component's shadow DOM.

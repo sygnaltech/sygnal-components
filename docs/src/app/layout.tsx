@@ -5,11 +5,11 @@ import './globals.css'
 
 export const metadata = {
   title: {
-    template: '%s - Sygnal Devmode',
-    default: 'Sygnal Devmode Documentation'
+    template: '%s - Sygnal Components',
+    default: 'Sygnal Components Documentation'
   },
   description:
-    'Official documentation for Sygnal Devmode, the Chrome extension that rewrites script and stylesheet sources per environment.'
+    'Official documentation for Sygnal Components, a reusable UI component library for Webflow.'
 }
 
 export default async function RootLayout({
@@ -17,7 +17,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const navbar = <Navbar logo={<strong>Sygnal Devmode</strong>} />
+  const navbar = <Navbar logo={<strong>Sygnal Components</strong>} />
   const pageMap = await getPageMap()
 
   return (
@@ -27,7 +27,7 @@ export default async function RootLayout({
           navbar={navbar}
           footer={
             <Footer>
-              &copy; {new Date().getFullYear()} Sygnal &middot; Sygnal Devmode Documentation
+              &copy; {new Date().getFullYear()} Sygnal &middot; Sygnal Components Documentation
             </Footer>
           }
           editLink="Suggest edits on GitHub"

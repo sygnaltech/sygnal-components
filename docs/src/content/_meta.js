@@ -6,5 +6,11 @@ export default {
     }
   },
   'getting-started': 'Getting Started',
-  components: 'Components'
+  '---': {
+    type: 'separator',
+    title: 'Code Component Libraries'
+  },
+  components: {
+    display: 'children'
+  }
 }

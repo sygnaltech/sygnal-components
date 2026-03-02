@@ -1,47 +1,96 @@
 # Getting Started
 
-Sygnal Components integrates into Webflow as a code component library. Follow these steps to add it to your project.
+Sygnal Components are installed into your Webflow workspace through **Sygnal Marketplace**. Once installed, all components appear in the Webflow Designer and can be added to any site in that workspace.
 
-## Prerequisites
+## Requirements
 
-- A Webflow site on a plan that supports code components
-- Access to your site's **Designer** settings
+- A Webflow site with a **Paid Site Plan**, or a site in a **Paid Workspace**
+- You must be the **owner** of the workspace to generate the required API token
+  - If you are an agency or freelancer guest, the workspace owner must generate the token for you
 
-## Adding the Library to Webflow
+## Step 1: Log in to Sygnal Marketplace
 
-1. Open your Webflow project in the Designer.
+Visit [sygnal.com/market](https://www.sygnal.com/market) and sign in with a Google account.
+
+## Step 2: Add Your Workspace
+
+On the main screen, click **Add Workspace**. You'll see the Add Workspace form:
+
+![Add Workspace form in Sygnal Marketplace](/components/install-add-workspace.png)
+
+## Step 3: Generate a Webflow API Token
+
+> Open a new browser tab for this step (`Ctrl+N` / `Cmd+N`) so the Add Workspace form stays open and ready.
+
+1. Visit your [Webflow dashboard](https://webflow.com/dashboard).
+2. In the left menu under **Settings**, expand **Apps & Integrations** and click **Manage**.
+
+![Webflow Apps & Integrations settings](/components/install-apps-integrations.png)
+
+3. Scroll to the bottom of the page to the **Workspace API access** section.
+4. Click the blue **Generate API token** button.
+
+![Generate API token button](/components/install-generate-token.png)
+
+5. Enter the token settings:
+   - **Name:** `Sygnal Marketplace` (for easy identification)
+   - **Code components** permissions: set to **Read and write**
+6. Click **Generate token**.
+
+![API token settings form](/components/install-token-settings.png)
+
+## Step 4: Save the Token in Sygnal Marketplace
+
+1. Copy the generated API token.
+2. Return to the Sygnal Marketplace tab.
+3. Paste the token into the **Webflow API Token** field in the Add Workspace form.
+4. Click **Add Workspace**.
+5. Once saved, return to Webflow and click **Hide token forever**.
+
+![Hide token button in Webflow](/components/install-hide-token.png)
+
+Your workspace is now connected. You'll see it listed in Sygnal Marketplace.
+
+![Saved token in Webflow](/components/install-token-saved.png)
+
+## Step 5: Install the Component Library
+
+From Sygnal Marketplace, select the **Sygnal Components** library and install it into your workspace. The library is deployed workspace-wide — all sites in the workspace gain access to the components immediately.
+
+## Using Components in the Designer
+
+1. Open any site in the Webflow Designer.
 2. Click the **Components** panel icon in the left sidebar.
-3. Scroll to the **Code components** section and click **Manage**.
-4. Add the Sygnal Components library by entering the library URL or selecting it from your connected libraries.
-5. Once connected, all components will appear in your component panel under the **Sygnal** group.
+3. Find the components under the **Sygnal** group.
+4. Drag a component onto the canvas.
+5. Select it on the canvas to open its property panel on the right.
+6. Configure properties — text, numbers, variants, and toggles.
 
-## Using a Component
+## Working with Slots
 
-1. Open the **Components** panel in the Webflow Designer.
-2. Find the component you want (e.g., **QR Code**, **Dropdown**).
-3. Drag it onto the canvas.
-4. Select the component on the canvas to open its property panel on the right.
-5. Configure the available properties — text, numbers, variants, and toggles.
+Many components include **Slot** properties. Slots let you place your own Webflow elements inside the component, which the component then positions or activates with its logic.
 
-## Slots
-
-Many components include one or more **Slot** properties. Slots let you nest your own Webflow elements inside the component, which the component then positions or wires up with its logic.
-
-To use a slot:
+To add content to a slot:
 1. Select the component on the canvas.
-2. In the right panel, find the slot property.
-3. Double-click into the slot area to add child elements.
+2. Double-click into the slot area.
+3. Add and style child elements normally.
 
-## Deploying
+## Multiple Workspaces
 
-Components render in the Webflow Designer for layout and configuration. They use the same React runtime in published sites. No additional build steps are needed — publish your site normally.
+If you have multiple Webflow workspaces, register each one separately in Sygnal Marketplace using **Add Workspace**. Each workspace requires its own API token.
+
+## Important Notes
+
+- If you make a mistake and hide the token before saving it in Sygnal Marketplace, simply revoke that token in Webflow and repeat the process.
+- Sygnal Marketplace encrypts your API key before storing it.
+- The workspace owner must perform the API token step. If sharing the key with a team member, use a secure communication channel.
 
 ## Development Notes
 
-If you are building or customizing the library itself, the project uses:
+If you are building or customizing the library itself:
 
 - `npm run dev` — Start the Vite development server
 - `npm run build` — Build for production
 - `npm run deploy` — Deploy components to the Webflow library
 
-See the repository's `CLAUDE.md` for full development commands.
+See `CLAUDE.md` in the repository root for full development commands and architecture details.
