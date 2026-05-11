@@ -164,21 +164,16 @@ function expandText(text: string, attrs: Record<string, string>, lenient: boolea
   return out;
 }
 
-// Walk every text node inside a single .w-embed and expand against the
-// embed's own attributes. Text-node mutation (vs. innerHTML rewrite)
-// preserves any event listeners or hydrated state on nested elements.
+// Treat the embed's content as opaque markup-or-text and run substitution
+// against the whole serialised string. This is intentional: the embed may
+// contain SVG, attribute values, script bodies, plain text, or anything
+// else — macros can appear anywhere, and the DOM position doesn't matter.
 function expandWithinEmbed(embed: Element, lenient: boolean) {
+  const html = embed.innerHTML;
+  if (html.indexOf('{{') === -1) return;
   const attrs = attrsOf(embed);
-  const walker = document.createTreeWalker(embed, NodeFilter.SHOW_TEXT);
-  let node = walker.nextNode();
-  while (node) {
-    const v = node.nodeValue;
-    if (v && v.indexOf('{{') !== -1) {
-      const next = expandText(v, attrs, lenient);
-      if (next !== v) node.nodeValue = next;
-    }
-    node = walker.nextNode();
-  }
+  const expanded = expandText(html, attrs, lenient);
+  if (expanded !== html) embed.innerHTML = expanded;
 }
 
 export function Embed({ slot, strict = true }: EmbedProps) {
