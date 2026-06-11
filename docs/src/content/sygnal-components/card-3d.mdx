@@ -1,0 +1,162 @@
+---
+title: 3D Card
+description: A card that tilts toward the mouse cursor, with optional depth-lifted elements that float above the card surface.
+---
+
+# 3D Card
+
+The 3D Card component wraps any content in an interactive surface that tilts in 3D space as the mouse moves over it. Wherever the cursor goes, that corner of the card rises toward the viewer. Individual descendant elements can be lifted off the card surface using a `z-pos` attribute, producing a subtle parallax that becomes vivid during the tilt.
+
+**Group:** Effects
+
+**[View Demo](https://webflow-core-component-test.webflow.io/3d-card)**
+
+## Features
+
+- Smooth mouse-tracking tilt with configurable maximum angle
+- Per-element depth via a single custom attribute (`z-pos`)
+- Global depth multiplier for tuning the whole effect at once
+- Configurable smoothing during tracking and easing on reset
+- Zero markup overhead — wraps any existing layout
+
+## Quick Start
+
+1. Add the **3D Card** component to your page
+2. Drop your card layout into the `Content` slot — any combination of headings, images, dividers, etc.
+3. On any descendant element you want to lift off the surface, add a custom attribute `z-pos="N"` where `N` is the desired height in pixels (e.g. `20`)
+4. Tune **Tilt Amount** to taste — 4–10 degrees feels natural; higher values get cartoonish quickly
+
+## Properties
+
+### Content
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `slot` | Slot | — | The card contents. Any element inside can carry a `z-pos` attribute to float above the surface. |
+
+### Tilt
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `tiltAmount` | Number | `8` | Maximum tilt angle in degrees when the mouse reaches a corner. `0` disables the tilt entirely. Range: 0–30. |
+| `perspective` | Number | `1000` | CSS perspective in pixels. Lower values exaggerate the 3D effect; higher values are more subtle. Range: 100–3000. |
+| `zScale` | Number | `1` | Multiplier applied to every `z-pos` value. Use this to globally amplify or flatten all floating elements without editing each one individually. Range: 0–10. |
+
+### Transition
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `followDuration` | Number | `80` | Smoothing duration as the card follows the mouse, in milliseconds. `0` = instant. Small values (60–120) feel buttery. Range: 0–500. |
+| `resetDuration` | Number | `400` | How long the card takes to settle back to flat after the mouse leaves, in milliseconds. Range: 0–2000. |
+| `resetEasing` | Text | `ease-out` | CSS easing function used for the reset transition (e.g. `ease`, `ease-out`, `cubic-bezier(0.34, 1.56, 0.64, 1)`). |
+
+## The `z-pos` Attribute
+
+`z-pos` is the heart of the 3D effect. Apply it to any descendant inside the card, and that element will float the specified number of pixels toward the viewer.
+
+```html
+<div z-pos="10">Subtly lifted</div>
+<img z-pos="30" src="..." />
+<h2 z-pos="50">Floats most prominently</h2>
+```
+
+### Setting `z-pos` in Webflow Designer
+
+1. Select the element inside the card you want to lift
+2. Open the **Element Settings** panel (gear icon)
+3. Scroll to **Custom attributes**
+4. Add `z-pos` with the numeric value (no units)
+
+### Choosing values
+
+There's no fixed scale, but a useful rule of thumb:
+
+| Value | Effect |
+|-------|--------|
+| `5–10` | Subtle — feels like raised ink or a sticker |
+| `15–30` | Clear separation from the card surface |
+| `40–80` | Strong parallax — the element clearly floats |
+| `100+` | Dramatic, almost theatrical depth |
+
+### Nested z-pos
+
+When a `z-pos` element contains another `z-pos` element, the inner value stacks on top of the outer. A parent at `z-pos="20"` containing a child at `z-pos="10"` puts the child at effective depth 30. This is useful for grouping elements that should travel together.
+
+### Tuning the whole card at once
+
+The `zScale` property multiplies every `z-pos` value. Design your card with reasonable per-element values, then use `zScale` to tune the global feel:
+
+- `zScale = 0` — completely flat (useful for an A/B comparison)
+- `zScale = 0.5` — half-depth
+- `zScale = 1` — as authored (default)
+- `zScale = 2` — exaggerate everything
+
+## How the Tilt Works
+
+The tilt direction follows the mouse: wherever the cursor is over the card, that corner rises toward the viewer.
+
+| Mouse position | Card tilt |
+|----------------|-----------|
+| Upper-left | Upper-left corner raised |
+| Upper-right | Upper-right corner raised |
+| Lower-left | Lower-left corner raised |
+| Lower-right | Lower-right corner raised |
+| Center | Flat |
+
+The maximum angle is reached at the corners; the tilt scales linearly toward zero at the center. `tiltAmount` is the corner-angle limit in degrees on each axis.
+
+### Perspective vs. Tilt
+
+The two interact:
+
+- **Higher `perspective` + higher `tiltAmount`** — long, gentle camera distance with strong rotation
+- **Lower `perspective` + lower `tiltAmount`** — close camera with restrained rotation; depth feels exaggerated
+
+Typical good combinations: `perspective: 800–1200` with `tiltAmount: 6–10`.
+
+## Behavior in Webflow Designer Preview
+
+The tilt does **not** animate in Webflow's Designer Preview mode. This is by design on Webflow's side — Designer Preview sets `data-hydrate="false"` on code-island components, which disables their client-side JavaScript. The card still renders correctly (and lifted `z-pos` elements remain visible in their lifted positions if they were applied during a prior render), but mouse interaction is inert.
+
+**Verify the tilt on the Published site, not in Designer Preview.**
+
+This affects all interactive code components in Webflow, not just this one.
+
+## Tips
+
+- The component automatically sets `transform-style: preserve-3d` on the ancestors of every `z-pos` element, so you don't need to manage that yourself
+- Any existing inline `transform` on a `z-pos` element gets overwritten by the lift transform — set transforms via CSS classes instead if you need both
+- The component is the wrapper; size and styling come from your slotted content, just as with any Webflow component
+- For a "card stack" effect, place several 3D Cards in a Webflow grid or flex layout — each gets its own independent perspective and tilt
+
+## Troubleshooting
+
+**Nothing is tilting**
+- Confirm you're viewing the Published site, not Designer Preview (see above)
+- Check that `tiltAmount` is not `0`
+- Make sure the mouse is actually over the card — the hit area is the card's bounding box
+
+**A `z-pos` element isn't lifting**
+- Confirm the attribute is exactly `z-pos` (lowercase, with a hyphen) and the value is a plain number with no units
+- Confirm the element is a descendant of the card's content slot
+- If the element already has a CSS `transform` applied, the component's `translateZ` will overwrite it — move the prior transform onto a parent or wrapper
+
+**The tilt feels jittery**
+- Increase `followDuration` (try 100–150 ms)
+- Reduce `tiltAmount`
+
+**The card snaps back too abruptly on mouse-leave**
+- Increase `resetDuration`
+- Try a softer `resetEasing` such as `cubic-bezier(0.34, 1.56, 0.64, 1)` for a slight bounce
+
+**The 3D effect looks flat or weird**
+- Lower the `perspective` (try 600–800) for a more pronounced effect
+- Increase individual `z-pos` values, or raise `zScale`
+
+## Best Practices
+
+1. Start subtle — `tiltAmount: 6`, a handful of `z-pos` values between 10 and 40, and `perspective: 1000`
+2. Use `zScale` rather than editing many `z-pos` values when tuning
+3. Lift elements that *should* feel separate (badges, accent shapes, icons) — leave the body text on the card surface
+4. Keep the card's overall size reasonable; oversized cards make the tilt feel slow and exaggerate the cursor's distance from corners
+5. Avoid placing 3D Cards inside containers that already have their own 3D transforms — the perspectives can compound unexpectedly

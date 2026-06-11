@@ -1,22 +1,24 @@
 # Getting Started
 
-Sygnal Components are installed into your Webflow workspace through **Sygnal Marketplace**. Once installed, all components appear in the Webflow Designer and can be added to any site in that workspace.
+Sygnal Components are installed into your Webflow workspace through **Sygnal Studio**. Once installed, all components appear in the Webflow Designer and can be added to any site in that workspace.
 
 ## Requirements
+
+To use Sygnal's components you must have; 
 
 - A Webflow site with a **Paid Site Plan**, or a site in a **Paid Workspace**
 - You must be the **owner** of the workspace to generate the required API token
   - If you are an agency or freelancer guest, the workspace owner must generate the token for you
 
-## Step 1: Log in to Sygnal Marketplace
+## Step 1: Log in to Sygnal Studio
 
-Visit [sygnal.com/market](https://www.sygnal.com/market) and sign in with a Google account.
+Visit [studio.sygnal.com](https://studio.sygnal.com) and sign in with a Google account.
 
 ## Step 2: Add Your Workspace
 
 On the main screen, click **Add Workspace**. You'll see the Add Workspace form:
 
-![Add Workspace form in Sygnal Marketplace](/components/install-add-workspace.png)
+![Add Workspace form in Sygnal Studio](/components/install-add-workspace.png)
 
 ## Step 3: Generate a Webflow API Token
 
@@ -33,29 +35,29 @@ On the main screen, click **Add Workspace**. You'll see the Add Workspace form:
 ![Generate API token button](/components/install-generate-token.png)
 
 5. Enter the token settings:
-   - **Name:** `Sygnal Marketplace` (for easy identification)
+   - **Name:** `Sygnal Studio` (for easy identification)
    - **Code components** permissions: set to **Read and write**
 6. Click **Generate token**.
 
 ![API token settings form](/components/install-token-settings.png)
 
-## Step 4: Save the Token in Sygnal Marketplace
+## Step 4: Save the Token in Sygnal Studio
 
 1. Copy the generated API token.
-2. Return to the Sygnal Marketplace tab.
+2. Return to the Sygnal Studio tab.
 3. Paste the token into the **Webflow API Token** field in the Add Workspace form.
 4. Click **Add Workspace**.
 5. Once saved, return to Webflow and click **Hide token forever**.
 
 ![Hide token button in Webflow](/components/install-hide-token.png)
 
-Your workspace is now connected. You'll see it listed in Sygnal Marketplace.
+Your workspace is now connected. You'll see it listed in Sygnal Studio.
 
 ![Saved token in Webflow](/components/install-token-saved.png)
 
 ## Step 5: Install the Component Library
 
-From Sygnal Marketplace, select the **Sygnal Components** library and install it into your workspace. The library is deployed workspace-wide — all sites in the workspace gain access to the components immediately.
+From Sygnal Studio, select the **Sygnal Components** library and install it into your workspace. The library is deployed workspace-wide — all sites in the workspace gain access to the components immediately.
 
 ## Using Components in the Designer
 
@@ -77,12 +79,12 @@ To add content to a slot:
 
 ## Multiple Workspaces
 
-If you have multiple Webflow workspaces, register each one separately in Sygnal Marketplace using **Add Workspace**. Each workspace requires its own API token.
+If you have multiple Webflow workspaces, register each one separately in Sygnal Studio using **Add Workspace**. Each workspace requires its own API token.
 
 ## Important Notes
 
-- If you make a mistake and hide the token before saving it in Sygnal Marketplace, simply revoke that token in Webflow and repeat the process.
-- Sygnal Marketplace encrypts your API key before storing it.
+- If you make a mistake and hide the token before saving it in Sygnal Studio, simply revoke that token in Webflow and repeat the process.
+- Sygnal Studio encrypts your API key before storing it.
 - The workspace owner must perform the API token step. If sharing the key with a team member, use a secure communication channel.
 
 ## Development Notes

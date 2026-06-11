@@ -1,5 +1,6 @@
 export default {
   index: 'Overview',
+  'card-3d': '3D Card',
   'code-embed': 'Code Embed',
   'color-swatch': 'Color Swatch',
   'countdown-timer': 'Countdown Timer',
