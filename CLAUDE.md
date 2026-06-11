@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+When changes are made to this project, also update the Gitbook documentation here-
+"D:\Projects\Docs\sygnal-components-docs" 
+
+
 ## Development Commands
 
 ### Core Development
