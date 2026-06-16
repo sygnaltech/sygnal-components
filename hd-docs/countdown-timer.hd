@@ -1,0 +1,283 @@
+---
+title: Countdown Timer
+description: A persistent per-visitor countdown timer that survives page reloads using localStorage.
+format: hd-doc v1
+date: 2026-06-17
+tags: [countdown-timer, marketing, urgency, localstorage]
+---
+
+<h1>Countdown Timer</h1>
+
+<p>The Countdown Timer is a personalized countdown that begins counting on each visitor's first page visit. The timer persists across page loads and browser sessions using <code>localStorage</code> — returning visitors pick up where they left off rather than restarting from the full duration.</p>
+
+<p><strong>Group:</strong> Utilities</p>
+
+<p><strong>Demo:</strong> <a href="https://webflow-core-component-test.webflow.io/media/countdown-timer">webflow-core-component-test.webflow.io/media/countdown-timer</a></p>
+
+<h2>Features</h2>
+
+<ul>
+  <li>Custom countdown duration — any length, any unit combination</li>
+  <li>100% designer-controlled styling — any element arrangement you like</li>
+  <li>Timer-expired state — hide the timer, show different content when it ends</li>
+  <li>Animation support — drive custom animations via JavaScript events on each tick</li>
+  <li>Debug support — inspect what the timer is tracking and calculating</li>
+</ul>
+
+<h2>Use Cases</h2>
+
+<p>This timer is designed for marketing scenarios where start time is visitor-specific:</p>
+
+<ul>
+  <li>Create urgency from first visit to purchase or conversion</li>
+  <li>Limited-time offer countdown personalized per visitor</li>
+</ul>
+
+<h2>Quick Start</h2>
+
+<ol>
+  <li>Add the <strong>Countdown Timer</strong> component to your page</li>
+  <li>Set the <code>duration</code> prop (e.g., <code>24h</code> for 24 hours, or <code>3d 10m</code> for 3 days and 10 minutes)</li>
+  <li>Add elements inside the <code>content</code> slot with <code>countdown-remaining</code> attributes to display the countdown</li>
+  <li>The component automatically updates text content every second based on those attributes</li>
+</ol>
+
+<h2>Properties</h2>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>duration</code></td><td>Text</td><td><code>24h</code></td><td>Duration string defining how long the countdown runs from first visit.</td></tr>
+    <tr><td><code>content</code></td><td>Slot</td><td>—</td><td>The content area containing countdown display elements.</td></tr>
+    <tr><td><code>storageKey</code></td><td>Text</td><td><code>countdown</code></td><td>localStorage key prefix. Use unique values for multiple timers on the same site.</td></tr>
+    <tr><td><code>leadingZeros</code></td><td>Boolean</td><td><code>true</code></td><td>Pad single-digit values with a leading zero (e.g., <code>5</code> → <code>05</code>).</td></tr>
+    <tr><td><code>debugMode</code></td><td>Boolean</td><td><code>false</code></td><td>Shows a debug panel with current timer state. Disable before publishing.</td></tr>
+  </tbody>
+</table>
+
+<h2>Duration Format</h2>
+
+<p>The <code>duration</code> property accepts a flexible string with one or more time units:</p>
+
+<table>
+  <thead><tr><th>Unit</th><th>Symbol</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Years</td><td><code>y</code></td><td>Calculated as 365 days</td></tr>
+    <tr><td>Months</td><td><code>M</code></td><td>Uppercase M, calculated as 30 days</td></tr>
+    <tr><td>Days</td><td><code>d</code></td><td></td></tr>
+    <tr><td>Hours</td><td><code>h</code></td><td></td></tr>
+    <tr><td>Minutes</td><td><code>m</code></td><td>Lowercase m</td></tr>
+    <tr><td>Seconds</td><td><code>s</code></td><td></td></tr>
+  </tbody>
+</table>
+
+<p><strong>Examples:</strong></p>
+
+<pre><code>24h           → 24 hours
+2d 12h        → 2 days and 12 hours
+1y 6M         → 1 year and 6 months
+30m 30s       → 30 minutes and 30 seconds
+1d 2h 30m 15s → 1 day, 2 hours, 30 minutes, 15 seconds</code></pre>
+
+<p><strong>Notes:</strong></p>
+
+<ul>
+  <li>Invalid parts are ignored</li>
+  <li>Duplicate units use the first occurrence (e.g., <code>1h 2h</code> = 1 hour)</li>
+  <li>Anomalous values work correctly (e.g., <code>36h</code> = 1.5 days)</li>
+</ul>
+
+<h2>Wiring Up Display Elements</h2>
+
+<p>Add <code>countdown-remaining</code> attributes to elements inside the <code>content</code> slot. The component finds and updates them automatically every second.</p>
+
+<h3>Time Values</h3>
+
+<table>
+  <thead><tr><th>Attribute</th><th>Updates With</th></tr></thead>
+  <tbody>
+    <tr><td><code>countdown-remaining="days"</code></td><td>Days remaining (e.g., <code>"05"</code>)</td></tr>
+    <tr><td><code>countdown-remaining="hours"</code></td><td>Hours remaining (e.g., <code>"23"</code>)</td></tr>
+    <tr><td><code>countdown-remaining="minutes"</code></td><td>Minutes remaining (e.g., <code>"59"</code>)</td></tr>
+    <tr><td><code>countdown-remaining="seconds"</code></td><td>Seconds remaining (e.g., <code>"45"</code>)</td></tr>
+  </tbody>
+</table>
+
+<h3>Visibility Controls</h3>
+
+<table>
+  <thead><tr><th>Attribute</th><th>Behavior</th></tr></thead>
+  <tbody>
+    <tr><td><code>countdown-remaining="active"</code></td><td>Visible while timer is running; hidden when expired</td></tr>
+    <tr><td><code>countdown-remaining="expired"</code></td><td>Hidden while timer is running; visible when expired</td></tr>
+  </tbody>
+</table>
+
+<h3>Example Slot Content</h3>
+
+<pre><code class="language-html">&lt;div countdown-remaining="active"&gt;
+  Offer ends in
+  &lt;span countdown-remaining="hours"&gt;00&lt;/span&gt;h
+  &lt;span countdown-remaining="minutes"&gt;00&lt;/span&gt;m
+  &lt;span countdown-remaining="seconds"&gt;00&lt;/span&gt;s
+&lt;/div&gt;
+&lt;div countdown-remaining="expired"&gt;
+  This offer has expired.
+&lt;/div&gt;</code></pre>
+
+<h2>JavaScript Events</h2>
+
+<p>The component dispatches <code>CustomEvent</code>s on the <code>window</code> object for animation and custom behavior integration.</p>
+
+<h3>countdown:update</h3>
+
+<p>Fired every second with the complete timer state.</p>
+
+<pre><code class="language-javascript">window.addEventListener('countdown:update', (e) =&gt; {
+  const { days, hours, minutes, seconds, expired, totalMs } = e.detail;
+  console.log(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+});</code></pre>
+
+<h3>countdown:days / countdown:hours / countdown:minutes / countdown:seconds</h3>
+
+<p>Fired when the respective value changes.</p>
+
+<pre><code class="language-javascript">window.addEventListener('countdown:seconds', (e) =&gt; {
+  const { value, previous } = e.detail;
+  // Trigger animation on every second tick
+});</code></pre>
+
+<h3>countdown:expired</h3>
+
+<p>Fired once when the timer reaches zero.</p>
+
+<pre><code class="language-javascript">window.addEventListener('countdown:expired', (e) =&gt; {
+  // Show modal, redirect, or trigger other expiration behavior
+});</code></pre>
+
+<h2>Animation Example</h2>
+
+<p>Drive SVG progress rings using countdown events:</p>
+
+<pre><code class="language-html">&lt;style&gt;
+  .progress-ring {
+    stroke-dasharray: 251;
+    stroke-dashoffset: 251;
+    transition: stroke-dashoffset 0.6s linear;
+  }
+&lt;/style&gt;
+
+&lt;svg width="100" height="100"&gt;
+  &lt;circle cx="50" cy="50" r="40" class="progress-ring" id="seconds-ring" /&gt;
+&lt;/svg&gt;
+
+&lt;script&gt;
+  const CIRCUMFERENCE = 251;
+  window.addEventListener('countdown:update', (e) =&gt; {
+    const { seconds } = e.detail;
+    const ring = document.getElementById('seconds-ring');
+    const progress = (60 - seconds) / 60;
+    ring.style.strokeDashoffset = CIRCUMFERENCE - (progress * CIRCUMFERENCE);
+  });
+&lt;/script&gt;</code></pre>
+
+<h2>How It Works</h2>
+
+<h3>First Visit Detection</h3>
+
+<ol>
+  <li>Component checks <code>localStorage</code> for existing timer state</li>
+  <li>If none found, records current timestamp as <code>firstVisit</code></li>
+  <li>Calculates <code>endTime</code> as <code>firstVisit + duration</code></li>
+  <li>Saves both values to <code>localStorage</code></li>
+</ol>
+
+<h3>Subsequent Visits</h3>
+
+<ol>
+  <li>Loads saved <code>firstVisit</code> and <code>endTime</code></li>
+  <li>Compares current time to <code>endTime</code></li>
+  <li>Displays remaining time or expired state</li>
+</ol>
+
+<h3>Duration Changes</h3>
+
+<p>If you change the <code>duration</code> prop after a timer has started, the component recalculates <code>endTime</code> from the original <code>firstVisit</code> + new duration. Changing from <code>24h</code> to <code>48h</code> extends the timer from the original first visit, not from now.</p>
+
+<h3>Expiration</h3>
+
+<ul>
+  <li>All time values display as <code>00</code></li>
+  <li>Elements with <code>countdown-remaining="active"</code> are hidden</li>
+  <li>Elements with <code>countdown-remaining="expired"</code> are shown</li>
+  <li><code>countdown:expired</code> fires once</li>
+  <li>Timer stops; expired state persists until <code>localStorage</code> is cleared</li>
+</ul>
+
+<h2>localStorage</h2>
+
+<p><strong>Key:</strong> <code>{storageKey}_state</code></p>
+
+<p><strong>Value stored:</strong></p>
+
+<pre><code class="language-json">{
+  "firstVisit": 1704067200000,
+  "endTime": 1704153600000,
+  "durationMs": 86400000
+}</code></pre>
+
+<h3>Resetting the Timer (for testing)</h3>
+
+<pre><code class="language-javascript">// Default storage key
+localStorage.removeItem('countdown_state');
+
+// Custom storage key
+localStorage.removeItem('my-offer_state');</code></pre>
+
+<h2>Multiple Timers</h2>
+
+<p>To use more than one timer on the same site, give each a unique <code>storageKey</code>:</p>
+
+<pre><code>Timer 1: storageKey = "sale-countdown"
+Timer 2: storageKey = "signup-deadline"</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<h4>Timer shows 00:00:00 immediately</h4>
+<ul>
+  <li>Check if the timer has already expired — enable <code>debugMode</code></li>
+  <li>Clear <code>localStorage</code> and refresh to reset</li>
+</ul>
+
+<h4>Slotted elements not updating</h4>
+<ul>
+  <li>Verify elements have the correct <code>countdown-remaining</code> attribute</li>
+  <li>Ensure content is slotted into the <code>content</code> slot</li>
+  <li>Check browser console for errors</li>
+</ul>
+
+<h4>Timer resets on every page load</h4>
+<ul>
+  <li><code>localStorage</code> may be blocked (check browser privacy settings)</li>
+  <li>Verify <code>storageKey</code> is consistent across pages</li>
+</ul>
+
+<h4>Animation not triggering</h4>
+<ul>
+  <li>Verify event listener is attached to <code>window</code></li>
+  <li>Check event name matches exactly (e.g., <code>countdown:update</code>)</li>
+</ul>
+
+<h2>Browser Support</h2>
+
+<p>Works in all modern browsers that support <code>localStorage</code>, <code>CustomEvent</code>, and Shadow DOM. If <code>localStorage</code> is unavailable, the timer still works but resets on page refresh.</p>
+
+<h2>Best Practices</h2>
+
+<ol>
+  <li>Use unique <code>storageKey</code> values for different countdown timers</li>
+  <li>Enable <code>debugMode</code> during development, disable before publishing</li>
+  <li>Always provide <code>countdown-remaining="expired"</code> content for good UX when the timer ends</li>
+  <li>Keep durations realistic — very long durations (multiple years) may cause precision issues</li>
+  <li>The timer uses the visitor's local time via <code>Date.now()</code> — account for time zones in your copy</li>
+</ol>

@@ -1,0 +1,141 @@
+---
+title: VCard
+description: Generate and download contact information as a vCard 3.0 (.vcf) file.
+format: hd-doc v1
+date: 2026-06-17
+tags: [vcard, interactive, contact, download, cms]
+---
+
+<h1>VCard</h1>
+
+<p>The VCard component generates a contact card in vCard 3.0 format and triggers a browser download when activated. Share contact information directly from your site — visitors can save it to their phone or desktop contact manager in one tap.</p>
+
+<p>All contact fields are CMS-bindable, making this ideal for employee directories, speaker pages, and contact listings.</p>
+
+<p><strong>Group:</strong> Interactive</p>
+
+<p><strong>Demo:</strong> <a href="https://webflow-core-component-test.webflow.io/vcard">webflow-core-component-test.webflow.io/vcard</a></p>
+
+<h2>Best Practices</h2>
+
+<ul>
+  <li><strong>Full Name is required.</strong> First Name and Last Name are also recommended as separate fields for better compatibility with contact apps.</li>
+  <li>VCards are primarily useful on mobile. Consider hiding the component on tablet and desktop breakpoints, or placing it in a mobile-only section.</li>
+</ul>
+
+<h2>Properties</h2>
+
+<h3>Display</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>variant</code></td><td>Variant</td><td><code>Button</code></td><td><code>Button</code> — renders a built-in download button. <code>Slot</code> — wraps custom content; clicking anywhere inside triggers the download.</td></tr>
+    <tr><td><code>buttonText</code></td><td>Text</td><td><code>Save to Contacts</code></td><td>Label text for the built-in button. Only used when <code>variant</code> is <code>Button</code>.</td></tr>
+    <tr><td><code>buttonStyle</code></td><td>Text</td><td><code>''</code></td><td>Inline CSS applied to the built-in button. Only used when <code>variant</code> is <code>Button</code>.</td></tr>
+    <tr><td><code>Slot</code></td><td>Slot</td><td>—</td><td>Custom clickable content. Only used when <code>variant</code> is <code>Slot</code>.</td></tr>
+  </tbody>
+</table>
+
+<h3>Download</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>filename</code></td><td>Text</td><td><code>contact.vcf</code></td><td>The downloaded file name. <code>.vcf</code> is automatically appended if not already present.</td></tr>
+  </tbody>
+</table>
+
+<h3>Contact Information</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>fullName</code></td><td>Text</td><td><strong>Required.</strong> Full display name.</td></tr>
+    <tr><td><code>firstName</code></td><td>Text</td><td>Given name</td></tr>
+    <tr><td><code>lastName</code></td><td>Text</td><td>Family name</td></tr>
+    <tr><td><code>organization</code></td><td>Text</td><td>Company or organization</td></tr>
+    <tr><td><code>title</code></td><td>Text</td><td>Job title or position</td></tr>
+    <tr><td><code>cellPhone</code></td><td>Text</td><td>Mobile phone number</td></tr>
+    <tr><td><code>workPhone</code></td><td>Text</td><td>Work phone number</td></tr>
+    <tr><td><code>email</code></td><td>Text</td><td>Primary email address</td></tr>
+    <tr><td><code>additionalEmail</code></td><td>Text</td><td>Secondary email address</td></tr>
+    <tr><td><code>streetAddress</code></td><td>Text</td><td>Street address</td></tr>
+    <tr><td><code>city</code></td><td>Text</td><td>City</td></tr>
+    <tr><td><code>state</code></td><td>Text</td><td>State, province, or region</td></tr>
+    <tr><td><code>postalCode</code></td><td>Text</td><td>ZIP or postal code</td></tr>
+    <tr><td><code>country</code></td><td>Text</td><td>Country name</td></tr>
+    <tr><td><code>websiteUrl</code></td><td>Link</td><td>Website or social media URL</td></tr>
+    <tr><td><code>note</code></td><td>Text</td><td>Additional notes</td></tr>
+  </tbody>
+</table>
+
+<h2>Interaction Modes</h2>
+
+<h3>Button variant</h3>
+
+<p>The component renders a built-in styled button (blue background, white text, <code>12px 24px</code> padding by default). Customize appearance with the <code>buttonStyle</code> property using inline CSS:</p>
+
+<pre><code class="language-css">background-color: #111827; color: white; border-radius: 6px; padding: 10px 20px; font-weight: 600;</code></pre>
+
+<h3>Slot variant</h3>
+
+<p>Set <code>variant</code> to <code>Slot</code> and design any Webflow element inside the slot — a button, banner, card, or link. The entire slot area becomes clickable and triggers the vCard download. This gives you full control over the trigger's appearance using Webflow's native design tools.</p>
+
+<h2>Generated vCard Format</h2>
+
+<p>The component outputs a vCard 3.0 file. Only fields with non-empty values are included:</p>
+
+<pre><code>BEGIN:VCARD
+VERSION:3.0
+N:Smith;John;;;
+FN:John Smith
+ORG:Acme Corp
+TITLE:Product Manager
+TEL;TYPE=CELL:+1 555 000 0001
+TEL;TYPE=WORK,VOICE:+1 555 000 0002
+EMAIL;TYPE=WORK:john@acme.com
+EMAIL:john@personal.com
+ADR;TYPE=WORK:;;123 Main St;Springfield;IL;62701;USA
+URL:https://john.example.com
+NOTE:Met at conference 2024
+END:VCARD</code></pre>
+
+<h3>vCard Field Mapping</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>vCard Field</th><th>Type Tag</th></tr></thead>
+  <tbody>
+    <tr><td><code>firstName</code> + <code>lastName</code></td><td><code>N</code></td><td>—</td></tr>
+    <tr><td><code>fullName</code></td><td><code>FN</code></td><td>—</td></tr>
+    <tr><td><code>organization</code></td><td><code>ORG</code></td><td>—</td></tr>
+    <tr><td><code>title</code></td><td><code>TITLE</code></td><td>—</td></tr>
+    <tr><td><code>cellPhone</code></td><td><code>TEL</code></td><td><code>CELL</code></td></tr>
+    <tr><td><code>workPhone</code></td><td><code>TEL</code></td><td><code>WORK,VOICE</code></td></tr>
+    <tr><td><code>email</code></td><td><code>EMAIL</code></td><td><code>WORK</code></td></tr>
+    <tr><td><code>additionalEmail</code></td><td><code>EMAIL</code></td><td>—</td></tr>
+    <tr><td><code>streetAddress</code> + <code>city</code> + <code>state</code> + <code>postalCode</code> + <code>country</code></td><td><code>ADR</code></td><td><code>WORK</code></td></tr>
+    <tr><td><code>websiteUrl</code></td><td><code>URL</code></td><td>—</td></tr>
+    <tr><td><code>note</code></td><td><code>NOTE</code></td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h2>Download Behavior</h2>
+
+<p>The component creates a <code>Blob</code> with the vCard content and type <code>text/vcard</code>, generates a temporary object URL, triggers the browser download dialog, then immediately revokes the URL. No server-side processing is required.</p>
+
+<h2>CMS Binding</h2>
+
+<p>Bind any contact field to a CMS field for dynamic contact pages. Useful patterns:</p>
+
+<ul>
+  <li>Employee directory: bind all fields to a Staff CMS collection</li>
+  <li>Speaker listing: bind name, title, organization, and email</li>
+  <li>Contact page: use a single-item CMS collection as a data source</li>
+</ul>
+
+<h2>Future Plans</h2>
+
+<ul>
+  <li>QR code option for sharing the vCard without downloading</li>
+</ul>

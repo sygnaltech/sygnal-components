@@ -1,0 +1,74 @@
+---
+title: Grid
+description: Arrange content in equal-width columns using CSS grid.
+format: hd-doc v1
+date: 2026-06-17
+tags: [grid, layout, css-grid, columns]
+---
+
+<h1>Grid</h1>
+
+<p>The Grid component distributes slotted content across a configurable number of equal-width columns using CSS grid. It uses <code>minmax(0, 1fr)</code> columns so items shrink correctly even when their content would otherwise overflow.</p>
+
+<p><strong>Group:</strong> Layout</p>
+
+<h2>Purpose</h2>
+
+<p>This component exists to satisfy Webflow's slot restrictions — only components can be slotted within other components. A typical construction is:</p>
+
+<ul>
+  <li>A <strong>Section</strong> component with a large content slot</li>
+  <li>Containing a <strong>Grid</strong> component</li>
+  <li>Which has the content cards slotted inside it</li>
+</ul>
+
+<h2>Properties</h2>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>columns</code></td><td>Number</td><td><code>3</code></td><td>Number of equal-width columns. Accepted range: 1–100.</td></tr>
+    <tr><td><code>content</code></td><td>Slot</td><td>—</td><td>Items to distribute across the grid columns.</td></tr>
+    <tr><td><code>debugMode</code></td><td>Boolean</td><td><code>false</code></td><td>Shows a debug panel indicating the active column count.</td></tr>
+  </tbody>
+</table>
+
+<h2>Column Layout</h2>
+
+<p>The grid is defined as:</p>
+
+<pre><code class="language-css">grid-template-columns: repeat(N, minmax(0, 1fr));
+gap: 1rem;</code></pre>
+
+<p>Where <code>N</code> is the <code>columns</code> value. All columns are equal width and flex with the container.</p>
+
+<p>Slotted child elements receive <code>display: contents</code>, which removes them from the layout box model so their children participate directly in the grid. This lets you nest Webflow elements inside the slot without creating an extra wrapper that breaks the grid structure.</p>
+
+<aside>
+  <p><strong>Note:</strong> Columns are fixed <code>1fr</code> — there is currently no feature for variable column sizes.</p>
+</aside>
+
+<h2>Responsive Layouts</h2>
+
+<p>The Grid component sets a fixed column count. For responsive behavior:</p>
+
+<ul>
+  <li>Use multiple Grid components with Webflow's conditional visibility, each with a different <code>columns</code> value suited to that breakpoint</li>
+  <li>Or wrap the Grid in a parent element and use Webflow's custom CSS to control when it switches to a single column</li>
+</ul>
+
+<h2>Gap</h2>
+
+<p>The gap between grid items is fixed at <code>1rem</code>. To adjust, apply custom CSS to the Grid's wrapper element.</p>
+
+<h2>Debug Mode</h2>
+
+<p>Enable <code>debugMode</code> to show a panel spanning all grid columns that displays the current <code>columns</code> value. Useful for confirming configuration while building. Disable before publishing.</p>
+
+<h2>Future Plans</h2>
+
+<ul>
+  <li>Collection List unwrapping support</li>
+  <li>Variable column sizes (e.g., <code>2fr 1fr 1fr</code>)</li>
+  <li>Configurable gap</li>
+</ul>

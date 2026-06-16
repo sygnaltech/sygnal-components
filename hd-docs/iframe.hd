@@ -1,0 +1,95 @@
+---
+title: IFrame
+description: Embed an external URL in a sandboxed iframe with configurable permissions.
+format: hd-doc v1
+date: 2026-06-17
+tags: [iframe, embed, sandbox, security]
+---
+
+<h1>IFrame</h1>
+
+<p>The IFrame component embeds an external URL in a sandboxed iframe. It exposes the same security and permission controls as the <a href="code-embed.hd">Code Embed</a> component, but takes a direct URL rather than assembling content from separate HTML/CSS/JS files.</p>
+
+<p><strong>Group:</strong> Utility</p>
+
+<h2>Properties</h2>
+
+<h3>Content</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>url</code></td><td>Text</td><td><code>''</code></td><td>The URL to embed. Must be a fully qualified URL (e.g., <code>https://example.com</code>).</td></tr>
+  </tbody>
+</table>
+
+<h3>Sizing</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>height</code></td><td>Number</td><td><code>400</code></td><td>iframe height in pixels.</td></tr>
+    <tr><td><code>width</code></td><td>Text</td><td><code>100%</code></td><td>iframe width as a CSS value (e.g., <code>100%</code>, <code>640px</code>).</td></tr>
+    <tr><td><code>scrolling</code></td><td>Variant</td><td><code>auto</code></td><td>Controls iframe scrollbars: <code>auto</code>, <code>yes</code>, or <code>no</code>.</td></tr>
+  </tbody>
+</table>
+
+<h3>Security &amp; Permissions</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>sandbox</code></td><td>Boolean</td><td><code>false</code></td><td>Applies iframe sandbox restrictions. Allows scripts, same-origin, forms, popups, downloads, and modals.</td></tr>
+    <tr><td><code>referrerPolicy</code></td><td>Boolean</td><td><code>true</code></td><td>Sends <code>strict-origin-when-cross-origin</code> referrer header. Disable to send no referrer.</td></tr>
+    <tr><td><code>allowFullscreen</code></td><td>Boolean</td><td><code>true</code></td><td>Permits the iframe to enter fullscreen mode.</td></tr>
+    <tr><td><code>allowAutoplay</code></td><td>Boolean</td><td><code>false</code></td><td>Permits media autoplay inside the iframe.</td></tr>
+    <tr><td><code>allowCamera</code></td><td>Boolean</td><td><code>false</code></td><td>Grants camera access to the iframe.</td></tr>
+    <tr><td><code>allowMicrophone</code></td><td>Boolean</td><td><code>false</code></td><td>Grants microphone access to the iframe.</td></tr>
+    <tr><td><code>allowGeolocation</code></td><td>Boolean</td><td><code>false</code></td><td>Grants geolocation access to the iframe.</td></tr>
+    <tr><td><code>allowClipboardWrite</code></td><td>Boolean</td><td><code>false</code></td><td>Permits writing to the clipboard.</td></tr>
+    <tr><td><code>allowPayment</code></td><td>Boolean</td><td><code>false</code></td><td>Permits use of the Payment Request API.</td></tr>
+    <tr><td><code>allowDisplayCapture</code></td><td>Boolean</td><td><code>false</code></td><td>Permits screen capture (getDisplayMedia).</td></tr>
+  </tbody>
+</table>
+
+<h2>Empty URL State</h2>
+
+<p>If <code>url</code> is empty, the component renders an error message in place of the iframe, indicating that no URL has been provided. This makes unconfigured instances easy to spot in the Designer and on the live site.</p>
+
+<h2>Security Controls</h2>
+
+<h3>Sandbox</h3>
+
+<p>Enabling <code>sandbox</code> applies the following permission set to the iframe:</p>
+
+<pre><code>allow-scripts allow-same-origin allow-forms allow-popups
+allow-popups-to-escape-sandbox allow-downloads allow-modals</code></pre>
+
+<p>This is a balanced sandbox that permits interactive content while restricting top-level navigation and other potentially risky behaviors.</p>
+
+<h3>Permission Flags</h3>
+
+<p>Each permission flag adds an entry to the iframe's <code>allow</code> attribute. Only enable permissions that the embedded content explicitly requires:</p>
+
+<ul>
+  <li><strong>allowAutoplay</strong> — Required for video/audio players that start automatically</li>
+  <li><strong>allowCamera / allowMicrophone</strong> — Required for video conferencing or media recording tools</li>
+  <li><strong>allowGeolocation</strong> — Required for location-based services</li>
+  <li><strong>allowClipboardWrite</strong> — Required for copy-to-clipboard functionality inside the iframe</li>
+  <li><strong>allowPayment</strong> — Required for embedded checkout flows using the Payment Request API</li>
+  <li><strong>allowDisplayCapture</strong> — Required for screen sharing features</li>
+</ul>
+
+<h2>IFrame vs Code Embed</h2>
+
+<p>Use <strong>IFrame</strong> when you have a URL to an existing page or service. Use <a href="code-embed.hd">Code Embed</a> when you have HTML, CSS, and JS files on a CDN that you want assembled and rendered together.</p>
+
+<table>
+  <thead><tr><th>Feature</th><th>IFrame</th><th>Code Embed</th></tr></thead>
+  <tbody>
+    <tr><td>Input</td><td>URL</td><td>CDN base URL</td></tr>
+    <tr><td>Content assembly</td><td>None — loads the URL directly</td><td>Assembles HTML + CSS + JS into a document</td></tr>
+    <tr><td>Auto-sizing</td><td>No</td><td>Yes (auto mode)</td></tr>
+    <tr><td>Use case</td><td>External pages, apps, embeds</td><td>Custom widgets from a CDN</td></tr>
+  </tbody>
+</table>

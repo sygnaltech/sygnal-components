@@ -1,0 +1,124 @@
+---
+title: Dropdown
+description: Nestable dropdown menu with configurable expansion direction, trigger mode, and fade animations.
+format: hd-doc v1
+date: 2026-06-17
+tags: [dropdown, navigation, menu, hover, nesting]
+---
+
+<h1>Dropdown</h1>
+
+<p>The Dropdown component renders a trigger button that opens a panel of content. It supports arbitrary nesting depth, six expansion directions, click or hover triggers, and configurable fade animations. Panels use <code>position: fixed</code> so they escape any <code>overflow: hidden</code> ancestors.</p>
+
+<p><strong>Group:</strong> Navigation</p>
+
+<h2>Properties</h2>
+
+<h3>Content</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>label</code></td><td>Text Node</td><td><code>Menu</code></td><td>The trigger button label text. Editable inline on the Webflow canvas.</td></tr>
+    <tr><td><code>icon</code></td><td>Image</td><td>—</td><td>Optional leading icon displayed before the label text.</td></tr>
+    <tr><td><code>content</code></td><td>Slot</td><td>—</td><td>The dropdown panel contents. Supports nested Dropdown components.</td></tr>
+  </tbody>
+</table>
+
+<h3>Behavior</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>position</code></td><td>Variant</td><td><code>below</code></td><td>Which direction the panel expands: <code>below</code>, <code>above</code>, <code>right-down</code>, <code>right-up</code>, <code>left-down</code>, <code>left-up</code>.</td></tr>
+    <tr><td><code>openOnHover</code></td><td>Boolean</td><td><code>false</code></td><td>Open the panel on mouse hover instead of click.</td></tr>
+    <tr><td><code>hoverCloseDelay</code></td><td>Number</td><td><code>150</code></td><td>Milliseconds to wait before closing the panel after the mouse leaves (hover mode only). Range: 0–2000.</td></tr>
+  </tbody>
+</table>
+
+<h3>Animation</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>fadeEnabled</code></td><td>Boolean</td><td><code>true</code></td><td>Fade the panel in and out on open/close.</td></tr>
+    <tr><td><code>fadeDuration</code></td><td>Number</td><td><code>200</code></td><td>Fade transition duration in milliseconds. Range: 0–2000.</td></tr>
+    <tr><td><code>fadeEasing</code></td><td>Text</td><td><code>ease</code></td><td>CSS easing function for the fade transition (e.g., <code>ease-in-out</code>, <code>cubic-bezier(0.4, 0, 0.2, 1)</code>).</td></tr>
+  </tbody>
+</table>
+
+<h3>Designer</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>designMode</code></td><td>Boolean</td><td><code>false</code></td><td>Forces the panel open so you can lay out and style it in the Webflow Designer. Disable before publishing.</td></tr>
+  </tbody>
+</table>
+
+<h2>Position Options</h2>
+
+<table>
+  <thead><tr><th>Value</th><th>Panel opens...</th></tr></thead>
+  <tbody>
+    <tr><td><code>below</code></td><td>Below the trigger, aligned to the left</td></tr>
+    <tr><td><code>above</code></td><td>Above the trigger, aligned to the left</td></tr>
+    <tr><td><code>right-down</code></td><td>To the right of the trigger, aligned to the top</td></tr>
+    <tr><td><code>right-up</code></td><td>To the right of the trigger, aligned to the bottom</td></tr>
+    <tr><td><code>left-down</code></td><td>To the left of the trigger, aligned to the top</td></tr>
+    <tr><td><code>left-up</code></td><td>To the left of the trigger, aligned to the bottom</td></tr>
+  </tbody>
+</table>
+
+<p>The panel position is calculated from viewport coordinates, so it renders correctly regardless of scroll position or parent overflow settings.</p>
+
+<h2>Nesting</h2>
+
+<p>Dropdown panels can contain other Dropdown components, creating multi-level menus. The component tracks nesting depth via shadow DOM traversal and exposes it as a CSS variable, allowing depth-specific styling:</p>
+
+<pre><code class="language-css">--cc-dropdown-background-1: #ffffff;   /* level 1 */
+--cc-dropdown-background-2: #f5f5f5;   /* level 2 */
+--cc-dropdown-background: #e0e0e0;     /* fallback for all levels */</code></pre>
+
+<p>There is no configured limit on nesting depth.</p>
+
+<h2>Click Mode</h2>
+
+<p>In click mode (default), clicking the trigger toggles the panel. Clicking outside any open dropdown or pressing <code>Escape</code> closes all open panels.</p>
+
+<h2>Hover Mode</h2>
+
+<p>Enable <code>openOnHover</code> to open the panel when the mouse enters the trigger area. The panel stays open while the mouse is over either the trigger or the panel. After the mouse leaves both, the panel closes after <code>hoverCloseDelay</code> milliseconds.</p>
+
+<p>The hover check traverses the composed event path to correctly handle nested dropdowns — hovering a child panel does not close the parent.</p>
+
+<h2>Chevron Icon</h2>
+
+<p>The trigger button includes a chevron icon that rotates based on the open state and expansion direction, providing a visual cue about which way the panel will appear.</p>
+
+<h2>Custom Events</h2>
+
+<table>
+  <thead><tr><th>Event</th><th>Fired On</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>dropdown:closeAll</code></td><td>Document</td><td>Dispatching this event on the document closes all open dropdown panels.</td></tr>
+  </tbody>
+</table>
+
+<pre><code class="language-javascript">document.dispatchEvent(new CustomEvent('dropdown:closeAll'));</code></pre>
+
+<h2>Design Mode</h2>
+
+<p>Set <code>designMode</code> to <code>true</code> while styling the dropdown panel in the Webflow Designer. This keeps the panel visible so you can select and style its contents. Remember to turn it off before publishing — the panel should be closed by default for site visitors.</p>
+
+<h2>CSS Styling</h2>
+
+<p>The dropdown panel is a standard div positioned with fixed coordinates. Apply Webflow classes to the content slot children to style the panel appearance. Use CSS variables for depth-aware theming when nesting multiple levels.</p>
+
+<h2>Implementation Notes</h2>
+
+<ul>
+  <li>The component uses module-level globals for cross-instance coordination: a monotonic z-index counter (so the most recently opened panel always sits on top) and a reference-counted document listener for outside-click and Escape-key handling.</li>
+  <li>The nesting-depth detection walks up through assigned-slot boundaries across shadow roots, so depth is correctly identified for arbitrarily nested instances.</li>
+  <li>Panels use <code>position: fixed</code> so they escape any <code>overflow: hidden</code> ancestor — including their own parent panel when nested dropdowns are open. This lets the parent panel use <code>overflow: hidden</code> (needed to clip child backgrounds at the border-radius corners) without clipping sibling/child sub-menus.</li>
+</ul>

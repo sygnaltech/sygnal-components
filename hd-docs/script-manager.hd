@@ -1,0 +1,132 @@
+---
+title: Script Manager
+description: Load different external scripts per environment — development, test, or production.
+format: hd-doc v1
+date: 2026-06-17
+tags: [script-manager, deployment, cdn, environments]
+---
+
+<h1>Script Manager</h1>
+
+<p>When injecting a code library into a Webflow site, it's best to serve it from a CDN and use separate URLs for dev, test, and production builds. Script Manager automates this — it detects the current environment and loads the correct script automatically, with easy URL-parameter overrides for developers.</p>
+
+<p>Based on an idea by <a href="https://x.com/corsettiDev">Patrick Corsetti</a>.</p>
+
+<p><strong>Group:</strong> Utilities</p>
+
+<p><strong>Demo:</strong> <a href="https://script-manager.webflow.io/?prod">script-manager.webflow.io/?prod</a></p>
+
+<h2>Features</h2>
+
+<ul>
+  <li>Dynamic script loading based on environment</li>
+  <li><strong>Automatic detection:</strong> injects the TEST script on staging (<code>*.webflow.io</code>), the PROD script on production</li>
+  <li><strong>Developer overrides:</strong> append <code>?dev</code>, <code>?test</code>, or <code>?prod</code> to any URL to switch modes instantly</li>
+  <li><strong>Persistent overrides:</strong> mode selection is stored in <code>localStorage</code> and survives page loads</li>
+  <li><strong>Visual indicator:</strong> colored badge shows when an override is active; click it to exit override mode</li>
+</ul>
+
+<h2>Properties</h2>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>devCodeUrl</code></td><td>Text</td><td>—</td><td>Script URL to load in development mode (typically <code>localhost</code>).</td></tr>
+    <tr><td><code>testCodeUrl</code></td><td>Text</td><td>—</td><td>Script URL to load in test/staging mode (e.g., a CDN integration branch).</td></tr>
+    <tr><td><code>prodCodeUrl</code></td><td>Text</td><td>—</td><td>Script URL to load in production mode (e.g., a CDN release branch).</td></tr>
+    <tr><td><code>async</code></td><td>Boolean</td><td><code>false</code></td><td>Load the script asynchronously.</td></tr>
+    <tr><td><code>defer</code></td><td>Boolean</td><td><code>false</code></td><td>Defer script execution until the page has finished loading.</td></tr>
+  </tbody>
+</table>
+
+<h2>Environment Detection</h2>
+
+<p>The component determines the active environment using this priority order:</p>
+
+<ol>
+  <li><strong>URL parameter</strong> — <code>?dev</code>, <code>?test</code>, or <code>?prod</code> in the current URL. Mode is saved to <code>localStorage</code>.</li>
+  <li><strong>localStorage</strong> — Previously stored mode from a URL parameter override.</li>
+  <li><strong>Hostname detection</strong> — Hostname containing <code>webflow.io</code> → test URL. All other hostnames → production URL.</li>
+</ol>
+
+<h2>Switching Environments via URL</h2>
+
+<p>Append a mode parameter to any page URL to override the active environment:</p>
+
+<pre><code>https://yoursite.com/page?dev
+https://yoursite.com/page?test
+https://yoursite.com/page?prod</code></pre>
+
+<p>The selected mode persists across page loads via <code>localStorage</code> until explicitly cleared.</p>
+
+<h2>Clearing an Override</h2>
+
+<p>Add <code>?dev=false</code>, <code>?test=false</code>, or <code>?prod=false</code> to any URL to clear the stored mode and return to automatic detection. Alternatively, click the mode indicator badge.</p>
+
+<h2>Mode Indicator</h2>
+
+<p>While a mode override is active, the component displays a fixed-position badge:</p>
+
+<ul>
+  <li><strong>Red badge</strong> — Development mode</li>
+  <li><strong>Yellow badge</strong> — Test mode</li>
+  <li><strong>Green badge</strong> — Production mode</li>
+</ul>
+
+<p>Clicking the badge clears the stored mode and removes the URL parameter.</p>
+
+<h2>Typical Setup</h2>
+
+<p>Place one Script Manager in the Webflow site's global settings (before <code>&lt;/body&gt;</code>) or in a Symbol that appears on every page. Point the three URLs at your CDN paths:</p>
+
+<table>
+  <thead><tr><th>Property</th><th>Example Value</th></tr></thead>
+  <tbody>
+    <tr><td><code>devCodeUrl</code></td><td><code>http://localhost:4000/dist/app.js</code></td></tr>
+    <tr><td><code>testCodeUrl</code></td><td><code>https://cdn-staging.example.com/app.js</code></td></tr>
+    <tr><td><code>prodCodeUrl</code></td><td><code>https://cdn.example.com/app.js</code></td></tr>
+  </tbody>
+</table>
+
+<p>During local development, add <code>?dev</code> to the URL — Script Manager loads your local build. On the live site without parameters, production scripts load automatically.</p>
+
+<h2>Script Loading Timing</h2>
+
+<aside>
+  <p><strong>Important:</strong> Using the code component approach, the script is injected at some point during page load — unlike a manually placed <code>&lt;script&gt;</code> tag, the exact load point is harder to control.</p>
+</aside>
+
+<p>If your scripts use the <code>DOMContentLoaded</code> trigger, verify that the event has not already fired:</p>
+
+<pre><code class="language-javascript">(() =&gt; {
+  function apply() {
+    // Your code here
+  }
+
+  // Safe loader — works whether DOMContentLoaded has already fired or not
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply, { once: true });
+  } else {
+    apply();
+  }
+})();</code></pre>
+
+<h2>Loading Attributes</h2>
+
+<p>Use <code>async</code> or <code>defer</code> to control when the script executes relative to page parsing:</p>
+
+<ul>
+  <li><strong>async</strong> — Downloads in parallel, executes as soon as available (may be before DOM is ready)</li>
+  <li><strong>defer</strong> — Downloads in parallel, executes after the DOM is fully parsed</li>
+  <li><strong>Neither</strong> — Blocks HTML parsing until downloaded and executed</li>
+</ul>
+
+<p>For most site enhancement scripts, <code>defer</code> is the recommended choice.</p>
+
+<h2>Future Plans</h2>
+
+<ul>
+  <li>Designer suppression (currently executes PROD mode code in the Designer)</li>
+  <li>Graceful handling of partial configurations (only some URLs provided)</li>
+  <li>Multiple named Script Manager instances with independent state tracking</li>
+</ul>

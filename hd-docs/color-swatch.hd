@@ -1,0 +1,140 @@
+---
+title: Color Swatch
+description: Clickable color swatch with optional hex/RGB display and automatic contrast-aware text color.
+format: hd-doc v1
+date: 2026-06-17
+tags: [color-swatch, ui, brand-guide, design-system]
+---
+
+<h1>Color Swatch</h1>
+
+<p>The Color Swatch component displays colors with optional hex and RGB information. Generates the SVG automatically. Click any swatch to copy the color value to your clipboard.</p>
+
+<p><strong>Group:</strong> UI</p>
+
+<p><strong>Demo:</strong> <a href="https://webflow-core-component-test.webflow.io/color-swatch">webflow-core-component-test.webflow.io/color-swatch</a></p>
+
+<h2>Use Cases</h2>
+
+<ul>
+  <li>Brand guide or style guide pages for clients — display an entire color palette with copy-on-click</li>
+  <li>Design system documentation</li>
+  <li>CMS-driven color reference pages (bind the <code>color</code> property to a CMS color or text field)</li>
+</ul>
+
+<h2>Properties</h2>
+
+<h3>Settings</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Options</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>color</code></td><td>Text</td><td><code>#000000</code></td><td>Any CSS color</td><td>The color to display. Accepts hex (<code>#ff6600</code>), named colors (<code>red</code>), RGB (<code>rgb(255,100,50)</code>), RGBA, HSL, and other CSS color formats.</td></tr>
+    <tr><td><code>style</code></td><td>Variant</td><td><code>Plain</code></td><td>Plain, Informative</td><td><strong>Plain</strong> displays color only. <strong>Informative</strong> shows hex code and RGB values (on larger sizes).</td></tr>
+    <tr><td><code>size</code></td><td>Variant</td><td><code>64 x 64</code></td><td>32×32, 48×48, 64×64, 96×96, 128×128, 154×154</td><td>The dimensions of the swatch in pixels.</td></tr>
+  </tbody>
+</table>
+
+<h3>Label</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Options</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>labelFormat</code></td><td>Variant</td><td><code>Hex Color</code></td><td>As Specified, Hex Color</td><td><strong>As Specified</strong> displays the color value exactly as entered. <strong>Hex Color</strong> converts any color format to a normalized 6-digit hex code.</td></tr>
+    <tr><td><code>labelColor</code></td><td>Variant</td><td><code>Auto</code></td><td>White, Black, Auto</td><td>The color of the label text. <strong>Auto</strong> uses WCAG luminance to select black or white for best contrast.</td></tr>
+  </tbody>
+</table>
+
+<h2>Size and Information Display</h2>
+
+<p>The amount of information shown in <strong>Informative</strong> style depends on the swatch size:</p>
+
+<table>
+  <thead><tr><th>Size</th><th>Informative Style Shows</th></tr></thead>
+  <tbody>
+    <tr><td>32 × 32</td><td>Color only (too small for text)</td></tr>
+    <tr><td>48 × 48</td><td>Color only (too small for text)</td></tr>
+    <tr><td>64 × 64</td><td>Hex code</td></tr>
+    <tr><td>96 × 96</td><td>Hex code + RGB values</td></tr>
+    <tr><td>128 × 128</td><td>Hex code + RGB values</td></tr>
+    <tr><td>154 × 154</td><td>Hex code + RGB values</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Plain</strong> style always shows color only, regardless of size.</p>
+
+<h2>Click-to-Copy</h2>
+
+<p>Click any swatch to copy the color value to your clipboard. A "Copied!" tooltip appears briefly to confirm.</p>
+
+<ul>
+  <li>In <strong>Hex Color</strong> format: copies the normalized hex value (e.g., <code>#ff6600</code>)</li>
+  <li>In <strong>As Specified</strong> format: copies the original value as entered</li>
+</ul>
+
+<h2>Label Format</h2>
+
+<ul>
+  <li><strong>As Specified:</strong> The label reflects the <code>color</code> value exactly as entered — if you type <code>tomato</code>, the label shows <code>tomato</code>.</li>
+  <li><strong>Hex Color:</strong> All color formats are normalized to 6-digit hex (e.g., <code>rgb(255, 99, 71)</code> → <code>#FF6347</code>). Named colors and <code>rgba</code> values are resolved to their hex equivalents.</li>
+</ul>
+
+<h2>Auto Text Color</h2>
+
+<p>When <code>labelColor</code> is set to <code>Auto</code>, the component calculates relative luminance using the WCAG formula and selects black or white text to ensure the highest contrast ratio against the swatch color.</p>
+
+<h2>Auto-Sizing Text</h2>
+
+<p>When using <strong>As Specified</strong> label format with longer color values (like <code>rgba(255, 128, 64, 0.5)</code>), the label text automatically scales down to fit within the swatch boundaries.</p>
+
+<h2>Color Format Support</h2>
+
+<p>The component accepts any CSS color string that the browser can parse. All colors are normalized to hex internally for copy operations and WCAG calculations:</p>
+
+<pre><code>#ff6600
+#f60
+rgb(255, 102, 0)
+rgba(255, 102, 0, 1)
+hsl(24, 100%, 50%)
+tomato
+coral
+rebeccapurple</code></pre>
+
+<h2>Examples</h2>
+
+<h3>Basic swatch</h3>
+
+<pre><code>Color: #3366cc
+Style: Plain
+Size: 64 x 64</code></pre>
+
+<p>Displays a simple blue square with hex code in the center.</p>
+
+<h3>Informative swatch with RGB</h3>
+
+<pre><code>Color: coral
+Style: Informative
+Size: 128 x 128
+Label Format: Hex Color
+Label Color: Auto</code></pre>
+
+<p>Displays a coral swatch showing <code>FF7F50</code> and RGB values (255, 127, 80) with auto-contrast white text.</p>
+
+<h3>Named color with original label</h3>
+
+<pre><code>Color: rebeccapurple
+Style: Informative
+Size: 154 x 154
+Label Format: As Specified
+Label Color: White</code></pre>
+
+<p>Displays the color with <code>rebeccapurple</code> as the label text.</p>
+
+<h2>Tips</h2>
+
+<ul>
+  <li>Use <strong>Hex Color</strong> label format for consistent hex output regardless of input format</li>
+  <li>Use <strong>As Specified</strong> for displaying CSS variable names or preserving named color labels</li>
+  <li>For accessibility, use <strong>Auto</strong> label color to ensure readable text on all swatches</li>
+  <li>Sizes 96+ are recommended for <strong>Informative</strong> style to display all information clearly</li>
+</ul>

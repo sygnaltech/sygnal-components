@@ -1,0 +1,93 @@
+---
+title: SVG Icon
+description: Render inline SVG markup with validation, HTML entity decoding, and preset size variants.
+format: hd-doc v1
+date: 2026-06-17
+tags: [svg-icon, media, cms, icons]
+---
+
+<h1>SVG Icon</h1>
+
+<p>In standard Webflow, inline SVGs are added using an Embed element — but that approach has limitations: the SVG cannot be stored in the CMS and bound to an Embed, and it cannot be componentized and slotted conveniently. SVG Icon solves both problems.</p>
+
+<p><strong>Group:</strong> Media</p>
+
+<h2>Features</h2>
+
+<ul>
+  <li>Paste SVG code directly into a property field</li>
+  <li><strong>CMS-bindable</strong> — store SVG markup in a plain text CMS field and bind it to the property for item-specific icons</li>
+  <li>Choose from six preset sizes</li>
+  <li>Color the icon through its wrapper div using the SVG <code>currentColor</code> property — that color can be stored in the CMS as a color field and bound to the wrapper's text color</li>
+  <li>Automatically validates that the input is valid SVG before rendering</li>
+</ul>
+
+<h2>Properties</h2>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>svg</code></td><td>Text</td><td>—</td><td>SVG markup string (the full <code>&lt;svg&gt;...&lt;/svg&gt;</code> element).</td></tr>
+    <tr><td><code>variant</code></td><td>Variant</td><td><code>16x16</code></td><td>Preset output dimensions applied to the rendered SVG container.</td></tr>
+  </tbody>
+</table>
+
+<h2>Size Options</h2>
+
+<table>
+  <thead><tr><th>Variant</th><th>Dimensions</th></tr></thead>
+  <tbody>
+    <tr><td><code>16x16</code></td><td>16 × 16 px</td></tr>
+    <tr><td><code>24x24</code></td><td>24 × 24 px</td></tr>
+    <tr><td><code>32x32</code></td><td>32 × 32 px</td></tr>
+    <tr><td><code>48x48</code></td><td>48 × 48 px</td></tr>
+    <tr><td><code>80x80</code></td><td>80 × 80 px</td></tr>
+    <tr><td><code>104x104</code></td><td>104 × 104 px</td></tr>
+  </tbody>
+</table>
+
+<p>Sizes are fixed pixel dimensions. The component wrapper is sized to the variant and the SVG renders within it.</p>
+
+<h2>Providing SVG Markup</h2>
+
+<p>Paste the full <code>&lt;svg&gt;</code> element into the <code>svg</code> property. The SVG must be valid XML. If the markup fails validation, the component renders an error state rather than broken HTML.</p>
+
+<pre><code class="language-xml">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"&gt;
+  &lt;circle cx="12" cy="12" r="10"/&gt;
+  &lt;line x1="12" y1="8" x2="12" y2="12"/&gt;
+  &lt;line x1="12" y1="16" x2="12.01" y2="16"/&gt;
+&lt;/svg&gt;</code></pre>
+
+<h2>CMS Binding</h2>
+
+<p>Store SVG markup in a plain text CMS field. When the SVG Icon is inside a Collection List, bind the <code>svg</code> property to the CMS text field. This lets each CMS item have its own icon without any custom code.</p>
+
+<h2>Controlling Color</h2>
+
+<p>Use <code>currentColor</code> in your SVG's <code>stroke</code> or <code>fill</code> attributes. The icon then inherits its color from the parent element's CSS <code>color</code> property — set this in Webflow's style panel on the component wrapper.</p>
+
+<pre><code class="language-xml">&lt;!-- Icon inherits color from parent element's text color --&gt;
+&lt;svg ... stroke="currentColor" fill="none"&gt;...&lt;/svg&gt;</code></pre>
+
+<p>You can also bind the wrapper's text color to a CMS color field for per-item icon colors.</p>
+
+<h2>HTML Entity Decoding</h2>
+
+<p>When entering SVG markup in Webflow's Designer text fields, certain characters may be encoded as HTML entities (<code>&amp;lt;</code>, <code>&amp;amp;</code>, <code>&amp;quot;</code>). The component automatically decodes these before rendering, so SVG copied from tools like Figma or Illustrator renders correctly without manual cleanup.</p>
+
+<h2>Default Icon</h2>
+
+<p>If the <code>svg</code> property is empty, the component renders a default plus/cross icon as a placeholder, making the component easy to identify and configure in the Designer.</p>
+
+<h2>Validation</h2>
+
+<p>The SVG string is parsed with <code>DOMParser</code> before rendering. If the parsed document contains a <code>parsererror</code> element, the SVG is considered invalid and an error state is shown instead.</p>
+
+<h2>Use Cases</h2>
+
+<ul>
+  <li>UI icons from icon libraries (Lucide, Heroicons, Feather, etc.)</li>
+  <li>CMS-driven icons where different items need different icons</li>
+  <li>Brand logos stored and managed in the CMS</li>
+  <li>Inline diagrams or illustrations that need to scale without pixelation</li>
+</ul>

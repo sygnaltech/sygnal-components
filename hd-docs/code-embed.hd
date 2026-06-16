@@ -1,0 +1,107 @@
+---
+title: Code Embed
+description: Embed external HTML, CSS, and JS from a CDN via iframe with auto-sizing and security controls.
+format: hd-doc v1
+date: 2026-06-17
+tags: [code-embed, iframe, cdn, sandboxing]
+---
+
+<h1>Code Embed</h1>
+
+<p>The Code Embed component loads HTML, CSS, and JS files from a CDN base URL and renders them inside an iframe. It assembles a complete HTML document from three files — <code>{url}.html</code>, <code>{url}.css</code>, and <code>{url}.js</code> — so your embedded content stays fully isolated from the host page.</p>
+
+<p><strong>Group:</strong> Utility</p>
+
+<h2>Properties</h2>
+
+<h3>Content</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>baseUrl</code></td><td>Text</td><td><code>''</code></td><td>CDN base URL. The component fetches <code>{url}.html</code>, <code>{url}.css</code>, and <code>{url}.js</code> from this path.</td></tr>
+  </tbody>
+</table>
+
+<h3>Sizing</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>sizingMode</code></td><td>Variant</td><td><code>explicit</code></td><td><code>explicit</code> — fixed pixel height. <code>auto</code> — grows dynamically via postMessage from the embedded content.</td></tr>
+    <tr><td><code>height</code></td><td>Number</td><td><code>400</code></td><td>iframe height in pixels. Used when <code>sizingMode</code> is <code>explicit</code>.</td></tr>
+    <tr><td><code>minHeight</code></td><td>Number</td><td><code>100</code></td><td>Minimum iframe height in pixels. Used when <code>sizingMode</code> is <code>auto</code>.</td></tr>
+    <tr><td><code>width</code></td><td>Text</td><td><code>100%</code></td><td>iframe width as a CSS value (e.g., <code>100%</code>, <code>640px</code>).</td></tr>
+    <tr><td><code>scrolling</code></td><td>Variant</td><td><code>auto</code></td><td>Controls iframe scrollbars: <code>auto</code>, <code>yes</code>, or <code>no</code>.</td></tr>
+  </tbody>
+</table>
+
+<h3>Security &amp; Permissions</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>sandbox</code></td><td>Boolean</td><td><code>false</code></td><td>Applies iframe sandbox restrictions. Allows scripts, same-origin, forms, popups, downloads, and modals.</td></tr>
+    <tr><td><code>referrerPolicy</code></td><td>Boolean</td><td><code>true</code></td><td>Sends <code>strict-origin-when-cross-origin</code> referrer header. Disable to send no referrer.</td></tr>
+    <tr><td><code>allowFullscreen</code></td><td>Boolean</td><td><code>true</code></td><td>Permits the iframe to enter fullscreen mode.</td></tr>
+    <tr><td><code>allowAutoplay</code></td><td>Boolean</td><td><code>false</code></td><td>Permits media autoplay inside the iframe.</td></tr>
+    <tr><td><code>allowCamera</code></td><td>Boolean</td><td><code>false</code></td><td>Grants camera access to the iframe.</td></tr>
+    <tr><td><code>allowMicrophone</code></td><td>Boolean</td><td><code>false</code></td><td>Grants microphone access to the iframe.</td></tr>
+    <tr><td><code>allowGeolocation</code></td><td>Boolean</td><td><code>false</code></td><td>Grants geolocation access to the iframe.</td></tr>
+    <tr><td><code>allowClipboardWrite</code></td><td>Boolean</td><td><code>false</code></td><td>Permits writing to the clipboard.</td></tr>
+    <tr><td><code>allowPayment</code></td><td>Boolean</td><td><code>false</code></td><td>Permits use of the Payment Request API.</td></tr>
+    <tr><td><code>allowDisplayCapture</code></td><td>Boolean</td><td><code>false</code></td><td>Permits screen capture (getDisplayMedia).</td></tr>
+  </tbody>
+</table>
+
+<h2>Sizing Modes</h2>
+
+<h3>Explicit mode</h3>
+
+<p>The iframe renders at a fixed pixel height. Use this when you know the content dimensions. Set <code>sizingMode</code> to <code>explicit</code> and provide a <code>height</code> value in pixels.</p>
+
+<h3>Auto mode</h3>
+
+<p>The iframe expands to match its content height. The component injects a resize reporter script into the assembled HTML document that sends the document height via <code>postMessage</code>. The outer component listens and adjusts the iframe height accordingly. Set <code>sizingMode</code> to <code>auto</code>. The <code>minHeight</code> property controls the smallest height the iframe will render at.</p>
+
+<aside>
+  <p><strong>Note:</strong> Auto mode requires the embedded content's origin to allow postMessage communication. If the content is cross-origin and blocked by CSP, use explicit mode instead.</p>
+</aside>
+
+<h2>How the URL is Assembled</h2>
+
+<p>Given a <code>baseUrl</code> of <code>https://cdn.example.com/widget</code>, the component fetches:</p>
+
+<ul>
+  <li><code>https://cdn.example.com/widget.html</code> — body content</li>
+  <li><code>https://cdn.example.com/widget.css</code> — stylesheet</li>
+  <li><code>https://cdn.example.com/widget.js</code> — script</li>
+</ul>
+
+<p>These are assembled into a complete HTML document and rendered in the iframe as a <code>srcdoc</code>. No separate HTTP requests for the iframe document itself are made.</p>
+
+<h2>Error State</h2>
+
+<p>If <code>baseUrl</code> is empty or the content fails to load, the component renders a placeholder box styled to look disabled, making it easy to spot unconfigured instances in the Designer.</p>
+
+<h2>Security Considerations</h2>
+
+<ul>
+  <li>Enable <code>sandbox</code> to apply the most restrictive iframe permissions. The sandbox value allows <code>allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals</code>.</li>
+  <li>Only enable permission flags (<code>allowCamera</code>, <code>allowMicrophone</code>, etc.) for content that explicitly requires them.</li>
+  <li>The <code>referrerPolicy</code> toggle controls whether the host page URL is sent to the CDN. Disable it for privacy-sensitive scenarios.</li>
+</ul>
+
+<h2>Code Embed vs IFrame</h2>
+
+<p>See <a href="iframe.hd">IFrame</a> for the URL-based equivalent.</p>
+
+<table>
+  <thead><tr><th>Feature</th><th>Code Embed</th><th>IFrame</th></tr></thead>
+  <tbody>
+    <tr><td>Input</td><td>CDN base URL (3 files)</td><td>Single URL</td></tr>
+    <tr><td>Content assembly</td><td>Assembles HTML + CSS + JS into a document</td><td>None — loads the URL directly</td></tr>
+    <tr><td>Auto-sizing</td><td>Yes (auto mode)</td><td>No</td></tr>
+    <tr><td>Use case</td><td>Custom widgets from a CDN</td><td>External pages, apps, embeds</td></tr>
+  </tbody>
+</table>

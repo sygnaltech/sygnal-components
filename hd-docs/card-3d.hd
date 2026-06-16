@@ -1,0 +1,231 @@
+---
+title: 3D Card
+description: A card that tilts toward the mouse cursor, with optional depth-lifted elements that float above the card surface.
+format: hd-doc v1
+date: 2026-06-17
+tags: [card-3d, effects, hover, 3d, parallax]
+---
+
+<h1>3D Card</h1>
+
+<p>The 3D Card component wraps any content in an interactive surface that tilts in 3D space as the mouse moves over it. Wherever the cursor goes, that corner of the card rises toward the viewer. Individual descendant elements can be lifted off the card surface using a <code>z-pos</code> attribute, producing a subtle parallax that becomes vivid during the tilt.</p>
+
+<p><strong>Group:</strong> Effects</p>
+
+<p><strong>Demo:</strong> <a href="https://webflow-core-component-test.webflow.io/3d-card">webflow-core-component-test.webflow.io/3d-card</a></p>
+
+<p><strong>Inspiration:</strong> <a href="https://www.reddit.com/r/webflow/comments/1u26ogr/3d_hover_tilt_interaction_code_in_comment_section/">@DRIFFFTAWAY on r/webflow</a>.</p>
+
+<h2>Features</h2>
+
+<ul>
+  <li>Smooth mouse-tracking tilt with configurable maximum angle</li>
+  <li>Per-element depth via a single custom attribute (<code>z-pos</code>)</li>
+  <li>Global depth multiplier for tuning the whole effect at once</li>
+  <li>Configurable smoothing during tracking and easing on reset</li>
+  <li>Zero markup overhead — wraps any existing layout</li>
+</ul>
+
+<h2>Use Cases</h2>
+
+<ul>
+  <li>Marketing hero cards that respond to mouse interaction</li>
+  <li>Pricing tiles and feature cards where one or two elements should "pop" off the surface</li>
+  <li>Product cards with a floating badge or accent shape</li>
+  <li>Portfolio thumbnails that feel tactile</li>
+</ul>
+
+<h2>Quick Start</h2>
+
+<ol>
+  <li>Add the <strong>3D Card</strong> component to your page</li>
+  <li>Drop your card layout into the <code>Content</code> slot — any combination of headings, images, dividers, etc.</li>
+  <li>On any descendant element you want to lift off the surface, add a custom attribute <code>z-pos="N"</code> where <code>N</code> is the desired height in pixels (e.g. <code>20</code>)</li>
+  <li>Tune <strong>Tilt Amount</strong> to taste — 4–10 degrees feels natural; higher values get cartoonish quickly</li>
+</ol>
+
+<h2>Properties</h2>
+
+<h3>Content</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>slot</code></td><td>Slot</td><td>—</td><td>The card contents. Any element inside can carry a <code>z-pos</code> attribute to float above the surface.</td></tr>
+  </tbody>
+</table>
+
+<h3>Tilt</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Range</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>tiltAmount</code></td><td>Number</td><td><code>8</code></td><td>0–30</td><td>Maximum tilt angle in degrees when the mouse reaches a corner. <code>0</code> disables the tilt entirely. Subtle values (4–10) feel most natural.</td></tr>
+    <tr><td><code>perspective</code></td><td>Number</td><td><code>1000</code></td><td>100–3000</td><td>CSS perspective in pixels. Lower values exaggerate the 3D effect; higher values are more subtle.</td></tr>
+    <tr><td><code>zScale</code></td><td>Number</td><td><code>1</code></td><td>0–10</td><td>Multiplier applied to every <code>z-pos</code> value. Use to globally amplify or flatten all floating elements without editing each one individually.</td></tr>
+  </tbody>
+</table>
+
+<h3>Transition</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Range</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>followDuration</code></td><td>Number</td><td><code>80</code></td><td>0–500</td><td>Smoothing duration as the card follows the mouse, in milliseconds. <code>0</code> = instant. Small values (60–120) feel buttery.</td></tr>
+    <tr><td><code>resetDuration</code></td><td>Number</td><td><code>400</code></td><td>0–2000</td><td>How long the card takes to settle back to flat after the mouse leaves, in milliseconds.</td></tr>
+    <tr><td><code>resetEasing</code></td><td>Text</td><td><code>ease-out</code></td><td>—</td><td>CSS easing function used for the reset transition (e.g. <code>ease</code>, <code>ease-out</code>, <code>cubic-bezier(0.34, 1.56, 0.64, 1)</code>).</td></tr>
+  </tbody>
+</table>
+
+<h2>The <code>z-pos</code> Attribute</h2>
+
+<p><code>z-pos</code> is the heart of the 3D effect. Apply it to any descendant inside the card, and that element will float the specified number of pixels toward the viewer.</p>
+
+<pre><code class="language-html">&lt;div z-pos="10"&gt;Subtly lifted&lt;/div&gt;
+&lt;img z-pos="30" src="..." /&gt;
+&lt;h2 z-pos="50"&gt;Floats most prominently&lt;/h2&gt;</code></pre>
+
+<h3>Setting <code>z-pos</code> in Webflow Designer</h3>
+
+<ol>
+  <li>Select the element inside the card you want to lift</li>
+  <li>Open the <strong>Element Settings</strong> panel (gear icon)</li>
+  <li>Scroll to <strong>Custom attributes</strong></li>
+  <li>Add <code>z-pos</code> with the numeric value (no units)</li>
+</ol>
+
+<h3>Choosing values</h3>
+
+<p>There's no fixed scale, but a useful rule of thumb:</p>
+
+<table>
+  <thead><tr><th>Value</th><th>Effect</th></tr></thead>
+  <tbody>
+    <tr><td><code>5–10</code></td><td>Subtle — feels like raised ink or a sticker</td></tr>
+    <tr><td><code>15–30</code></td><td>Clear separation from the card surface</td></tr>
+    <tr><td><code>40–80</code></td><td>Strong parallax — the element clearly floats</td></tr>
+    <tr><td><code>100+</code></td><td>Dramatic, almost theatrical depth</td></tr>
+  </tbody>
+</table>
+
+<h3>Nested <code>z-pos</code></h3>
+
+<p>When a <code>z-pos</code> element contains another <code>z-pos</code> element, the inner value stacks on top of the outer. A parent at <code>z-pos="20"</code> containing a child at <code>z-pos="10"</code> puts the child at effective depth 30. Useful for grouping elements that should travel together.</p>
+
+<h3>Tuning the whole card at once</h3>
+
+<p>The <code>zScale</code> property multiplies every <code>z-pos</code> value. Design your card with reasonable per-element values, then use <code>zScale</code> to tune the global feel:</p>
+
+<ul>
+  <li><code>zScale = 0</code> — completely flat (useful for A/B comparison)</li>
+  <li><code>zScale = 0.5</code> — half-depth</li>
+  <li><code>zScale = 1</code> — as authored (default)</li>
+  <li><code>zScale = 2</code> — exaggerate everything</li>
+</ul>
+
+<h2>How the Tilt Works</h2>
+
+<p>The tilt direction follows the mouse: wherever the cursor is over the card, that corner rises toward the viewer.</p>
+
+<table>
+  <thead><tr><th>Mouse position</th><th>Card tilt</th></tr></thead>
+  <tbody>
+    <tr><td>Upper-left</td><td>Upper-left corner raised</td></tr>
+    <tr><td>Upper-right</td><td>Upper-right corner raised</td></tr>
+    <tr><td>Lower-left</td><td>Lower-left corner raised</td></tr>
+    <tr><td>Lower-right</td><td>Lower-right corner raised</td></tr>
+    <tr><td>Center</td><td>Flat</td></tr>
+  </tbody>
+</table>
+
+<p>The maximum angle is reached at the corners; the tilt scales linearly toward zero at the center. <code>tiltAmount</code> is the corner-angle limit in degrees on each axis.</p>
+
+<h3>Perspective vs. Tilt</h3>
+
+<p>The two interact:</p>
+
+<ul>
+  <li><strong>Higher <code>perspective</code> + higher <code>tiltAmount</code></strong> — long, gentle camera distance with strong rotation</li>
+  <li><strong>Lower <code>perspective</code> + lower <code>tiltAmount</code></strong> — close camera with restrained rotation; depth feels exaggerated</li>
+</ul>
+
+<p>Typical good combinations: <code>perspective: 800–1200</code> with <code>tiltAmount: 6–10</code>.</p>
+
+<h2>Behavior in Webflow Designer Preview</h2>
+
+<aside>
+  <p><strong>Important:</strong> The tilt does <strong>not</strong> animate in Webflow's Designer Preview mode. This is by design on Webflow's side — Designer Preview sets <code>data-hydrate="false"</code> on code-island components, which disables their client-side JavaScript. The card still renders correctly (and lifted <code>z-pos</code> elements remain visible in their lifted positions if they were applied during a prior render), but mouse interaction is inert.</p>
+  <p>Verify the tilt on the Published site, not in Designer Preview. This affects all interactive code components in Webflow, not just this one.</p>
+</aside>
+
+<h2>Implementation Notes</h2>
+
+<ul>
+  <li>The component attaches <code>mousemove</code> and <code>mouseleave</code> listeners natively (via <code>addEventListener</code> in <code>useEffect</code>) rather than through React's synthetic events. This is required because the slot's projected content lives in light DOM — React's synthetic event delegation walks <code>parentNode</code>, not the composed path, and would never reach the shadow-root wrapper from a slotted target.</li>
+  <li>The component automatically sets <code>transform-style: preserve-3d</code> on every ancestor between a <code>z-pos</code> element and the host, so <code>translateZ</code> is rendered in 3D space rather than flattened.</li>
+  <li>A <code>data-sygnal-3d-card-preserve</code> marker is added to each ancestor it modifies, so subsequent <code>slotchange</code> walks are idempotent.</li>
+  <li>Mouse-move updates are RAF-throttled with a short <code>followDuration</code> smoothing transition.</li>
+</ul>
+
+<h2>Tips</h2>
+
+<ul>
+  <li>The component automatically sets <code>transform-style: preserve-3d</code> on the ancestors of every <code>z-pos</code> element, so you don't need to manage that yourself</li>
+  <li>Any existing inline <code>transform</code> on a <code>z-pos</code> element gets overwritten by the lift transform — set transforms via CSS classes on a parent if you need both</li>
+  <li>The component is the wrapper; size and styling come from your slotted content, just as with any Webflow component</li>
+  <li>For a "card stack" effect, place several 3D Cards in a Webflow grid or flex layout — each gets its own independent perspective and tilt</li>
+</ul>
+
+<h2>Troubleshooting</h2>
+
+<h4>Nothing is tilting</h4>
+<ul>
+  <li>Confirm you're viewing the Published site, not Designer Preview (see above)</li>
+  <li>Check that <code>tiltAmount</code> is not <code>0</code></li>
+  <li>Make sure the mouse is actually over the card — the hit area is the card's bounding box</li>
+</ul>
+
+<h4>A <code>z-pos</code> element isn't lifting</h4>
+<ul>
+  <li>Confirm the attribute is exactly <code>z-pos</code> (lowercase, with a hyphen) and the value is a plain number with no units</li>
+  <li>Confirm the element is a descendant of the card's content slot</li>
+  <li>If the element already has a CSS <code>transform</code>, the component's <code>translateZ</code> overwrites it — move the prior transform onto a parent or wrapper</li>
+</ul>
+
+<h4>The tilt feels jittery</h4>
+<ul>
+  <li>Increase <code>followDuration</code> (try 100–150 ms)</li>
+  <li>Reduce <code>tiltAmount</code></li>
+</ul>
+
+<h4>The card snaps back too abruptly on mouse-leave</h4>
+<ul>
+  <li>Increase <code>resetDuration</code></li>
+  <li>Try a softer <code>resetEasing</code> such as <code>cubic-bezier(0.34, 1.56, 0.64, 1)</code> for a slight bounce</li>
+</ul>
+
+<h4>The 3D effect looks flat or weird</h4>
+<ul>
+  <li>Lower the <code>perspective</code> (try 600–800) for a more pronounced effect</li>
+  <li>Increase individual <code>z-pos</code> values, or raise <code>zScale</code></li>
+</ul>
+
+<h2>Browser Support</h2>
+
+<p>Works in all modern browsers that support:</p>
+
+<ul>
+  <li>CSS 3D transforms (<code>perspective</code>, <code>transform-style: preserve-3d</code>, <code>translateZ</code>, <code>rotateX/rotateY</code>)</li>
+  <li>Shadow DOM (handled by Webflow)</li>
+  <li><code>requestAnimationFrame</code></li>
+</ul>
+
+<h2>Best Practices</h2>
+
+<ol>
+  <li><strong>Start subtle</strong> — <code>tiltAmount: 6</code>, a handful of <code>z-pos</code> values between 10 and 40, and <code>perspective: 1000</code></li>
+  <li><strong>Use <code>zScale</code> to tune</strong> rather than editing many <code>z-pos</code> values</li>
+  <li><strong>Lift elements that should feel separate</strong> — badges, accent shapes, icons. Leave body text on the card surface</li>
+  <li><strong>Keep cards reasonably sized</strong> — oversized cards make the tilt feel slow and exaggerate cursor distance from corners</li>
+  <li><strong>Avoid nesting 3D Cards inside other 3D-transformed containers</strong> — the perspectives can compound unexpectedly</li>
+</ol>

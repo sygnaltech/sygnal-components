@@ -1,0 +1,83 @@
+---
+title: QR Code
+description: Generate QR codes from any text or URL with customizable size, colors, and error correction.
+format: hd-doc v1
+date: 2026-06-17
+tags: [qr-code, media, cms, scannable]
+---
+
+<h1>QR Code</h1>
+
+<p>The QR Code component generates a scannable QR code from any text or URL. Size, foreground/background colors, error correction level, and quiet zone margin are all configurable in the Webflow Designer. All properties are CMS-bindable.</p>
+
+<p><strong>Group:</strong> Media</p>
+
+<h2>Use Cases</h2>
+
+<ul>
+  <li>Link to App Store or Google Play listings</li>
+  <li>Link to AR experiences</li>
+  <li>Quick contact card sharing from web to mobile</li>
+  <li>Provide special mobile-only views or offers</li>
+  <li>Product pages with QR codes linking to manuals or support</li>
+</ul>
+
+<h2>Properties</h2>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>data</code></td><td>Text</td><td><code>https://www.webflow.com</code></td><td>The URL or text to encode in the QR code. CMS-bindable.</td></tr>
+    <tr><td><code>variant</code></td><td>Variant</td><td><code>200x200</code></td><td>Preset output dimensions.</td></tr>
+    <tr><td><code>includeMargin</code></td><td>Boolean</td><td><code>true</code></td><td>Adds a quiet zone (white margin) around the QR code, as recommended by the QR standard.</td></tr>
+    <tr><td><code>foregroundColor</code></td><td>Text</td><td><code>#000000</code></td><td>Color of the QR code modules (dots). Accepts any CSS hex color.</td></tr>
+    <tr><td><code>backgroundColor</code></td><td>Text</td><td><code>#ffffff</code></td><td>Color of the QR code background. Accepts any CSS hex color.</td></tr>
+    <tr><td><code>errorCorrection</code></td><td>Variant</td><td><code>M</code></td><td>Error correction level. Higher levels allow more of the code to be obscured while remaining scannable.</td></tr>
+  </tbody>
+</table>
+
+<h2>Size Options</h2>
+
+<table>
+  <thead><tr><th>Variant</th><th>Output Size</th></tr></thead>
+  <tbody>
+    <tr><td><code>100x100</code></td><td>100 × 100 px</td></tr>
+    <tr><td><code>200x200</code></td><td>200 × 200 px</td></tr>
+    <tr><td><code>300x300</code></td><td>300 × 300 px</td></tr>
+    <tr><td><code>400x400</code></td><td>400 × 400 px</td></tr>
+    <tr><td><code>500x500</code></td><td>500 × 500 px</td></tr>
+    <tr><td><code>100%x100%</code></td><td>Fills container width and height</td></tr>
+  </tbody>
+</table>
+
+<p>Use <code>100%x100%</code> when you want the QR code to scale with its parent container rather than render at a fixed pixel size.</p>
+
+<h2>Error Correction Levels</h2>
+
+<table>
+  <thead><tr><th>Level</th><th>Data Recovery</th><th>Use When</th></tr></thead>
+  <tbody>
+    <tr><td><code>L</code></td><td>~7%</td><td>Clean environments, maximum data density</td></tr>
+    <tr><td><code>M</code></td><td>~15%</td><td>General purpose (recommended default)</td></tr>
+    <tr><td><code>Q</code></td><td>~25%</td><td>Printed materials that may get slightly dirty</td></tr>
+    <tr><td><code>H</code></td><td>~30%</td><td>Logos or graphics overlaid on the QR code</td></tr>
+  </tbody>
+</table>
+
+<p>Higher error correction levels increase QR code complexity (more modules), which may reduce scan speed at smaller sizes. For most web use cases, <code>M</code> is the best balance.</p>
+
+<h2>Colors</h2>
+
+<p>Set <code>foregroundColor</code> and <code>backgroundColor</code> using hex values. While the standard calls for dark modules on a light background, any color combination works as long as there is sufficient contrast for scanners to read the code. Very low-contrast color pairs may cause scan failures.</p>
+
+<h2>Quiet Zone (Margin)</h2>
+
+<p>The <code>includeMargin</code> property adds a white border around the code. The QR standard requires a minimum quiet zone of 4 modules. Disable this only if you are providing the quiet zone in surrounding CSS padding or the QR code is on a plain white background.</p>
+
+<h2>Live Updates</h2>
+
+<p>The QR code re-renders automatically when any property changes — useful while building in the Webflow Designer.</p>
+
+<h2>Rendering</h2>
+
+<p>QR codes are rendered as styled SVG using the <code>qr-code-styling</code> library with rounded dots, embedded directly in the component's shadow DOM.</p>
