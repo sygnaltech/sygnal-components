@@ -29,6 +29,7 @@ version: 1
     <tr><td><a href="code-embed.hd">Code Embed</a></td><td>Utility</td><td>Embed external HTML/CSS/JS files from a CDN as an assembled iframe document, with auto-sizing.</td></tr>
     <tr><td><a href="color-swatch.hd">Color Swatch</a></td><td>UI</td><td>Clickable color swatch with click-to-copy and contrast-aware label color.</td></tr>
     <tr><td><a href="countdown-timer.hd">Countdown Timer</a></td><td>Utilities</td><td>Persistent per-visitor countdown that survives reloads via localStorage. Fully designer-styled.</td></tr>
+    <tr><td><a href="countup.hd">Countup</a></td><td>Interactive</td><td>Animates numeric text in slotted content from a start value up to a target when triggered. Behavior only.</td></tr>
     <tr><td><a href="css-isolator.hd">CSS Isolator</a></td><td>Style</td><td>Scope CSS variables and CSS rules to a specific container instance using auto-generated IDs.</td></tr>
     <tr><td><a href="dropdown.hd">Dropdown</a></td><td>Navigation</td><td>Nestable dropdown menu with six expansion directions, hover/click triggers, and depth-aware CSS variables.</td></tr>
     <tr><td><a href="grid.hd">Grid</a></td><td>Layout</td><td>Equal-width CSS grid with a configurable column count. Used when nested slots are required.</td></tr>
@@ -47,6 +48,7 @@ version: 1
     <tr><th>Version</th><th>Changes</th><th>Date</th></tr>
   </thead>
   <tbody>
+    <tr><td>v0.1.10</td><td><a href="countup.hd">Countup</a> component</td><td>26-Jul-2026</td></tr>
     <tr><td>v0.1.8</td><td><a href="card-3d.hd">3D Card</a> component</td><td>11-Jun-2026</td></tr>
     <tr><td>v0.1.6</td><td><a href="color-swatch.hd">Color Swatch</a> component</td><td>19-Jan-2026</td></tr>
     <tr><td>v0.1.5</td><td><a href="countdown-timer.hd">Countdown Timer</a> component</td><td>11-Jan-2026</td></tr>

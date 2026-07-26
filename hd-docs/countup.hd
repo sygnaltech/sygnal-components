@@ -1,0 +1,260 @@
+---
+title: Countup
+description: Animates numeric text in slotted content from a start value up to a target when triggered. Behavior only — the designer authors all the markup.
+format: hd-doc v1
+date: 2026-07-26
+tags: [countup, interactive, animation, counter, stats, numbers]
+---
+
+<h1>Countup</h1>
+
+<p>Countup is a behavior-only component. It contributes <strong>no visual output of its own</strong> — it renders whatever markup you drop into its slot, then finds the elements you've tagged and animates their numeric text from a starting value up to a target when a trigger fires. Presentation (layout, type, surrounding copy) stays entirely in your hands; Countup only supplies the counting behavior.</p>
+
+<p><strong>Group:</strong> Interactive</p>
+
+<h2>Features</h2>
+
+<ul>
+  <li>Counts any tagged element from a start value up to a target</li>
+  <li>Three trigger modes — on scroll into view, on page load, or manually via a custom event</li>
+  <li>Five easing curves, configurable duration, per-element stagger, and start delay</li>
+  <li>Rich number formatting — decimals, thousands separator, prefix, and suffix</li>
+  <li>Per-element overrides via <code>data-*</code> attributes, so one section can hold counters with different targets and formats</li>
+  <li>Honors <code>prefers-reduced-motion</code> out of the box</li>
+  <li>Zero runtime dependencies — pure React + DOM</li>
+</ul>
+
+<h2>Use Cases</h2>
+
+<ul>
+  <li>Stat rows and "by the numbers" sections that count up as the visitor scrolls to them</li>
+  <li>KPI dashboards and metric cards</li>
+  <li>Revenue, customer, or download counters with currency and units</li>
+  <li>Any hero or feature block where a headline number should animate into place</li>
+</ul>
+
+<h2>Quick Start</h2>
+
+<ol>
+  <li>Add the <strong>Countup</strong> component to your page</li>
+  <li>Drop your layout into the <code>Content</code> slot — headings, stat cards, dividers, anything</li>
+  <li>On each element whose number should animate, add the custom attribute <code>template="value"</code></li>
+  <li>Type the <strong>final</strong> number as that element's text (e.g. <code>13,000</code>). Countup reads it as the target and animates up from the start value</li>
+  <li>Leave <strong>Trigger</strong> on <code>on-view</code> and publish — the count fires as the section scrolls into view</li>
+</ol>
+
+<h2>The <code>template="value"</code> Attribute</h2>
+
+<p><code>template="value"</code> is what marks an element as a count target. Countup animates every descendant of the component that carries it; everything else in the slot is left untouched.</p>
+
+<pre><code class="language-html">&lt;div class="stats-row"&gt;
+  &lt;div class="stat"&gt;
+    &lt;span template="value"&gt;13,000&lt;/span&gt;
+    &lt;span class="stat-label"&gt;Cleared Reference Methods&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="stat"&gt;
+    &lt;span template="value" data-suffix="+"&gt;450&lt;/span&gt;
+    &lt;span class="stat-label"&gt;Active Customers&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="stat"&gt;
+    &lt;span template="value" data-prefix="$" data-suffix="M" data-decimals="1"&gt;2.3&lt;/span&gt;
+    &lt;span class="stat-label"&gt;Annual Revenue&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+<aside>
+  <p><strong>Keep <code>template="value"</code> on a leaf element</strong> — a <code>&lt;span&gt;</code> around just the number. Countup writes to the element's <code>textContent</code>, which replaces everything inside it. If you tag a parent that also contains a label or a <code>&lt;sup&gt;</code>, that markup is wiped when counting starts.</p>
+</aside>
+
+<h3>Setting the attribute in Webflow Designer</h3>
+
+<ol>
+  <li>Select the element that holds the number</li>
+  <li>Open the <strong>Element Settings</strong> panel (gear icon)</li>
+  <li>Scroll to <strong>Custom attributes</strong></li>
+  <li>Add <code>template</code> with the value <code>value</code></li>
+</ol>
+
+<h2>Properties</h2>
+
+<h3>Content</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>content</code></td><td>Slot</td><td>—</td><td>Your markup. Any descendant with <code>template="value"</code> becomes a count target.</td></tr>
+  </tbody>
+</table>
+
+<h3>Trigger</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Range</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>trigger</code></td><td>Variant</td><td><code>on-view</code></td><td>on-view / on-load / manual</td><td>When the count begins. <code>on-view</code> fires as the component scrolls into view; <code>on-load</code> fires immediately on load; <code>manual</code> waits for a <code>countup:start</code> event (see below).</td></tr>
+    <tr><td><code>threshold</code></td><td>Number</td><td><code>0.3</code></td><td>0–1</td><td>Fraction of the component that must be visible to fire. Only used when <code>trigger</code> is <code>on-view</code>.</td></tr>
+    <tr><td><code>replay</code></td><td>Boolean</td><td><code>false</code></td><td>—</td><td>If on, the count re-runs every time the component re-enters view (or on every <code>countup:start</code> event in manual mode). If off, it fires once.</td></tr>
+    <tr><td><code>delay</code></td><td>Number</td><td><code>0</code></td><td>≥ 0</td><td>Delay in milliseconds after the trigger fires before counting begins.</td></tr>
+  </tbody>
+</table>
+
+<h3>Animation</h3>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Range</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>duration</code></td><td>Number</td><td><code>2000</code></td><td>≥ 0</td><td>Total count time per element, in milliseconds.</td></tr>
+    <tr><td><code>easing</code></td><td>Variant</td><td><code>ease-out-cubic</code></td><td>linear / ease-out / ease-in-out / ease-out-cubic / ease-out-expo</td><td>Easing curve applied to the count. The <code>ease-out</code> curves decelerate toward the target, which reads well for numbers.</td></tr>
+    <tr><td><code>stagger</code></td><td>Number</td><td><code>0</code></td><td>≥ 0</td><td>Delay in milliseconds between successive matched elements. Element <em>N</em> starts at <em>N</em> × stagger after the trigger.</td></tr>
+    <tr><td><code>respectReducedMotion</code></td><td>Boolean</td><td><code>true</code></td><td>—</td><td>If on and the visitor's OS requests reduced motion, the animation is skipped and the final value is written immediately.</td></tr>
+  </tbody>
+</table>
+
+<h3>Format</h3>
+
+<p>These are the defaults for every counter. Any counter can override them individually with <code>data-*</code> attributes (see below).</p>
+
+<table>
+  <thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Range</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>startValue</code></td><td>Number</td><td><code>0</code></td><td>—</td><td>The value every counter animates up from.</td></tr>
+    <tr><td><code>decimals</code></td><td>Number</td><td><code>0</code></td><td>0–6</td><td>Number of decimal places.</td></tr>
+    <tr><td><code>separator</code></td><td>Variant</td><td><code>comma</code></td><td>comma / period / space / none / auto</td><td>Thousands separator. <code>auto</code> uses the visitor's locale via <code>toLocaleString()</code>. The decimal point stays <code>.</code> regardless.</td></tr>
+    <tr><td><code>prefix</code></td><td>Text</td><td><code>""</code></td><td>—</td><td>Text prepended to the value, e.g. <code>$</code>.</td></tr>
+    <tr><td><code>suffix</code></td><td>Text</td><td><code>""</code></td><td>—</td><td>Text appended to the value, e.g. <code>+</code> or <code>%</code>.</td></tr>
+  </tbody>
+</table>
+
+<h2>Per-element Overrides</h2>
+
+<p>When a single section has counters that need different targets or formats, override the component defaults per element with <code>data-*</code> attributes. Anything you don't set falls back to the component property.</p>
+
+<table>
+  <thead><tr><th>Attribute</th><th>Overrides</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>data-target</code></td><td>the target value</td><td>Explicit target. If absent, the target is parsed from the element's text.</td></tr>
+    <tr><td><code>data-from</code></td><td><code>startValue</code></td><td>Per-element start value.</td></tr>
+    <tr><td><code>data-duration</code></td><td><code>duration</code></td><td>Milliseconds.</td></tr>
+    <tr><td><code>data-decimals</code></td><td><code>decimals</code></td><td>Integer 0–6.</td></tr>
+    <tr><td><code>data-prefix</code></td><td><code>prefix</code></td><td>String.</td></tr>
+    <tr><td><code>data-suffix</code></td><td><code>suffix</code></td><td>String.</td></tr>
+  </tbody>
+</table>
+
+<h3>How the Target is Resolved</h3>
+
+<p>For each tagged element, Countup decides the target number in this order:</p>
+
+<ol>
+  <li><code>data-target</code>, if present (non-numeric characters other than <code>.</code> and <code>-</code> are stripped)</li>
+  <li>Otherwise, the element's initial text, parsed as a number</li>
+  <li>Otherwise, <code>0</code></li>
+</ol>
+
+<p>Typing the final number straight into the design canvas — <code>&lt;span template="value"&gt;13,000&lt;/span&gt;</code> — is the recommended pattern. Anyone viewing the Designer or a static snapshot sees the accurate final figure, and Countup reads it as the target and animates up from the start value.</p>
+
+<h2>Trigger Modes</h2>
+
+<h3>on-view</h3>
+
+<p>The default. Countup watches the component with an <code>IntersectionObserver</code> and fires when it becomes at least <code>threshold</code> visible. With <code>replay</code> off it fires once and stops observing; with <code>replay</code> on it re-runs every time the component re-enters view.</p>
+
+<h3>on-load</h3>
+
+<p>Fires as soon as the component mounts (after any <code>delay</code>). Best for numbers already above the fold.</p>
+
+<h3>manual</h3>
+
+<p>Countup waits for a <code>countup:start</code> <code>CustomEvent</code> dispatched on the component's host element. Wire it up with a Webflow Interaction that runs custom code, or a small <code>&lt;script&gt;</code>:</p>
+
+<pre><code class="language-js">document
+  .querySelector('code-island[data-component="Countup"]')
+  .dispatchEvent(new CustomEvent('countup:start'));</code></pre>
+
+<p>With <code>replay</code> on, every <code>countup:start</code> event re-runs the animation.</p>
+
+<h2>Formatting Notes</h2>
+
+<ul>
+  <li>The mid-animation value is formatted every frame with the configured decimals, separator, prefix, and suffix — so a counter reads <code>$1,240,000</code> the whole way up, not just at the end.</li>
+  <li>The decimal separator is always <code>.</code>, even when the thousands separator is <code>period</code> (e.g. <code>1.234.5</code>). This is a known v1 ambiguity; use <code>comma</code> or <code>space</code> grouping if it matters.</li>
+  <li>Seed text is parsed treating <code>.</code> as the decimal point. A European-style seed like <code>13.000</code> meaning thirteen thousand will be read as <code>13</code> — set <code>data-target="13000"</code> in that case.</li>
+</ul>
+
+<h2>Behavior in Webflow Designer Preview</h2>
+
+<aside>
+  <p><strong>Important:</strong> the count does <strong>not</strong> animate in Webflow's Designer Preview mode. Webflow sets <code>data-hydrate="false"</code> on code-island components in Preview, which disables their client-side JavaScript, so <code>useEffect</code> never runs. Your seed numbers still render exactly as typed (which is why typing the final figure is the right pattern), but the animation is inert.</p>
+  <p>Verify the count on the Published site, not in Designer Preview. This affects all interactive code components, not just this one.</p>
+</aside>
+
+<h2>Edge Cases</h2>
+
+<table>
+  <thead><tr><th>Situation</th><th>Behavior</th></tr></thead>
+  <tbody>
+    <tr><td>No <code>template="value"</code> elements in the slot</td><td>Mounts silently. The trigger is installed but there's nothing to animate — no error.</td></tr>
+    <tr><td>Seed text can't be parsed and no <code>data-target</code></td><td>Target is <code>0</code>; the element animates <code>0 → 0</code> (visually a no-op).</td></tr>
+    <tr><td>Both <code>data-target</code> and seed text present</td><td><code>data-target</code> wins.</td></tr>
+    <tr><td><code>replay</code> on and a count is still running when it re-fires</td><td>The in-flight animation is cancelled and restarts cleanly from the start value.</td></tr>
+    <tr><td>Slot content changes after mount (CMS / locale switch)</td><td>Targets are resolved once at mount. Countup does <strong>not</strong> auto-refresh if the surrounding content mutates afterward.</td></tr>
+    <tr><td>Multiple Countup instances on a page</td><td>Each manages only its own content — no shared or cross-instance state.</td></tr>
+  </tbody>
+</table>
+
+<h2>Troubleshooting</h2>
+
+<h4>Nothing counts</h4>
+<ul>
+  <li>Confirm you're viewing the Published site, not Designer Preview (see above)</li>
+  <li>Check the attribute is exactly <code>template</code> = <code>value</code> on the numeric element</li>
+  <li>In <code>on-view</code> mode, make sure the component actually scrolls into view past the <code>threshold</code>; lower the threshold if the section is short</li>
+</ul>
+
+<h4>A number jumps to its final value instantly</h4>
+<ul>
+  <li>The visitor's OS may request reduced motion and <code>respectReducedMotion</code> is on — this is intended. Turn it off to force the animation</li>
+  <li>Check <code>duration</code> isn't <code>0</code></li>
+</ul>
+
+<h4>The counted number lost its <code>+</code>, <code>%</code>, or nested markup</h4>
+<ul>
+  <li>Move <code>template="value"</code> onto a leaf <code>&lt;span&gt;</code> around only the number, and put the unit in <code>suffix</code> / <code>data-suffix</code>. Countup replaces the whole element's text, so any sibling markup inside a tagged parent is wiped</li>
+</ul>
+
+<h4>The count starts at the wrong number</h4>
+<ul>
+  <li>A European-format seed (<code>13.000</code>) is read as <code>13</code>. Set <code>data-target="13000"</code></li>
+  <li>Set an explicit <code>data-from</code> if the counter should start somewhere other than <code>startValue</code></li>
+</ul>
+
+<h2>Out of Scope (v1)</h2>
+
+<ul>
+  <li>Live data binding / server-driven values</li>
+  <li>Per-element easing or stagger overrides</li>
+  <li>A separate decimal-separator control (only the thousands separator is configurable)</li>
+  <li>Counting down as a designed mode — <code>from &gt; to</code> works mathematically, but the UX isn't designed for it</li>
+  <li>Reverse-on-exit (uncounting when leaving the viewport)</li>
+  <li>A completion callback or event</li>
+</ul>
+
+<h2>Browser Support</h2>
+
+<p>Works in all modern browsers that support:</p>
+
+<ul>
+  <li><code>IntersectionObserver</code></li>
+  <li><code>requestAnimationFrame</code></li>
+  <li>Shadow DOM (handled by Webflow)</li>
+</ul>
+
+<h2>Best Practices</h2>
+
+<ol>
+  <li><strong>Type the final number as the seed</strong> — it's accurate in the Designer, in static snapshots, and for anyone with JavaScript disabled, and it doubles as the animation target</li>
+  <li><strong>Keep the tag on a leaf element</strong> — units and symbols belong in <code>suffix</code> / <code>prefix</code>, not inside the tagged element</li>
+  <li><strong>Use an <code>ease-out</code> curve</strong> — decelerating into the final figure reads better than a linear ramp</li>
+  <li><strong>Add a little <code>stagger</code></strong> for a row of stats so they cascade rather than all landing at once</li>
+  <li><strong>Leave <code>respectReducedMotion</code> on</strong> — accessibility for free</li>
+</ol>

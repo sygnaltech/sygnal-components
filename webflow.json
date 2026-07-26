@@ -1,6 +1,6 @@
 {
   "library": {
-    "name": "Sygnal Components v0.1.9",
+    "name": "Sygnal Components v0.1.10",
     "components": [
       "./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
     ],
