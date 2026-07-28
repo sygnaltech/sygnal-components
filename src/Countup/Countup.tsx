@@ -230,22 +230,36 @@ export const Countup: React.FC<CountupProps> = ({
     } else if (trigger === 'manual') {
       host.addEventListener(MANUAL_EVENT, fire);
     } else {
-      // on-view
+      // on-view. We observe the target elements themselves, NOT the host: the
+      // host <code-island> is rendered by Webflow with display:contents, so it
+      // has a 0×0 box that an IntersectionObserver would never report as
+      // intersecting. The slotted targets have real layout boxes. We treat the
+      // whole set as one group — fire when the first target crosses the
+      // threshold, and (for replay) re-arm once every target has left view.
       const ratio = Math.max(0, Math.min(1, threshold));
+      const visible = new Set<Element>();
+      let hasFired = false;
       observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
+            if (entry.isIntersecting) visible.add(entry.target);
+            else visible.delete(entry.target);
+          });
+          if (visible.size > 0 && !hasFired) {
+            hasFired = true;
             fire();
             if (!replay) {
               observer?.disconnect();
               observer = null;
             }
-          });
+          } else if (visible.size === 0 && replay) {
+            // All targets have scrolled out — re-arm for the next entry.
+            hasFired = false;
+          }
         },
         { threshold: ratio }
       );
-      observer.observe(host);
+      targets.forEach((cfg) => observer!.observe(cfg.el));
     }
 
     return () => {
