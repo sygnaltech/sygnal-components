@@ -166,6 +166,17 @@ export const Countup: React.FC<CountupProps> = ({
       };
     });
 
+    // Nothing to animate is a silent no-op per spec, but it's almost always a
+    // setup mistake (the designer forgot template="value" on the number), so
+    // leave a breadcrumb in the console rather than failing silently.
+    if (targets.length === 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[Countup] No count targets found. Add a custom attribute template="value" ' +
+          'to each element whose number should animate.'
+      );
+    }
+
     const render = (cfg: TargetConfig, value: number) => {
       cfg.el.textContent = `${cfg.prefix}${formatValue(value, cfg.decimals, separator)}${cfg.suffix}`;
     };
