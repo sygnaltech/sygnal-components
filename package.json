@@ -2,8 +2,10 @@
   "name": "sygnal-components",
   "version": "0.1.11",
   "private": true,
+  "description": "A library of Webflow Code Components built with React + TypeScript — UI, layout, and utility components configurable directly in the Webflow Designer.",
   "license": "MIT",
   "author": "Sygnal <info@sygnal.com>",
+  "homepage": "https://github.com/sygnaltech/sygnal-components#readme",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
