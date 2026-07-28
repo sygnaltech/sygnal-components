@@ -1,123 +1,175 @@
 # Sygnal Components
 
-A Webflow Code Components Library built with React and TypeScript, providing reusable UI components that integrate seamlessly with Webflow's visual editor.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Webflow](https://img.shields.io/badge/Webflow-Code%20Components-146EF5?logo=webflow&logoColor=white)](https://developers.webflow.com/code-components)
+
+A library of [Webflow Code Components](https://developers.webflow.com/code-components) built with React and TypeScript, providing reusable UI, layout, and utility components that install into Webflow's Designer and are configured entirely through its property panel.
 
 ## Overview
 
-**Sygnal Components** is a specialized component library designed for Webflow designers and developers. It provides utility and styling components that extend Webflow's capabilities with dynamic features, isolated styling, and environment-aware script management.
+**Sygnal Components** extends Webflow with dynamic behaviour, isolated styling, and environment-aware tooling that would otherwise require hand-written custom code. Each component is authored as a standard React component and wrapped for Webflow via `@webflow/react`, exposing typed properties, slots, and variants directly in the Designer.
 
-**Version:** 0.1.2
-**Built with:** React 19.1.1, TypeScript, Vite, @webflow/react
+**Built with:** React, TypeScript, Vite, and `@webflow/react`.
 
 ## Components
 
-### SVG Icon
-
-Renders inline SVG icons with validated, sanitized SVG code.
-
-**Features:**
-- Accepts raw SVG code as input with automatic validation
-- HTML entity decoding for properly encoded SVG strings
-- 6 predefined sizes: 16×16, 24×24, 32×32, 48×48, 80×80, 104×104
-- Fallback to default icon if no SVG provided
-- Security: Prevents invalid/malicious SVG code
-
-**Use Cases:**
-- Displaying custom icons from external sources
-- Dynamic icon rendering based on CMS data
-- Consistent icon sizing across your Webflow site
+| Component | Group | Description |
+| --- | --- | --- |
+| [3D Card](#3d-card) | Effects | Card that tilts toward the cursor, with descendants that float above the surface. |
+| [Code Embed](#code-embed) | Utility | Loads an HTML document from a CDN base URL into an isolated iframe, with auto-sizing. |
+| [Color Swatch](#color-swatch) | UI | Color swatch with click-to-copy and optional hex/RGB readout. |
+| [Countdown Timer](#countdown-timer) | Utility | Per-visitor countdown anchored to the first visit, driven by custom attributes. |
+| [Countup](#countup) | Interactive | Animates numeric text from a start value up to a target when triggered. |
+| [CSS Isolator](#css-isolator) | Style | Scoped container for CSS overrides and variable changes without global bleed. |
+| [Dropdown](#dropdown) | Navigation | Nestable dropdown menu with configurable expansion direction and trigger mode. |
+| [Embed](#embed) | Utility | Wraps a Webflow Embed and substitutes `{{wf …}}` macros at hydration. |
+| [Grid](#grid) | Layout | Arranges slotted items in a CSS grid. |
+| [IFrame](#iframe) | Utility | Embeds a URL with configurable sizing, sandboxing, and feature permissions. |
+| [QR Code](#qr-code) | Media | Generates a customizable QR code from text or URL data. |
+| [Script Manager](#script-manager) | Utility | Injects external scripts based on the detected Dev / Test / Prod environment. |
+| [SVG Icon](#svg-icon) | Media | Renders a validated, sanitized inline SVG icon. |
+| [VCard](#vcard) | Interactive | Downloads contact information as a `.vcf` vCard file. |
 
 ---
+
+### 3D Card
+
+Card that tilts toward the mouse cursor for an interactive parallax effect. Any descendant carrying a `z-pos="N"` custom attribute floats N pixels above the card surface during the tilt.
+
+- Configurable tilt amount, perspective, and a global depth multiplier for all floating layers
+- Follow smoothing while tracking the cursor, plus a separate reset duration and easing when the mouse leaves
+- Works with any slotted content
+
+### Code Embed
+
+Loads an external HTML document (`{url}.html`) from a CDN base URL into an isolated iframe.
+
+- Explicit fixed-height sizing, or `auto` mode that grows to fit content via an injected `postMessage` resize reporter
+- Configurable width, scrolling behaviour, and optional sandboxing
+- Granular feature permissions: fullscreen, autoplay, camera, microphone, geolocation, clipboard, payment, and display capture
+
+### Color Swatch
+
+Displays a color swatch with click-to-copy functionality.
+
+- Accepts any CSS color value (hex, rgb, rgba, named)
+- **Plain** or **Informative** style (the latter surfaces hex/RGB data)
+- Six preset sizes and configurable label format (as-specified or converted to hex)
+- Auto-contrast label color that flips to stay legible
+
+### Countdown Timer
+
+A personalized countdown timer that anchors to each visitor's first visit and persists in `localStorage`.
+
+- Flexible duration syntax (e.g. `24h`, `2d 12h`, `1y 6M 5d 3h 30m 15s`)
+- Drives markup through `countdown-remaining` custom attributes (days, hours, minutes, seconds, active, expired)
+- Independent timers via a configurable storage key, optional leading zeros, and a debug panel
+
+### Countup
+
+Animates numeric text within slotted content from a start value up to a target. Add a `template="value"` custom attribute to any element that should count.
+
+- Triggers: `on-view` (with a visibility threshold), `on-load`, or `manual` via a `countup:start` event
+- Configurable duration, easing, per-element stagger, and optional replay on re-entry
+- Formatting for decimals, thousands separators, prefixes, and suffixes — all overridable per element via `data-*` attributes
+- Respects the visitor's reduced-motion preference
 
 ### CSS Isolator
 
-Creates a scoped CSS container to apply isolated CSS rules and CSS variable overrides without affecting the rest of the page.
+Creates a scoped container for applying isolated CSS rules and CSS variable overrides without affecting the rest of the page.
 
-**Features:**
-- Automatic CSS scoping via unique ID generation
-- CSS selector prefixing to isolate styles
-- Support for CSS variable overrides
-- Slot support for nesting child components
-- HTML entity decoding for properly encoded CSS
+- Automatic scoping via a generated unique ID and selector prefixing
+- Supports CSS variable overrides and nested child components through its slot
+- Ideal for self-contained styled modules and preventing style conflicts
 
-**Use Cases:**
-- Applying component-specific styles without global pollution
-- Overriding CSS variables for specific sections
-- Creating self-contained styled modules
-- Preventing style conflicts in complex Webflow projects
+### Dropdown
 
-**Example:**
-```css
-/* CSS Variables */
---primary-color: #3b82f6;
---spacing: 2rem;
+A nestable navigation dropdown with configurable expansion direction and trigger mode.
 
-/* Scoped Rules */
-.button { background: var(--primary-color); }
-```
+- Expands below, above, or to either side (`right-down`, `left-up`, etc.) for side-expanding submenus
+- Opens on click or hover, with a hover-close delay to prevent accidental closing
+- Optional leading icon, inline-editable label, and a fade transition
+- **Design Mode** forces the panel open for styling in the Designer
 
----
+### Embed
+
+Wraps a Webflow Embed element and substitutes macros at hydration time.
+
+- Write macros as `{{wf name}}` or `{{wf {"path":"name"} }}` — both resolve `name` as a custom attribute on the embed element
+- **Strict** mode (default) recognises only `{{wf …}}` macros; **Lenient** also accepts bare `{{name}}`
+
+### Grid
+
+Arranges the items in its Content slot into a CSS grid.
+
+- Configurable number of equal-width columns
+- Debug mode shows numbered badges for each slotted item
+
+### IFrame
+
+Embeds an external URL in an iframe with full control over sizing, security, and permissions.
+
+- Configurable height, width, and scrolling
+- Optional sandboxing and referrer policy
+- Granular feature permissions: fullscreen, autoplay, camera, microphone, geolocation, clipboard, payment, and display capture
 
 ### QR Code
 
-Generates customizable QR codes from URLs or text data.
+Generates a customizable QR code from URL or text data, powered by `qr-code-styling`.
 
-**Features:**
-- 6 size options: 100×100, 200×200, 300×300, 400×400, 500×500, or responsive (100%)
+- Multiple preset sizes plus a responsive (100%) option
 - Customizable foreground and background colors
-- 4 error correction levels: L (7%), M (15%), Q (25%), H (30%)
-- Optional margin/quiet zone around QR code
-- Real-time updates when properties change
-- Powered by `qr-code-styling` library
-
-**Use Cases:**
-- Event tickets with dynamic QR codes
-- Product pages with QR links to details
-- Contact information QR codes
-- Payment/donation links
-- App download links
-
-**Default Values:**
-- Data: https://www.webflow.com
-- Size: 200×200
-- Colors: Black on white
-- Error Correction: M (15%)
-- Margin: Included
-
----
+- Four error-correction levels (L, M, Q, H) and an optional quiet-zone margin
+- Updates in real time as properties change
 
 ### Script Manager
 
-Dynamically injects external scripts with intelligent environment detection for Dev, Test, and Production modes.
+Dynamically injects external scripts with environment detection for Dev, Test, and Production.
 
-**Features:**
-- Environment-aware script injection (Dev/Test/Prod)
-- Automatic environment detection (*.webflow.io = Test)
-- Cookie-based persistent mode selection
-- URL parameter override support (`?dev`, `?test`, `?prod`)
-- Visual mode indicator badge with color coding:
-  - Dev Mode: Red
-  - Test Mode: Yellow
-  - Prod Mode: Green
-- Configurable async/defer loading
-- Automatic cleanup on unmount
+- Auto-detects environment (`*.webflow.io` = Test), with cookie persistence and `?dev` / `?test` / `?prod` URL overrides
+- Separate script URLs per environment with configurable async/defer loading
+- Color-coded mode indicator badge (Dev = red, Test = yellow, Prod = green)
+- Cleans up on unmount
 
-**Use Cases:**
-- Loading different analytics scripts per environment
-- Testing integrations before production deployment
-- Conditional feature flags based on environment
-- A/B testing with separate script versions
-- Development debugging without affecting production
+### SVG Icon
 
-**Environment Logic:**
-1. URL parameters (`?dev`, `?test`, `?prod`) - highest priority
-2. Stored cookie if previously set
-3. Auto-detect: `webflow.io` domain = Test, otherwise = Prod
+Renders an inline SVG icon from raw SVG code, with validation and sanitization.
 
-**Example Setup:**
-- Dev Code URL: `https://cdn.example.com/script-dev.js`
-- Test Code URL: `https://cdn.example.com/script-test.js`
-- Prod Code URL: `https://cdn.example.com/script.js`
+- Accepts raw SVG input with automatic validation and HTML-entity decoding
+- Preset sizes with a fallback default icon
+- Guards against invalid or malicious SVG
 
----
+### VCard
 
+Lets visitors download contact information as a standard `.vcf` vCard file.
+
+- **Button** variant with configurable text/style, or **Slot** variant to trigger from any custom content
+- Full contact schema: name, organization, title, phones, emails, address, website, and notes
+- Configurable download filename
+
+## Architecture
+
+Each component follows a dual-file pattern:
+
+- `ComponentName.tsx` — the React implementation
+- `ComponentName.webflow.tsx` — the Webflow wrapper that calls `declareComponent()` and declares typed props via `@webflow/data-types`
+
+Webflow entry points are matched by the `./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)` pattern in `webflow.json`. Slots (`props.Slot()`) allow content to be inserted from within the Webflow Designer.
+
+## Development
+
+```bash
+npm install        # install dependencies
+npm run dev        # start the Vite dev server
+npm run build      # production build
+npm run preview    # preview the production build
+npm test           # run tests
+npm run deploy     # share the library to Webflow (webflow library share)
+```
+
+## License
+
+[MIT](./LICENSE) © Sygnal
