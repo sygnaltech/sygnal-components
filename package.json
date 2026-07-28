@@ -1,7 +1,9 @@
 {
   "name": "sygnal-components",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "private": true,
+  "license": "MIT",
+  "author": "Sygnal <info@sygnal.com>",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
